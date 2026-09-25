@@ -83,6 +83,23 @@ def test_run_level_check_escalates_on_drift():
     assert "avg_groundedness" in result["reasons"][0]
 
 
+def test_tier1_failure_escalates_without_running_other_checks():
+    """An orchestrator should be able to short-circuit on bad news --
+    a low golden_eval score alone is enough to escalate."""
+    result = sign_off(Q3_GOLDEN)  # groundedness/judge intentionally omitted
+    assert result["verdict"] == "escalate"
+    assert any("golden_eval" in r for r in result["reasons"])
+
+
+def test_incomplete_evidence_cannot_approve():
+    """A good golden_eval score alone is NOT enough to approve -- skipping
+    Tier 2 checks must escalate ('insufficient evidence'), not approve."""
+    good_golden = {"score": 0.95, "reasoning": "matches"}
+    result = sign_off(good_golden)  # groundedness/judge omitted
+    assert result["verdict"] == "escalate"
+    assert "insufficient evidence" in result["reasons"][0]
+
+
 def test_run_level_check_approves_when_healthy():
     drift_result = {"drifted": False, "details": {}}
     assert run_level_check(drift_result)["verdict"] == "approve"

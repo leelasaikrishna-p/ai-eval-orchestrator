@@ -37,27 +37,42 @@ GATE_PROFILES = {
 
 def sign_off(
     golden_result: dict,
-    groundedness_result: dict,
-    judge_result: dict,
+    groundedness_result: dict | None = None,
+    judge_result: dict | None = None,
     provider: str = "ollama",
 ) -> dict:
-    """Combine one candidate answer's three per-answer checks into a verdict.
+    """Combine one candidate answer's per-answer checks into a verdict.
+
+    `groundedness_result`/`judge_result` may be None when an orchestrator
+    short-circuited and didn't run them -- that's fine for an early ESCALATE
+    (a Tier 1 failure alone is sufficient reason), but insufficient to reach
+    APPROVE: approving requires full evidence, escalating doesn't. This lets
+    an orchestrator stop early on bad news without stopping early on good
+    news.
 
     Returns {"verdict": "approve"|"escalate", "reasons": [str, ...], "flags": [str, ...]}.
-    `reasons` are why it escalated (empty if approved); `flags` are Tier-2
-    signals that fired but weren't, by themselves, enough to force a verdict
-    under a stricter (e.g. "and") profile -- kept for visibility either way.
     """
     profile = GATE_PROFILES[provider]
     reasons: list[str] = []
     flags: list[str] = []
 
-    # Tier 1 -- hard gate
+    # Tier 1 -- hard gate. A failure here is sufficient to escalate on its
+    # own, even if Tier 2 checks were never run.
     if golden_result["score"] < profile["golden_eval_floor"]:
         reasons.append(
             f"golden_eval score {golden_result['score']:.2f} below floor "
             f"{profile['golden_eval_floor']} -- doesn't match known-good behavior"
         )
+        return {"verdict": "escalate", "reasons": reasons, "flags": flags}
+
+    # Reaching APPROVE requires full evidence -- an orchestrator that skipped
+    # a Tier 2 check hasn't earned the right to approve, only to keep going.
+    if groundedness_result is None or judge_result is None:
+        return {
+            "verdict": "escalate",
+            "reasons": ["insufficient evidence: not all checks were run before concluding"],
+            "flags": flags,
+        }
 
     # Tier 2 -- advisory, combined per the provider's profile
     groundedness_flagged = not groundedness_result["grounded"]
@@ -75,7 +90,7 @@ def sign_off(
         if profile["tier2_mode"] == "or"
         else (groundedness_flagged and judge_flagged)
     )
-    if tier2_triggers and not reasons:  # Tier 1 already escalated; don't duplicate
+    if tier2_triggers:
         reasons.extend(flags)
 
     verdict = "escalate" if reasons else "approve"

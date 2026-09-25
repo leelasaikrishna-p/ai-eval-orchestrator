@@ -64,6 +64,33 @@ class OllamaProvider(LLMProvider):
                 f"Original error: {e}"
             ) from e
 
+    def chat(self, messages: list[dict], tools: list[dict] | None = None, temperature: float = 0.0) -> dict:
+        """Native tool-calling via Ollama's /api/chat. Returns the raw
+        `message` dict -- may contain `content` (plain text) and/or
+        `tool_calls` (a list of {id, function: {name, arguments}})."""
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "stream": False,
+            "options": {"temperature": temperature},
+        }
+        if tools:
+            payload["tools"] = tools
+        req = urllib.request.Request(
+            f"{self.host}/api/chat",
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=180) as resp:
+                body = json.loads(resp.read().decode("utf-8"))
+                return body["message"]
+        except urllib.error.URLError as e:
+            raise RuntimeError(
+                f"Could not reach Ollama at {self.host}. Is it running? Original error: {e}"
+            ) from e
+
 
 class MockProvider(LLMProvider):
     """Deterministic canned responses for tests -- no network, no model.

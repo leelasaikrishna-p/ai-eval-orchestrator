@@ -25,8 +25,45 @@ rather than assumed.
 - [x] **M1** — four evaluation tools working standalone
 - [x] **Decision policy** — provider-aware gate structure (`decision_policy.py`)
 - [x] **M2** — each tool exposed as its own MCP server (stdio transport), verified end-to-end over the real protocol
-- [ ] **M3** — orchestrator agent chains tool calls, makes real branching decisions
+- [x] **M3** — orchestrator agent chains tool calls, makes real branching decisions
 - [ ] **M4** — human-approval gate + GitHub Actions wrapper + demo write-up
+
+## The orchestrator (M3)
+
+`orchestrator.py` is the actual agentic piece: it connects to the three
+per-answer MCP servers as a real client, hands their schemas to the model
+via Ollama's native tool-calling (`/api/chat`), and lets the **model**
+decide which tool(s) to call and in what order — not a hardcoded sequence.
+The model's job stops at gathering evidence; the final approve/escalate
+verdict is computed by the tested `decision_policy.sign_off()`, not the
+model's own opinion. Agentic investigation, governed decision.
+
+```bash
+source .venv/bin/activate
+python3 orchestrator.py   # runs all three sample cases, prints the full trace
+```
+
+### What a real run against llama3.1:8b actually showed
+
+- **Real short-circuiting, working as designed:** on the hallucinated answer
+  (score 0.0 from `golden_eval_tool`), the model reasoned *"This alone is
+  enough evidence... I do not need to call the other tools"* and stopped
+  after one call — genuine agentic behavior, not a scripted pipeline.
+- **The governed decision overrode the model's own wrong opinion.** In one
+  run, two tool calls failed (the model sent malformed arguments — a real
+  reliability limit of this small local model on multi-turn tool calls),
+  and the model's own text concluded *"I would recommend approving."*
+  `decision_policy.sign_off()` disagreed and escalated anyway, because
+  approving requires full evidence and two checks never actually ran. The
+  tested code was right; the model's free-form judgment was wrong. That's
+  the entire argument for keeping the verdict deterministic instead of
+  trusting the agent's own conclusion.
+- **A real bug this caught:** the first version of the orchestrator stored
+  a failed tool call's error as if it were a real result, which would have
+  crashed `sign_off()` the moment it tried to read a `"grounded"` key that
+  didn't exist. Fixed to treat a failed call as *not run* (absent evidence),
+  not a malformed result — see `tests/test_orchestrator_verdict.py` for the
+  regression test.
 
 ## MCP servers (M2)
 
