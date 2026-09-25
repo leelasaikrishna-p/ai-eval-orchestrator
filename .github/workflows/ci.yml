@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements.txt
+
+      # No Ollama on hosted runners -- these suites use PROVIDER=mock or
+      # need no LLM at all, so CI proves the logic (parsing, gate structure,
+      # MCP protocol wiring, orchestrator decision-making) on every push.
+      # Judgment QUALITY against a real model is validated separately, by
+      # hand, against Ollama -- see README for what that run showed.
+      - name: Tool smoke tests
+        run: python3 tests/test_tools_smoke.py
+
+      - name: Decision policy tests
+        run: python3 tests/test_decision_policy.py
+
+      - name: MCP protocol tests
+        run: python3 tests/test_mcp_servers.py
+
+      - name: Orchestrator verdict tests
+        run: python3 tests/test_orchestrator_verdict.py

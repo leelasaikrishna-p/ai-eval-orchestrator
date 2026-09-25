@@ -1,0 +1,56 @@
+name: Evaluate and Approve
+
+# Manually triggered: pick one of the labeled demo cases and watch the gate
+# structure decide whether it needs a human. This is the same shape as a
+# Harness pipeline with an Approval step -- an automatic gate (evaluate)
+# feeding a manual gate (human_approval) feeding a final action (publish),
+# except the "manual gate" here is a GitHub Environment with a required
+# reviewer instead of a Harness approval step.
+on:
+  workflow_dispatch:
+    inputs:
+      case:
+        description: "Which demo case to evaluate"
+        required: true
+        type: choice
+        options: [q1, q3, q5, clean]
+        default: clean
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    outputs:
+      verdict: ${{ steps.eval.outputs.verdict }}
+      reasons: ${{ steps.eval.outputs.reasons }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - id: eval
+        run: python3 .github/scripts/run_verdict.py --case "${{ inputs.case }}"
+
+  human_approval:
+    needs: evaluate
+    if: needs.evaluate.outputs.verdict == 'escalate'
+    runs-on: ubuntu-latest
+    # THIS is the actual gate: GitHub won't run this job until someone with
+    # access to the "production-approval" environment approves it in the UI.
+    # The workflow pauses here for real -- it is not a simulated wait.
+    environment: production-approval
+    steps:
+      - run: |
+          echo "A human reviewer approved this escalation."
+          echo "Reasons that triggered escalation: ${{ needs.evaluate.outputs.reasons }}"
+
+  publish:
+    needs: [evaluate, human_approval]
+    # Runs if evaluate auto-approved (human_approval was skipped entirely),
+    # OR if evaluate escalated and a human then approved it.
+    if: |
+      always() &&
+      (needs.evaluate.outputs.verdict == 'approve' || needs.human_approval.result == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Publishing the evaluated answer -- verdict was ${{ needs.evaluate.outputs.verdict }}."
