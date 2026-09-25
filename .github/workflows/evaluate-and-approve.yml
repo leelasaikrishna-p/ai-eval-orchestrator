@@ -40,9 +40,15 @@ jobs:
     # The workflow pauses here for real -- it is not a simulated wait.
     environment: production-approval
     steps:
-      - run: |
+      # Pass the value through an env var rather than interpolating
+      # ${{ }} directly into the script -- the reasons string can contain
+      # quotes/apostrophes (e.g. "doesn't match") that break shell quoting
+      # if substituted straight into the run: block.
+      - env:
+          REASONS: ${{ needs.evaluate.outputs.reasons }}
+        run: |
           echo "A human reviewer approved this escalation."
-          echo "Reasons that triggered escalation: ${{ needs.evaluate.outputs.reasons }}"
+          echo "Reasons that triggered escalation: $REASONS"
 
   publish:
     needs: [evaluate, human_approval]
