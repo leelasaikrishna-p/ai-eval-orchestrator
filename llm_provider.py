@@ -87,7 +87,8 @@ def get_provider(name: str | None = None) -> LLMProvider:
     if name == "ollama":
         return OllamaProvider()
     if name == "mock":
-        return MockProvider()
+        response = os.environ.get("MOCK_RESPONSE")
+        return MockProvider(response) if response else MockProvider()
     # Future providers -- add the class above, then register here:
     # if name == "gemini":
     #     from providers.gemini_provider import GeminiProvider

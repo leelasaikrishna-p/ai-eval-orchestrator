@@ -2,3 +2,4 @@
 # plain HTTP via the standard library. pytest is optional; the smoke tests
 # also run standalone with `python3 tests/test_tools_smoke.py`.
 pytest>=7.0
+mcp>=2.0

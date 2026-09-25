@@ -24,9 +24,33 @@ rather than assumed.
 
 - [x] **M1** — four evaluation tools working standalone
 - [x] **Decision policy** — provider-aware gate structure (`decision_policy.py`)
-- [ ] **M2** — each tool exposed as its own MCP server
+- [x] **M2** — each tool exposed as its own MCP server (stdio transport), verified end-to-end over the real protocol
 - [ ] **M3** — orchestrator agent chains tool calls, makes real branching decisions
 - [ ] **M4** — human-approval gate + GitHub Actions wrapper + demo write-up
+
+## MCP servers (M2)
+
+Each tool is wrapped as its own MCP server in `mcp_servers/`, using the
+**stdio transport** — the server runs as a local subprocess, communicating
+over stdin/stdout, exactly like Claude Desktop's local MCP integrations.
+Not internet-accessible by design at this stage: no network, no hosting, no
+auth to worry about. (MCP also supports an HTTP transport for services that
+do need to be network-reachable — a possible M4+ stretch goal, not needed
+to prove the agentic architecture itself.)
+
+```bash
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Each server just sits waiting for an MCP client to connect over stdio --
+# that's correct behavior, not a hang. Point an MCP client's config at the
+# script path to actually use it, e.g.:
+python3 mcp_servers/drift_check_server.py
+```
+
+`tests/test_mcp_servers.py` spins up each server as a real subprocess and
+talks to it over the actual MCP protocol (not just calling the Python
+function directly) — proof the wrapping works, not just that it imports.
 
 ### Sign-off policy: why the gates are structured this way
 
