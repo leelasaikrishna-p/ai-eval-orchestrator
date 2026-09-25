@@ -26,7 +26,7 @@ rather than assumed.
 - [x] **Decision policy** — provider-aware gate structure (`decision_policy.py`)
 - [x] **M2** — each tool exposed as its own MCP server (stdio transport), verified end-to-end over the real protocol
 - [x] **M3** — orchestrator agent chains tool calls, makes real branching decisions
-- [ ] **M4** — human-approval gate + GitHub Actions wrapper + demo write-up
+- [x] **M4** — CI + a real human-approval gate, verified live on GitHub Actions
 
 ## The orchestrator (M3)
 
@@ -64,6 +64,33 @@ python3 orchestrator.py   # runs all three sample cases, prints the full trace
   didn't exist. Fixed to treat a failed call as *not run* (absent evidence),
   not a malformed result — see `tests/test_orchestrator_verdict.py` for the
   regression test.
+
+## CI + the human-approval gate (M4)
+
+Two workflows, both verified live on real GitHub Actions infrastructure,
+not just written and assumed to work:
+
+- **`ci.yml`** — runs all four test suites (mock/no-LLM) on every push.
+- **`evaluate-and-approve.yml`** — the Harness-shaped demo: an `evaluate`
+  job computes a verdict via `decision_policy.sign_off()` against one of
+  the real recorded score sets from the Ollama run, feeding a
+  `human_approval` job gated on a genuine GitHub Environment
+  (`production-approval`, with a real required reviewer configured via the
+  API) — which feeds a final `publish` job.
+
+Both branches proven live:
+- **Escalate case (`q3`, the hallucination):** `human_approval` genuinely
+  paused — GitHub would not run it until a real click on "Review
+  deployments" in the Actions UI. It failed once for a real reason: the
+  `reasons` output contained an apostrophe (*"doesn't match..."*) that broke
+  shell quoting when interpolated directly into a `run:` script via `${{ }}`.
+  Fixed by passing it through an env var instead — the general fix for any
+  arbitrary string content in a GitHub Actions step.
+- **Approve case (`clean`):** `human_approval` was skipped entirely —
+  `evaluate` fed straight into `publish` with no pause.
+
+Trigger it yourself: **Actions tab → Evaluate and Approve → Run workflow**,
+pick a case (`q1`, `q3`, `q5`, or `clean`).
 
 ## MCP servers (M2)
 
