@@ -199,19 +199,18 @@ PROVIDER=mock python3 tools/llm_judge.py        # canned response, for tests
 **Planned:** `PROVIDER=gemini` and `PROVIDER=groq` (both have genuine free
 API tiers) and `PROVIDER=anthropic`, each a drop-in class in
 `llm_provider.py` implementing the same `generate(prompt) -> str` method.
-Nothing in the four tools or the future orchestrator needs to change when a
-new provider is added.
+Nothing in the four tools or the orchestrator needs to change when a new
+provider is added.
 
-## Roadmap
+## What's next
 
-- **M2 (MCP):** wrap each tool in its own MCP server so any MCP-compatible
-  client (Claude, or a custom orchestrator) can discover and call them.
-- **M3 (orchestrator):** an agent loop that, given a new candidate answer,
-  decides which tool to call first, reads the result, and decides what to
-  call next — e.g. skip straight to human escalation if groundedness fails,
-  only run `drift_check` if the first two checks pass.
-- **M4 (CI + write-up):** wire the orchestrator into a GitHub Actions
-  workflow (the free stand-in for the Harness pipelines this pattern is
-  designed for professionally), add an explicit human-approval step before
-  any verdict is final, and write up the finished project as a portfolio
-  case study.
+All four milestones are done (see Status above). Possible follow-ups, not
+required to prove the core architecture:
+
+- Measure Gemini/Groq/Anthropic the same way Ollama was measured, and let a
+  provider proven reliable enough graduate `groundedness_check` from Tier 2
+  into a trusted Tier 1 hard gate (see `GATE_PROFILES` in `decision_policy.py`).
+- An HTTP-transport MCP deployment, if this ever needs to be network-reachable
+  rather than local-only (see MCP servers section above).
+- A real Harness pipeline alongside the GitHub Actions one, since Harness is
+  what this pattern is designed for professionally.
