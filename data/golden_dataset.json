@@ -1,0 +1,32 @@
+[
+  {
+    "id": "q1",
+    "question": "Can I still edit an invoice after the customer has made a partial payment?",
+    "context": "Invoices can be edited any time before the first payment is received; after a partial payment, only the due date and notes fields remain editable.",
+    "golden_answer": "Once a partial payment has been made, most of the invoice is locked -- only the due date and the notes field can still be edited."
+  },
+  {
+    "id": "q2",
+    "question": "What's the default payment term for a new invoice?",
+    "context": "Default payment terms are Net 30. Account owners can change the default to Net 15, Net 45, or Net 60 in Settings > Billing.",
+    "golden_answer": "New invoices default to Net 30, though the account owner can change the default to Net 15, Net 45, or Net 60."
+  },
+  {
+    "id": "q3",
+    "question": "If a customer paid by credit card, can I refund them to their bank account instead?",
+    "context": "Refunded amounts are returned to the original payment method and typically post within 5-10 business days. Ledgerly does not support refunding a payment to a different payment method than the one used originally.",
+    "golden_answer": "No -- refunds always go back to the original payment method. Ledgerly doesn't support refunding to a different method, like moving a card payment to a bank account."
+  },
+  {
+    "id": "q4",
+    "question": "How often do late fees get applied if an invoice stays unpaid?",
+    "context": "When enabled, a late fee is applied automatically 1 day after an invoice's due date, and again every 30 days the invoice remains unpaid, up to a cap the account owner sets.",
+    "golden_answer": "A late fee is applied one day after the due date, then again every 30 days the invoice remains unpaid, up to a cap you configure."
+  },
+  {
+    "id": "q5",
+    "question": "I set my account's default currency to USD at signup. Can I still send an invoice in EUR?",
+    "context": "An account's default currency is set once at account creation and cannot be changed afterward, though individual invoices can still be issued in any of the four supported currencies regardless of the account default.",
+    "golden_answer": "Yes -- even though your account's default currency is fixed at USD, you can still issue any individual invoice in EUR, GBP, or CAD."
+  }
+]

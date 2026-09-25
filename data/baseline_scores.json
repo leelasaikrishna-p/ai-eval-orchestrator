@@ -1,0 +1,7 @@
+{
+  "recorded_at": "2026-09-17T00:00:00Z",
+  "note": "Aggregate scores from a prior evaluation run, used by drift_check.py as the 'before' snapshot to compare a new run against.",
+  "avg_golden_similarity": 0.88,
+  "avg_groundedness": 0.94,
+  "avg_judge_score": 8.6
+}

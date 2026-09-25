@@ -1,0 +1,17 @@
+[
+  {
+    "id": "q1",
+    "label": "clean pass",
+    "candidate_answer": "After a partial payment is made, the invoice is mostly locked -- you can still update the due date and the notes, but nothing else."
+  },
+  {
+    "id": "q3",
+    "label": "hallucinated / ungrounded",
+    "candidate_answer": "Yes, if you contact support they can manually reroute a refund from a credit card to your bank account instead."
+  },
+  {
+    "id": "q5",
+    "label": "subtly wrong",
+    "candidate_answer": "Yes, and you can also change your account's default currency later from Settings if you decide USD wasn't the right choice."
+  }
+]
