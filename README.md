@@ -16,14 +16,46 @@ orchestrator that decides what to run next based on what it's already seen.
 
 ## Status
 
-**M1 — done.** The four evaluation tools work standalone, verified against
-a mock provider (see `tests/test_tools_smoke.py`) so the logic is proven
-independent of any specific model.
+**M1 — done.** Four evaluation tools work standalone, verified against a
+mock provider. **Sign-off policy — done.** Combines the four tools' verdicts
+into an approve/escalate decision, with a gate structure derived from
+actually measuring each tool's reliability against a real model (see below)
+rather than assumed.
 
 - [x] **M1** — four evaluation tools working standalone
+- [x] **Decision policy** — provider-aware gate structure (`decision_policy.py`)
 - [ ] **M2** — each tool exposed as its own MCP server
 - [ ] **M3** — orchestrator agent chains tool calls, makes real branching decisions
 - [ ] **M4** — human-approval gate + GitHub Actions wrapper + demo write-up
+
+### Sign-off policy: why the gates are structured this way
+
+Running all four tools against a real model (`llama3.1:8b` via Ollama)
+surfaced real, measured differences in reliability, not assumed ones:
+
+| Tool | Behavior observed | Trust level |
+|---|---|---|
+| `drift_check` | No LLM involved — pure arithmetic | **Tier 1 — always trusted** |
+| `golden_eval` | 0 false positives; correctly zeroed a hallucinated answer | **Tier 1 — trusted hard gate** |
+| `groundedness_check` | 1 false positive (flagged a *correct* paraphrase as unsupported) | Tier 2 — advisory only |
+| `llm_judge` | 1 false negative (rated a factually wrong answer 8/10) | Tier 2 — advisory only |
+
+Tier 2 uses **OR, not AND**: either check flagging a problem is enough to
+escalate, even alone. This was a deliberate correction — an early AND-based
+draft (both must agree) would have let the real error past, because
+`llm_judge` missed it and only `groundedness_check` caught it. Since the
+only two outcomes are *approve* or *escalate to a human* — never a silent
+auto-reject — a false escalation only costs a minute of review, while a
+false approval ships a wrong answer. That asymmetry is why the policy is
+biased toward escalating when any single credible signal fires.
+`tests/test_decision_policy.py` runs the actual scores from that real
+model run (not synthetic data) and includes a test proving the AND version
+would have failed on the exact case OR gets right.
+
+This structure is per-provider (`GATE_PROFILES` in `decision_policy.py`),
+not fixed — once Gemini/Groq/Anthropic are measured the same way, a
+provider proven reliable enough can graduate `groundedness_check` from
+Tier 2 into a trusted Tier 1 hard gate.
 
 ## The four tools
 
