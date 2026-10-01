@@ -223,6 +223,18 @@ python3 tools/run_eval.py                   # compare a new run to it (exit 1 on
   groundedness baseline is **0.0**. A relative drop from 0 is undefined, so
   drift on that metric can't be measured for llama -- the check now reports
   that explicitly instead of silently passing.
+- **The two recorded baselines show why "normal" is per model:**
+
+  | Run average | llama3.1:8b | gemini-3.5-flash-lite | Correct for these 3 answers |
+  |---|---|---|---|
+  | golden similarity | 0.57 | 0.60 | — |
+  | grounded share | **0.00** | **0.33** | **0.33** (only q1 is correct) |
+  | judge score | 7.53 | **9.77** | should be low for q3 and q5 |
+
+  Gemini's groundedness matches the correct rate exactly; its judge rates
+  everything high, including 9.3 for the hallucination. Comparing a Gemini
+  run against llama's baseline would report a large "improvement" that is
+  just a different model's normal.
 - **What a flag means here:** the candidate answers are fixed, so a drift
   flag means the *evaluator's* judgments changed (for example, a provider
   silently updating a model). Pointed at a live RAG bot's answers, the same

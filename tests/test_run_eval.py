@@ -49,12 +49,19 @@ def test_missing_baseline_says_how_to_record_one():
         raise AssertionError("expected FileNotFoundError")
 
 
-def test_real_ollama_baseline_is_recorded_and_complete():
-    """The committed baseline comes from a real full pass, not placeholders."""
-    baseline = load_baseline_scores("ollama", "llama3.1:8b")
-    assert baseline["provider"] == "ollama" and baseline["model"] == "llama3.1:8b"
-    assert baseline["n"] == len(baseline["per_answer"]) == 3
-    assert set(baseline["metrics"]) == {"avg_golden_similarity", "avg_groundedness", "avg_judge_score"}
+def test_every_committed_baseline_is_complete_and_consistent():
+    """Each committed baseline comes from a real full pass: its stored
+    averages must be exactly what its own per-answer scores aggregate to."""
+    from data_utils import BASELINE_DIR
+
+    files = sorted(BASELINE_DIR.glob("*.json"))
+    assert {f.name for f in files} >= {"ollama__llama3.1_8b.json", "gemini__gemini-3.5-flash-lite.json"}
+    for f in files:
+        import json
+        baseline = json.loads(f.read_text())
+        assert baseline_path(baseline["provider"], baseline["model"]) == f, f.name
+        assert baseline["n"] == len(baseline["per_answer"]) == 3, f.name
+        assert aggregate(baseline["per_answer"]) == baseline["metrics"], f.name
 
 
 def test_identical_run_does_not_drift_against_real_baseline():
