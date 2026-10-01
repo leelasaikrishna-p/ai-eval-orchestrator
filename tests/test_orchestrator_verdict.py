@@ -26,6 +26,22 @@ def test_short_circuit_after_bad_golden_eval_escalates():
     assert result["verdict"] == "escalate"
 
 
+def test_early_stop_on_failed_groundedness_reports_the_real_reason():
+    """Regression test from the live Gemini run: on q5 the model called
+    golden_eval (0.80) and groundedness (contradiction found) and correctly
+    stopped without the judge. The verdict was right, but the reason said
+    'insufficient evidence' -- masking the actual failure. A real flag is
+    sufficient to escalate on its own; it must be the reason given."""
+    collected = {
+        "golden_eval_tool": {"score": 0.8, "reasoning": "adds extra information"},
+        "groundedness_check_tool": {"grounded": False, "unsupported_claims": ["can change default currency later"]},
+    }
+    result = verdict_from_collected(collected, provider="gemini", model="gemini-3.5-flash-lite")
+    assert result["verdict"] == "escalate"
+    assert any("groundedness_check" in r for r in result["reasons"])
+    assert not any("insufficient evidence" in r for r in result["reasons"])
+
+
 def test_failed_tool_call_does_not_crash_or_count_as_evidence():
     """Regression test for a real bug found during the first live orchestrator
     run: groundedness_check_tool errored out on bad arguments, and the

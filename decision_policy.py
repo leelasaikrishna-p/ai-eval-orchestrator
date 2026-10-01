@@ -91,6 +91,22 @@ def sign_off(
         )
         return {"verdict": "escalate", "reasons": reasons, "flags": flags}
 
+    # Tier 2 -- advisory, combined per the profile. Evaluate whatever checks
+    # DID run first: in OR mode a single real flag is sufficient to escalate,
+    # so a skipped check must not mask it behind "insufficient evidence".
+    groundedness_flagged = groundedness_result is not None and not groundedness_result["grounded"]
+    judge_flagged = judge_result is not None and judge_result["score"] < profile["judge_score_floor"]
+
+    if groundedness_flagged:
+        flags.append(
+            f"groundedness_check flagged unsupported claims: {groundedness_result['unsupported_claims']}"
+        )
+    if judge_flagged:
+        flags.append(f"llm_judge score {judge_result['score']:.1f} below floor {profile['judge_score_floor']}")
+
+    if profile["tier2_mode"] == "or" and flags:
+        return {"verdict": "escalate", "reasons": flags, "flags": []}
+
     # Reaching APPROVE requires full evidence -- an orchestrator that skipped
     # a Tier 2 check hasn't earned the right to approve, only to keep going.
     if groundedness_result is None or judge_result is None:
@@ -100,23 +116,7 @@ def sign_off(
             "flags": flags,
         }
 
-    # Tier 2 -- advisory, combined per the provider's profile
-    groundedness_flagged = not groundedness_result["grounded"]
-    judge_flagged = judge_result["score"] < profile["judge_score_floor"]
-
-    if groundedness_flagged:
-        flags.append(
-            f"groundedness_check flagged unsupported claims: {groundedness_result['unsupported_claims']}"
-        )
-    if judge_flagged:
-        flags.append(f"llm_judge score {judge_result['score']:.1f} below floor {profile['judge_score_floor']}")
-
-    tier2_triggers = (
-        (groundedness_flagged or judge_flagged)
-        if profile["tier2_mode"] == "or"
-        else (groundedness_flagged and judge_flagged)
-    )
-    if tier2_triggers:
+    if profile["tier2_mode"] != "or" and groundedness_flagged and judge_flagged:
         reasons.extend(flags)
 
     verdict = "escalate" if reasons else "approve"

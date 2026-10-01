@@ -65,6 +65,27 @@ python3 orchestrator.py   # runs all three sample cases, prints the full trace
   not a malformed result — see `tests/test_orchestrator_verdict.py` for the
   regression test.
 
+### And against gemini-3.5-flash-lite
+
+```bash
+PROVIDER=gemini python3 orchestrator.py
+```
+
+- **Reliable tool calling:** 6 of 6 tool calls had valid arguments (llama
+  sent malformed ones), so the clean answer (q1) got all three checks and
+  was **approved** — on llama it escalated because two calls failed.
+- **Smarter stopping:** on the hallucination (q3) it stopped after
+  `golden_eval` = 0, like llama. On the subtly wrong answer (q5) it called
+  `golden_eval` (0.80, not decisive), then `groundedness_check`, saw the
+  contradiction, and stopped on its own without the judge — the right call,
+  since under the OR rule no judge score could rescue it.
+- **A third real bug it caught:** q5's verdict was right (escalate) but the
+  *reason* was wrong — "insufficient evidence: not all checks were run" —
+  because the policy checked for missing evidence before checking for real
+  failures. That contradicted the policy's own rule (approving needs full
+  evidence; escalating doesn't), so actual flags are now evaluated first and
+  reported as the reason. Regression test included.
+
 ## CI + the human-approval gate (M4)
 
 Two workflows, both verified live on real GitHub Actions infrastructure,
