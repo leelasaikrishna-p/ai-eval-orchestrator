@@ -165,11 +165,11 @@ async def evaluate(question: str, golden_answer: str, context: str, candidate_an
         "model": getattr(provider, "model", None),
         "trace": trace,
         "model_summary": summary,
-        "verdict": verdict_from_collected(collected, provider=provider.name),
+        "verdict": verdict_from_collected(collected, provider=provider.name, model=getattr(provider, "model", None)),
     }
 
 
-def verdict_from_collected(collected: dict[str, dict], provider: str = "ollama") -> dict:
+def verdict_from_collected(collected: dict[str, dict], provider: str = "ollama", model: str | None = None) -> dict:
     """Pure function: turns whatever tool results the agentic loop actually
     collected into a final verdict. Separated from `evaluate()` so this
     decision logic is unit-testable without spinning up MCP servers or a
@@ -185,6 +185,7 @@ def verdict_from_collected(collected: dict[str, dict], provider: str = "ollama")
         groundedness_result=collected.get("groundedness_check_tool"),
         judge_result=collected.get("llm_judge_tool"),
         provider=provider,
+        model=model,
     )
 
 

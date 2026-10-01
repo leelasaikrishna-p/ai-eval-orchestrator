@@ -141,7 +141,7 @@ class GeminiProvider(LLMProvider):
     name = "gemini"
 
     def __init__(self, model: str | None = None, api_key: str | None = None):
-        self.model = model or os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
+        self.model = model or os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
         self.api_key = api_key or os.environ.get("GEMINI_API_KEY")
         if not self.api_key:
             raise RuntimeError(

@@ -18,33 +18,46 @@ groundedness_check and llm_judge are demoted to advisory signals (Tier 2)
 that can each independently trigger escalation (OR, not AND -- see below)
 but never independently trigger approval.
 
-Once Gemini/Groq/Anthropic are wired in and measured the same way, add a
-gate profile per provider below -- a provider proven reliable enough on a
-labeled set can graduate a check from Tier 2 into a Tier 1 hard gate.
+Profiles are keyed by provider AND model ("gemini/gemini-3.5-flash-lite"),
+because trust is a property of the model. A model proven reliable enough on
+a labeled set can graduate a check from Tier 2 into a Tier 1 hard gate; an
+unmeasured model always gets the conservative profile.
 """
 from __future__ import annotations
 
-GATE_PROFILES = {
-    "ollama": {
-        "golden_eval_floor": 0.3,   # below this -> Tier 1 auto-escalate
-        "judge_score_floor": 5.0,   # below this -> Tier 2 flag (0-10 scale)
-        "tier2_mode": "or",         # either groundedness or judge flagging is enough
-    },
-    # PROVISIONAL: copied from the most conservative measured profile (ollama)
-    # until Gemini is measured against the labeled sample runs. Loosen it
-    # (e.g. "and", or promote groundedness to Tier 1) only on measured evidence.
-    "gemini": {
-        "golden_eval_floor": 0.3,
-        "judge_score_floor": 5.0,
-        "tier2_mode": "or",
-    },
-    # "anthropic": {..., "tier2_mode": "and"},  # once calibrated: require agreement, or
-    #                                            # promote groundedness to Tier 1 outright
+# Trust belongs to a specific MODEL, not a provider: two Gemini models can
+# judge very differently. Profiles are keyed "provider/model" and only exist
+# for models actually measured against the labeled sample runs.
+CONSERVATIVE = {
+    "golden_eval_floor": 0.3,   # below this -> Tier 1 auto-escalate
+    "judge_score_floor": 5.0,   # below this -> Tier 2 flag (0-10 scale)
+    "tier2_mode": "or",         # either groundedness or judge flagging is enough
 }
 
-# An unmeasured provider hasn't earned any trust, so it gets the most
-# conservative profile rather than a crash or a guess.
-CONSERVATIVE_PROFILE = "ollama"
+GATE_PROFILES = {
+    # Measured: golden_eval 0 FP; groundedness 1 FP (flagged a correct
+    # paraphrase); judge 1 FN (rated the subtly wrong answer 8/10).
+    "ollama/llama3.1:8b": dict(CONSERVATIVE),
+    # Measured: golden_eval 0 FP but missed the subtle error (0.80);
+    # groundedness 3/3 correct; judge 2 FN (rated the hallucination 9/10 and
+    # the subtly wrong answer 10/10). Keeps OR: AND would approve q5.
+    "gemini/gemini-3.5-flash-lite": dict(CONSERVATIVE),
+    # "anthropic/<model>": {..., "tier2_mode": "and"},  # once calibrated
+}
+
+# Provider-level defaults (used when no model is given) point at the
+# measured default model for that provider.
+PROVIDER_DEFAULTS = {"ollama": "ollama/llama3.1:8b", "gemini": "gemini/gemini-3.5-flash-lite"}
+
+
+def resolve_profile(provider: str, model: str | None = None) -> tuple[str, dict]:
+    """Return (profile_key, profile). An unmeasured model hasn't earned any
+    trust, so it gets the conservative profile rather than a crash or a guess."""
+    candidates = [f"{provider}/{model}"] if model else [PROVIDER_DEFAULTS.get(provider), provider]
+    for key in candidates:
+        if key in GATE_PROFILES:
+            return key, GATE_PROFILES[key]
+    return "conservative (unmeasured)", CONSERVATIVE
 
 
 def sign_off(
@@ -52,6 +65,7 @@ def sign_off(
     groundedness_result: dict | None = None,
     judge_result: dict | None = None,
     provider: str = "ollama",
+    model: str | None = None,
 ) -> dict:
     """Combine one candidate answer's per-answer checks into a verdict.
 
@@ -64,7 +78,7 @@ def sign_off(
 
     Returns {"verdict": "approve"|"escalate", "reasons": [str, ...], "flags": [str, ...]}.
     """
-    profile = GATE_PROFILES.get(provider, GATE_PROFILES[CONSERVATIVE_PROFILE])
+    _, profile = resolve_profile(provider, model)
     reasons: list[str] = []
     flags: list[str] = []
 

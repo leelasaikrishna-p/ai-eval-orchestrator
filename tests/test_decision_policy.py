@@ -55,7 +55,7 @@ def test_and_mode_would_have_missed_q5():
     would slip through as approved."""
     from decision_policy import GATE_PROFILES
 
-    GATE_PROFILES["ollama_and_demo"] = {**GATE_PROFILES["ollama"], "tier2_mode": "and"}
+    GATE_PROFILES["ollama_and_demo"] = {**GATE_PROFILES["ollama/llama3.1:8b"], "tier2_mode": "and"}
     result = sign_off(Q5_GOLDEN, Q5_GROUNDEDNESS, Q5_JUDGE, provider="ollama_and_demo")
     assert result["verdict"] == "approve"  # the bug we're guarding against
     del GATE_PROFILES["ollama_and_demo"]
@@ -105,16 +105,45 @@ def test_run_level_check_approves_when_healthy():
     assert run_level_check(drift_result)["verdict"] == "approve"
 
 
-def test_unmeasured_provider_gets_conservative_profile():
-    """A provider with no measured profile must not crash and must not be
-    trusted more than the most conservative measured one: the q5 case
-    (judge fooled, only groundedness flags it) still escalates."""
-    golden = {"score": 0.82, "reasoning": "close"}
-    groundedness = {"grounded": False, "unsupported_claims": ["30 days"]}
-    judge = {"score": 8.0, "breakdown": {}}
-    for provider in ("gemini", "some-unmeasured-provider"):
-        result = sign_off(golden, groundedness, judge, provider=provider)
-        assert result["verdict"] == "escalate", provider
+def test_unmeasured_model_gets_conservative_profile():
+    """A model with no measured profile must not crash and must not be
+    trusted more than the conservative profile: the q5 case (judge fooled,
+    only groundedness flags it) still escalates."""
+    from decision_policy import resolve_profile
+
+    assert resolve_profile("gemini", "gemini-some-future-model")[0] == "conservative (unmeasured)"
+    assert resolve_profile("some-unmeasured-provider")[0] == "conservative (unmeasured)"
+    result = sign_off(Q5_GOLDEN, Q5_GROUNDEDNESS, Q5_JUDGE, provider="gemini", model="gemini-some-future-model")
+    assert result["verdict"] == "escalate"
+
+
+# Verbatim scores from the real run against gemini-3.5-flash-lite.
+GEMINI_LITE = {
+    "q1": ({"score": 1.00, "reasoning": ""}, {"grounded": True, "unsupported_claims": []}, {"score": 9.3, "breakdown": {}}),
+    "q3": ({"score": 0.00, "reasoning": ""}, {"grounded": False, "unsupported_claims": ["reroute"]}, {"score": 9.0, "breakdown": {}}),
+    "q5": ({"score": 0.80, "reasoning": ""}, {"grounded": False, "unsupported_claims": ["change currency"]}, {"score": 10.0, "breakdown": {}}),
+}
+
+
+def test_gemini_lite_real_scores_get_correct_verdicts():
+    """Same policy, second model: approve the correct answer, escalate both
+    errors -- even though the judge rated them 9/10 and 10/10."""
+    expected = {"q1": "approve", "q3": "escalate", "q5": "escalate"}
+    for case, (golden, grounded, judge) in GEMINI_LITE.items():
+        result = sign_off(golden, grounded, judge, provider="gemini", model="gemini-3.5-flash-lite")
+        assert result["verdict"] == expected[case], case
+
+
+def test_and_mode_would_also_have_missed_q5_on_gemini():
+    """The OR decision holds on a second model: with AND, a judge that gives
+    the subtly wrong answer 10/10 would let it through."""
+    from decision_policy import GATE_PROFILES
+
+    GATE_PROFILES["gemini_and_demo"] = {**GATE_PROFILES["gemini/gemini-3.5-flash-lite"], "tier2_mode": "and"}
+    golden, grounded, judge = GEMINI_LITE["q5"]
+    result = sign_off(golden, grounded, judge, provider="gemini_and_demo")
+    assert result["verdict"] == "approve"  # the failure mode OR prevents
+    del GATE_PROFILES["gemini_and_demo"]
 
 
 if __name__ == "__main__":

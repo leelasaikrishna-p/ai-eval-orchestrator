@@ -140,10 +140,34 @@ biased toward escalating when any single credible signal fires.
 model run (not synthetic data) and includes a test proving the AND version
 would have failed on the exact case OR gets right.
 
-This structure is per-provider (`GATE_PROFILES` in `decision_policy.py`),
-not fixed — once Gemini/Groq/Anthropic are measured the same way, a
-provider proven reliable enough can graduate `groundedness_check` from
-Tier 2 into a trusted Tier 1 hard gate.
+This structure is per **model** (`GATE_PROFILES` in `decision_policy.py`,
+keyed `provider/model`), not fixed, because two models from the same
+provider can judge very differently. A model proven reliable enough can
+graduate `groundedness_check` from Tier 2 into a trusted Tier 1 hard gate;
+an unmeasured model always gets the conservative profile.
+
+### A second model: gemini-3.5-flash-lite
+
+The same three labeled answers, measured the same way:
+
+| Tool | q1 (correct) | q3 (hallucinated) | q5 (subtly wrong) | vs. llama3.1:8b |
+|---|---|---|---|---|
+| `golden_eval` | 1.00 ✓ | 0.00 ✓ | 0.80 — missed | same pattern: catches gross errors, not subtle ones |
+| `groundedness_check` | grounded ✓ | flagged ✓ | flagged ✓ | **better** — 3/3, no false positive on the paraphrase |
+| `llm_judge` | 9.3 ✓ | **9.0** ✗ | **10.0** ✗ | **worse** — two false negatives instead of one |
+
+Through the policy, all three verdicts are right (approve, escalate,
+escalate), and **AND would have failed again**: a judge giving the subtly
+wrong answer 10/10 would have approved it. `test_decision_policy.py` replays
+these real scores too.
+
+**The bigger finding:** `llm_judge` only sees the question and the answer --
+never the golden answer or the source context. So its "correctness" score
+really measures whether an answer *sounds* right, which is why a fluent
+hallucination scores 9-10 on both models. That's a design limit, not a model
+limit: the fix is reference-guided judging (give the judge the golden answer
+or context), or scoping the judge to clarity and tone and leaving
+correctness to `golden_eval` and `groundedness_check`.
 
 ## The four tools
 
@@ -204,9 +228,12 @@ export GEMINI_API_KEY=...            # create one at https://aistudio.google.com
 PROVIDER=gemini python3 orchestrator.py
 ```
 
-`GEMINI_MODEL` overrides the default model (`gemini-3.8-flash`). Google
-retires model versions regularly (`gemini-2.5-flash` already returns 404 for
-new keys), so if the default stops working, list what your key can use:
+`GEMINI_MODEL` overrides the default model (`gemini-3.5-flash-lite` -- a
+pinned version, chosen over `gemini-3.8-flash`, whose free tier allows only
+20 requests and was returning 503 "high demand", and over `-latest` aliases,
+which can change model underneath a measurement). Google retires model
+versions regularly (`gemini-2.5-flash` already returns 404 for new keys), so
+if the default stops working, list what your key can use:
 
 ```bash
 curl -s -H "x-goog-api-key: $GEMINI_API_KEY" "https://generativelanguage.googleapis.com/v1beta/models?pageSize=200" | python3 -c "import json,sys; [print(m['name']) for m in json.load(sys.stdin).get('models',[]) if 'generateContent' in m.get('supportedGenerationMethods',[])]"
