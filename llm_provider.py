@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -140,7 +141,7 @@ class GeminiProvider(LLMProvider):
     name = "gemini"
 
     def __init__(self, model: str | None = None, api_key: str | None = None):
-        self.model = model or os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+        self.model = model or os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
         self.api_key = api_key or os.environ.get("GEMINI_API_KEY")
         if not self.api_key:
             raise RuntimeError(
@@ -160,7 +161,7 @@ class GeminiProvider(LLMProvider):
         request["generationConfig"] = {"temperature": temperature}
         return from_gemini_response(self._post(request))
 
-    def _post(self, payload: dict, retries: int = 3) -> dict:
+    def _post(self, payload: dict, retries: int = 5) -> dict:
         # Key goes in a header, not the URL, so it never shows up in logs or tracebacks.
         url = f"{GEMINI_API_BASE}/models/{self.model}:generateContent"
         data = json.dumps(payload).encode("utf-8")
@@ -177,8 +178,13 @@ class GeminiProvider(LLMProvider):
             except urllib.error.HTTPError as e:
                 detail = e.read().decode("utf-8", errors="replace")
                 if e.code in GEMINI_RETRYABLE and attempt < retries:
-                    # Free-tier rate limits are per minute; back off 5s, 10s, 20s.
-                    time.sleep(5 * 2**attempt)
+                    # Rate limits (429) are per minute and "high demand" (503) spikes
+                    # can last a while: honor Retry-After if sent, else back off
+                    # 5s, 10s, 20s, 40s, 60s (~2 min total).
+                    retry_after = e.headers.get("Retry-After") if e.headers else None
+                    wait = float(retry_after) if retry_after and retry_after.isdigit() else min(60, 5 * 2**attempt)
+                    print(f"  (Gemini {e.code}, retrying in {wait:.0f}s -- attempt {attempt + 1}/{retries})", file=sys.stderr)
+                    time.sleep(wait)
                     continue
                 raise RuntimeError(f"Gemini API error {e.code} (model {self.model}): {detail[:500]}") from e
             except urllib.error.URLError as e:

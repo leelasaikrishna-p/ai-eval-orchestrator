@@ -204,7 +204,16 @@ export GEMINI_API_KEY=...            # create one at https://aistudio.google.com
 PROVIDER=gemini python3 orchestrator.py
 ```
 
-`GEMINI_MODEL` overrides the default model (`gemini-2.5-flash`). The provider
+`GEMINI_MODEL` overrides the default model (`gemini-3.8-flash`). Google
+retires model versions regularly (`gemini-2.5-flash` already returns 404 for
+new keys), so if the default stops working, list what your key can use:
+
+```bash
+curl -s -H "x-goog-api-key: $GEMINI_API_KEY" "https://generativelanguage.googleapis.com/v1beta/models?pageSize=200" | python3 -c "import json,sys; [print(m['name']) for m in json.load(sys.stdin).get('models',[]) if 'generateContent' in m.get('supportedGenerationMethods',[])]"
+```
+
+Rate limits (429) and "high demand" errors (503) are retried with backoff
+(honoring `Retry-After`, about two minutes total) before giving up. The provider
 uses the REST API through the standard library -- no SDK -- and translates
 between the project's Ollama-style chat format and Gemini's function-calling
 format at the edge, so the orchestrator never branches on provider. The key
