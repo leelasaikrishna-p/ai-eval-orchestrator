@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from llm_provider import (  # noqa: E402
     GeminiProvider,
     from_gemini_response,
+    gemini_retry_hint,
     get_provider,
     to_gemini_request,
 )
@@ -141,6 +142,33 @@ def test_get_provider_returns_gemini_without_network():
         provider = get_provider()
     assert provider.name == "gemini"
     assert provider.model == "gemini-test"
+
+
+def test_retry_hint_reads_per_minute_delay():
+    body = '{"error": {"code": 429, "details": [' \
+        '{"@type": "type.googleapis.com/google.rpc.QuotaFailure", "violations": [' \
+        '{"quotaId": "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"}]},' \
+        '{"@type": "type.googleapis.com/google.rpc.RetryInfo", "retryDelay": "24.959s"}]}}'
+    hint = gemini_retry_hint(body)
+    assert hint["daily_quota"] is False
+    assert abs(hint["retry_delay"] - 24.959) < 1e-6
+
+
+def test_retry_hint_detects_daily_quota():
+    """A per-day quota can't be fixed by waiting seconds, so the provider
+    must fail fast instead of burning minutes on retries."""
+    body = '{"error": {"code": 429, "details": [' \
+        '{"@type": "type.googleapis.com/google.rpc.QuotaFailure", "violations": [' \
+        '{"quotaId": "GenerateRequestsPerDayPerProjectPerModel-FreeTier"}]}]}}'
+    hint = gemini_retry_hint(body)
+    assert hint["daily_quota"] is True
+    assert "PerDay" in hint["quota_id"]
+
+
+def test_retry_hint_tolerates_non_json_errors():
+    assert gemini_retry_hint("<html>Service Unavailable</html>") == {
+        "retry_delay": None, "daily_quota": False, "quota_id": None,
+    }
 
 
 def test_server_env_forwards_only_provider_settings():

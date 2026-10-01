@@ -177,19 +177,59 @@ class GeminiProvider(LLMProvider):
                     return json.loads(resp.read().decode("utf-8"))
             except urllib.error.HTTPError as e:
                 detail = e.read().decode("utf-8", errors="replace")
+                hint = gemini_retry_hint(detail)
+                if e.code == 429 and hint["daily_quota"]:
+                    # Retrying can't help until the daily quota resets -- fail fast.
+                    raise RuntimeError(
+                        f"Gemini daily quota exhausted for {self.model} ({hint['quota_id']}). "
+                        f"It resets daily; meanwhile set GEMINI_MODEL to another model "
+                        f"(see README for how to list them) or enable billing."
+                    ) from e
                 if e.code in GEMINI_RETRYABLE and attempt < retries:
-                    # Rate limits (429) are per minute and "high demand" (503) spikes
-                    # can last a while: honor Retry-After if sent, else back off
-                    # 5s, 10s, 20s, 40s, 60s (~2 min total).
+                    # Wait as long as the API asks (RetryInfo or Retry-After); otherwise
+                    # back off 5s, 10s, 20s, 40s, 60s (~2 min total) for 503 spikes.
                     retry_after = e.headers.get("Retry-After") if e.headers else None
-                    wait = float(retry_after) if retry_after and retry_after.isdigit() else min(60, 5 * 2**attempt)
+                    if hint["retry_delay"] is not None:
+                        wait = hint["retry_delay"] + 1
+                    elif retry_after and retry_after.isdigit():
+                        wait = float(retry_after)
+                    else:
+                        wait = min(60, 5 * 2**attempt)
                     print(f"  (Gemini {e.code}, retrying in {wait:.0f}s -- attempt {attempt + 1}/{retries})", file=sys.stderr)
                     time.sleep(wait)
                     continue
-                raise RuntimeError(f"Gemini API error {e.code} (model {self.model}): {detail[:500]}") from e
+                raise RuntimeError(f"Gemini API error {e.code} (model {self.model}): {detail[:1500]}") from e
             except urllib.error.URLError as e:
                 raise RuntimeError(f"Could not reach the Gemini API: {e}") from e
         raise RuntimeError("unreachable")
+
+
+def gemini_retry_hint(error_body: str) -> dict:
+    """Read Google's structured error details: how long the API asks us to
+    wait (RetryInfo), and whether the exhausted quota is a DAILY one
+    (QuotaFailure quotaId containing "PerDay"), where retrying is pointless.
+    Pure function -- unit-tested offline."""
+    hint = {"retry_delay": None, "daily_quota": False, "quota_id": None}
+    try:
+        error = json.loads(error_body).get("error", {})
+    except (json.JSONDecodeError, AttributeError):
+        return hint
+    for detail in error.get("details") or []:
+        kind = detail.get("@type", "")
+        if kind.endswith("QuotaFailure"):
+            for violation in detail.get("violations") or []:
+                quota_id = violation.get("quotaId") or ""
+                if "PerDay" in quota_id:
+                    hint["daily_quota"] = True
+                    hint["quota_id"] = quota_id
+        elif kind.endswith("RetryInfo"):
+            delay = str(detail.get("retryDelay", ""))
+            if delay.endswith("s"):
+                try:
+                    hint["retry_delay"] = float(delay[:-1])
+                except ValueError:
+                    pass
+    return hint
 
 
 # Gemini accepts an OpenAPI subset for function parameters; MCP's generated
