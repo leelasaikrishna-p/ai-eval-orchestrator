@@ -193,21 +193,43 @@ so switching providers is a one-line change, not a rewrite:
 
 ```bash
 PROVIDER=ollama python3 tools/llm_judge.py      # default
+PROVIDER=gemini python3 tools/llm_judge.py      # Google Gemini (free tier, API key)
 PROVIDER=mock python3 tools/llm_judge.py        # canned response, for tests
 ```
 
-**Planned:** `PROVIDER=gemini` and `PROVIDER=groq` (both have genuine free
-API tiers) and `PROVIDER=anthropic`, each a drop-in class in
-`llm_provider.py` implementing the same `generate(prompt) -> str` method.
-Nothing in the four tools or the orchestrator needs to change when a new
-provider is added.
+### Gemini
+
+```bash
+export GEMINI_API_KEY=...            # create one at https://aistudio.google.com/apikey
+PROVIDER=gemini python3 orchestrator.py
+```
+
+`GEMINI_MODEL` overrides the default model (`gemini-2.5-flash`). The provider
+uses the REST API through the standard library -- no SDK -- and translates
+between the project's Ollama-style chat format and Gemini's function-calling
+format at the edge, so the orchestrator never branches on provider. The key
+travels in a request header, never the URL, and must never be committed
+(`.env` is gitignored).
+
+Two details that mattered:
+- **The MCP SDK starts tool servers with a minimal environment**, so
+  `PROVIDER` and the API key are forwarded to them explicitly (and nothing
+  else) -- otherwise the tools would silently keep using the default provider.
+- **Gemini's gate profile is provisional** -- a copy of the most conservative
+  measured profile -- until Gemini is measured against the labeled sample
+  runs the same way llama3.1:8b was. Any unmeasured provider gets that
+  conservative profile rather than unearned trust.
+
+**Planned:** `PROVIDER=groq` (fast hosted Llama, free tier) and
+`PROVIDER=anthropic`, each a drop-in class in `llm_provider.py`. Nothing in
+the four tools or the orchestrator needs to change when a provider is added.
 
 ## What's next
 
 All four milestones are done (see Status above). Possible follow-ups, not
 required to prove the core architecture:
 
-- Measure Gemini/Groq/Anthropic the same way Ollama was measured, and let a
+- Measure Gemini (now wired in), Groq and Anthropic the same way Ollama was measured, and let a
   provider proven reliable enough graduate `groundedness_check` from Tier 2
   into a trusted Tier 1 hard gate (see `GATE_PROFILES` in `decision_policy.py`).
 - An HTTP-transport MCP deployment, if this ever needs to be network-reachable

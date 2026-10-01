@@ -105,6 +105,18 @@ def test_run_level_check_approves_when_healthy():
     assert run_level_check(drift_result)["verdict"] == "approve"
 
 
+def test_unmeasured_provider_gets_conservative_profile():
+    """A provider with no measured profile must not crash and must not be
+    trusted more than the most conservative measured one: the q5 case
+    (judge fooled, only groundedness flags it) still escalates."""
+    golden = {"score": 0.82, "reasoning": "close"}
+    groundedness = {"grounded": False, "unsupported_claims": ["30 days"]}
+    judge = {"score": 8.0, "breakdown": {}}
+    for provider in ("gemini", "some-unmeasured-provider"):
+        result = sign_off(golden, groundedness, judge, provider=provider)
+        assert result["verdict"] == "escalate", provider
+
+
 if __name__ == "__main__":
     tests = [v for k, v in list(globals().items()) if k.startswith("test_")]
     for t in tests:

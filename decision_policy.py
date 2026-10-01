@@ -30,9 +30,21 @@ GATE_PROFILES = {
         "judge_score_floor": 5.0,   # below this -> Tier 2 flag (0-10 scale)
         "tier2_mode": "or",         # either groundedness or judge flagging is enough
     },
+    # PROVISIONAL: copied from the most conservative measured profile (ollama)
+    # until Gemini is measured against the labeled sample runs. Loosen it
+    # (e.g. "and", or promote groundedness to Tier 1) only on measured evidence.
+    "gemini": {
+        "golden_eval_floor": 0.3,
+        "judge_score_floor": 5.0,
+        "tier2_mode": "or",
+    },
     # "anthropic": {..., "tier2_mode": "and"},  # once calibrated: require agreement, or
     #                                            # promote groundedness to Tier 1 outright
 }
+
+# An unmeasured provider hasn't earned any trust, so it gets the most
+# conservative profile rather than a crash or a guess.
+CONSERVATIVE_PROFILE = "ollama"
 
 
 def sign_off(
@@ -52,7 +64,7 @@ def sign_off(
 
     Returns {"verdict": "approve"|"escalate", "reasons": [str, ...], "flags": [str, ...]}.
     """
-    profile = GATE_PROFILES[provider]
+    profile = GATE_PROFILES.get(provider, GATE_PROFILES[CONSERVATIVE_PROFILE])
     reasons: list[str] = []
     flags: list[str] = []
 

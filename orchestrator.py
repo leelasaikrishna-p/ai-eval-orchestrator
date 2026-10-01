@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import sys
 from contextlib import AsyncExitStack
 from pathlib import Path
@@ -30,7 +31,7 @@ from mcp.client.stdio import StdioServerParameters, stdio_client
 sys.path.insert(0, str(Path(__file__).parent))
 from decision_policy import sign_off  # noqa: E402
 from data_utils import load_golden_dataset, load_sample_candidate_runs  # noqa: E402
-from llm_provider import OllamaProvider  # noqa: E402
+from llm_provider import get_provider  # noqa: E402
 
 ROOT = Path(__file__).parent
 SERVERS = {
@@ -39,6 +40,19 @@ SERVERS = {
     "llm_judge_tool": "llm_judge_server.py",
 }
 MAX_TOOL_ROUNDS = 6
+
+# The MCP SDK starts servers with only a minimal environment (PATH, HOME...),
+# so provider settings must be passed explicitly -- otherwise the tool servers
+# silently fall back to the default provider. Only these are forwarded.
+PROVIDER_ENV_VARS = (
+    "PROVIDER", "MOCK_RESPONSE",
+    "OLLAMA_MODEL", "OLLAMA_HOST",
+    "GEMINI_API_KEY", "GEMINI_MODEL",
+)
+
+
+def _server_env() -> dict[str, str]:
+    return {k: os.environ[k] for k in PROVIDER_ENV_VARS if k in os.environ}
 
 SYSTEM_PROMPT = """You are evaluating whether a candidate answer to a customer's \
 question is trustworthy enough to ship. You have three tools:
@@ -64,7 +78,11 @@ async def _connect_all(stack: AsyncExitStack) -> dict[str, ClientSession]:
     """Spawns each MCP server and returns {tool_name: open ClientSession}."""
     sessions = {}
     for tool_name, script in SERVERS.items():
-        params = StdioServerParameters(command=sys.executable, args=[str(ROOT / "mcp_servers" / script)])
+        params = StdioServerParameters(
+            command=sys.executable,
+            args=[str(ROOT / "mcp_servers" / script)],
+            env=_server_env(),
+        )
         read, write = await stack.enter_async_context(stdio_client(params))
         session = await stack.enter_async_context(ClientSession(read, write))
         await session.initialize()
@@ -93,7 +111,9 @@ async def _mcp_tools_as_ollama_schema(sessions: dict[str, ClientSession]) -> lis
 async def evaluate(question: str, golden_answer: str, context: str, candidate_answer: str) -> dict:
     """Runs the full agentic loop for one candidate answer. Returns the
     trace of tool calls made, the model's summary, and the final verdict."""
-    provider = OllamaProvider()
+    provider = get_provider()
+    if not hasattr(provider, "chat"):
+        raise RuntimeError(f"Provider {provider.name!r} has no tool-calling chat(); use ollama or gemini.")
     trace: list[dict] = []
     collected: dict[str, dict] = {}
 
@@ -131,19 +151,25 @@ async def evaluate(question: str, golden_answer: str, context: str, candidate_an
                     # not a malformed dict it might crash trying to read.
                     error_text = result.content[0].text if result.content else "unknown error"
                     trace.append({"tool": name, "arguments": args, "result": {"error": error_text}})
-                    messages.append({"role": "tool", "content": json.dumps({"error": error_text})})
+                    messages.append({"role": "tool", "tool_name": name, "content": json.dumps({"error": error_text})})
                     continue
                 result_data = json.loads(result.content[0].text)
                 collected[name] = result_data
                 trace.append({"tool": name, "arguments": args, "result": result_data})
-                messages.append({"role": "tool", "content": json.dumps(result_data)})
+                messages.append({"role": "tool", "tool_name": name, "content": json.dumps(result_data)})
         else:
             summary = "(stopped -- exceeded max tool-call rounds)"
 
-    return {"trace": trace, "model_summary": summary, "verdict": verdict_from_collected(collected)}
+    return {
+        "provider": provider.name,
+        "model": getattr(provider, "model", None),
+        "trace": trace,
+        "model_summary": summary,
+        "verdict": verdict_from_collected(collected, provider=provider.name),
+    }
 
 
-def verdict_from_collected(collected: dict[str, dict]) -> dict:
+def verdict_from_collected(collected: dict[str, dict], provider: str = "ollama") -> dict:
     """Pure function: turns whatever tool results the agentic loop actually
     collected into a final verdict. Separated from `evaluate()` so this
     decision logic is unit-testable without spinning up MCP servers or a
@@ -158,6 +184,7 @@ def verdict_from_collected(collected: dict[str, dict]) -> dict:
         golden_result=collected.get("golden_eval_tool"),
         groundedness_result=collected.get("groundedness_check_tool"),
         judge_result=collected.get("llm_judge_tool"),
+        provider=provider,
     )
 
 
@@ -171,6 +198,7 @@ async def _demo():
 
         result = await evaluate(item["question"], item["golden_answer"], item["context"], run["candidate_answer"])
 
+        print(f"Provider: {result['provider']} ({result['model']})")
         print(f"Tool calls made ({len(result['trace'])}):")
         for step in result["trace"]:
             print(f"  -> {step['tool']}: {step['result']}")

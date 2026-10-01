@@ -32,3 +32,6 @@ jobs:
 
       - name: Orchestrator verdict tests
         run: python3 tests/test_orchestrator_verdict.py
+
+      - name: Gemini provider tests (offline, no API key)
+        run: python3 tests/test_gemini_provider.py
