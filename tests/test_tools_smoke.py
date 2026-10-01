@@ -53,8 +53,20 @@ def test_llm_judge_parses_breakdown():
         '"reasoning": "solid answer"}'
     )
     result = llm_judge("q?", "answer", provider)
-    assert result["score"] == 8.5
+    # Overall is computed from the breakdown, not taken from the model's 8.5.
+    assert result["score"] == 8.3
+    assert result["model_reported_score"] == 8.5
     assert result["breakdown"]["correctness"] == 9
+
+
+def test_llm_judge_without_breakdown_is_a_failed_check():
+    provider = MockProvider('{"score": 9.0, "reasoning": "looks fine"}')
+    try:
+        llm_judge("q?", "answer", provider)
+    except ValueError as e:
+        assert "breakdown" in str(e)
+    else:
+        raise AssertionError("expected ValueError")
 
 
 def test_drift_check_no_drift():

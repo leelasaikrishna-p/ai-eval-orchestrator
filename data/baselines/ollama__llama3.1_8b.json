@@ -1,0 +1,34 @@
+{
+  "provider": "ollama",
+  "model": "llama3.1:8b",
+  "recorded_at": "2026-10-01T22:54:23+00:00",
+  "n": 3,
+  "metrics": {
+    "avg_golden_similarity": 0.5667,
+    "avg_groundedness": 0.0,
+    "avg_judge_score": 7.5333
+  },
+  "per_answer": [
+    {
+      "id": "q1",
+      "label": "clean pass",
+      "golden_score": 0.9,
+      "grounded": false,
+      "judge_score": 8.3
+    },
+    {
+      "id": "q3",
+      "label": "hallucinated / ungrounded",
+      "golden_score": 0.0,
+      "grounded": false,
+      "judge_score": 6.0
+    },
+    {
+      "id": "q5",
+      "label": "subtly wrong",
+      "golden_score": 0.8,
+      "grounded": false,
+      "judge_score": 8.3
+    }
+  ]
+}

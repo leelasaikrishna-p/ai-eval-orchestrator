@@ -35,3 +35,6 @@ jobs:
 
       - name: Gemini provider tests (offline, no API key)
         run: python3 tests/test_gemini_provider.py
+
+      - name: Run-level drift tests (real recorded baseline, no LLM)
+        run: python3 tests/test_run_eval.py

@@ -26,6 +26,20 @@ import urllib.request
 from abc import ABC, abstractmethod
 
 
+# Default model per provider -- shared by the provider classes and by the
+# per-model baseline lookup, so the two can never disagree.
+DEFAULT_MODELS = {"ollama": "llama3.1:8b", "gemini": "gemini-3.5-flash-lite"}
+
+
+def active_model(provider: str) -> str | None:
+    """The model a provider will use, honoring the same env overrides."""
+    if provider == "ollama":
+        return os.environ.get("OLLAMA_MODEL", DEFAULT_MODELS["ollama"])
+    if provider == "gemini":
+        return os.environ.get("GEMINI_MODEL", DEFAULT_MODELS["gemini"])
+    return None
+
+
 class LLMProvider(ABC):
     name = "base"
 
@@ -47,7 +61,7 @@ class OllamaProvider(LLMProvider):
     name = "ollama"
 
     def __init__(self, model: str | None = None, host: str | None = None):
-        self.model = model or os.environ.get("OLLAMA_MODEL", "llama3.1:8b")
+        self.model = model or active_model("ollama")
         self.host = host or os.environ.get("OLLAMA_HOST", "http://localhost:11434")
 
     def generate(self, prompt: str, temperature: float = 0.0) -> str:
@@ -141,7 +155,7 @@ class GeminiProvider(LLMProvider):
     name = "gemini"
 
     def __init__(self, model: str | None = None, api_key: str | None = None):
-        self.model = model or os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
+        self.model = model or active_model("gemini")
         self.api_key = api_key or os.environ.get("GEMINI_API_KEY")
         if not self.api_key:
             raise RuntimeError(

@@ -42,10 +42,16 @@ async def call_tool(script: str, tool_name: str, arguments: dict, env_extra: dic
 
 
 async def _test_drift_check_server():
+    # A synthetic regression derived from the REAL recorded baseline the
+    # server loads (every metric halved), so the test can't drift out of
+    # sync with the baseline file.
+    from data_utils import load_baseline_scores
+
+    base = load_baseline_scores("ollama", "llama3.1:8b")["metrics"]
     result = await call_tool(
         "drift_check_server.py",
         "drift_check_tool",
-        {"avg_golden_similarity": 0.85, "avg_groundedness": 0.70, "avg_judge_score": 8.0},
+        {metric: value * 0.5 for metric, value in base.items()},
     )
     assert result["drifted"] is True
     print("  ok  drift_check_server responds correctly over real MCP stdio")
@@ -86,7 +92,9 @@ async def _test_llm_judge_server_with_mock():
             "MOCK_RESPONSE": '{"score": 7.5, "breakdown": {"correctness": 8, "clarity": 7, "tone": 7}, "reasoning": "ok"}',
         },
     )
-    assert result["score"] == 7.5
+    # Overall is computed from the breakdown (8, 7, 7 -> 7.3), not the model's 7.5.
+    assert result["score"] == 7.3
+    assert result["model_reported_score"] == 7.5
     print("  ok  llm_judge_server responds correctly over real MCP stdio (mock provider)")
 
 

@@ -21,13 +21,14 @@ def drift_check_tool(
     avg_groundedness: float,
     avg_judge_score: float,
 ) -> dict:
-    """Compare this run's aggregate evaluation scores against the stored
-    historical baseline, flagging any metric that regressed more than 10%.
+    """Compare this run's aggregate evaluation scores against the recorded
+    baseline for the active provider/model, flagging any metric that
+    regressed more than 10%.
 
     Pass the AVERAGE golden_eval score, AVERAGE groundedness pass rate, and
     AVERAGE llm_judge score across a batch of evaluated answers -- this
     gates the health of the whole run/deployment, not a single answer.
-    No model call involved; this is pure arithmetic against data/baseline_scores.json.
+    No model call involved; pure arithmetic against data/baselines/.
     """
     current = {
         "avg_golden_similarity": avg_golden_similarity,

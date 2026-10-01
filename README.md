@@ -190,6 +190,53 @@ limit: the fix is reference-guided judging (give the judge the golden answer
 or context), or scoping the judge to clarity and tone and leaving
 correctness to `golden_eval` and `groundedness_check`.
 
+(The judge scores in these tables are the model's own overall score, as
+recorded at the time. The judge now computes its overall score in code -- see
+below.)
+
+## Run-level drift (`tools/run_eval.py`)
+
+The per-answer gate above decides whether one answer ships. Drift asks a
+different question: **has this whole run gotten worse than this model's
+normal?**
+
+```bash
+python3 tools/run_eval.py --save-baseline   # record this model's baseline
+python3 tools/run_eval.py                   # compare a new run to it (exit 1 on drift)
+```
+
+- **A full, fixed pass, not the agent.** The orchestrator skips checks once
+  it has enough evidence, so its averages depend on what it chose to call and
+  aren't comparable run to run. `run_eval.py` runs all three LLM tools on
+  every labeled answer, so two runs are always measured the same way.
+- **Three run averages:** mean `golden_eval` score (0-1), share of answers
+  judged grounded (0-1), and mean `llm_judge` score (0-10).
+- **Drift math (no LLM):** for each metric,
+  `relative_drop = (baseline - current) / baseline`; flagged above 10%; a rise
+  is never flagged; any flag escalates the run (`run_level_check`).
+- **One baseline per provider/model** in `data/baselines/`, like gate
+  profiles -- a different model has a different normal. The committed
+  `ollama__llama3.1_8b.json` comes from a real full pass (an earlier version
+  of this repo shipped hand-written placeholder numbers; they were replaced).
+- **A real edge case it exposed:** llama judged all three answers
+  ungrounded (including its known false positive on the correct one), so its
+  groundedness baseline is **0.0**. A relative drop from 0 is undefined, so
+  drift on that metric can't be measured for llama -- the check now reports
+  that explicitly instead of silently passing.
+- **What a flag means here:** the candidate answers are fixed, so a drift
+  flag means the *evaluator's* judgments changed (for example, a provider
+  silently updating a model). Pointed at a live RAG bot's answers, the same
+  check would catch the bot regressing.
+- **Honest limit:** with three labeled answers, one answer changing moves an
+  average by about 33%, so this demonstrates the mechanism, not a
+  statistically meaningful signal. A larger golden set comes first.
+
+**The judge's overall score is computed in code** (equal-weight mean of
+correctness, clarity and tone), not taken from the model, so it is always
+consistent with its breakdown. The model's own number is kept as
+`model_reported_score` for comparison; a response without a usable breakdown
+is a failed check, not a score.
+
 ## The four tools
 
 | Tool | Question it answers | LLM call? |
@@ -197,7 +244,7 @@ correctness to `golden_eval` and `groundedness_check`.
 | `golden_eval` | Does this answer mean the same thing as a known-correct reference? | yes |
 | `groundedness_check` | Does every claim in this answer actually trace back to the retrieved context? | yes |
 | `llm_judge` | How good is this answer on a correctness/clarity/tone rubric? | yes |
-| `drift_check` | Have this run's aggregate scores regressed vs. a historical baseline? | no — pure arithmetic |
+| `drift_check` | Have this run's averages regressed vs. this model's recorded baseline? | no — pure arithmetic |
 
 The demo domain is a small fictional invoicing product ("Ledgerly") with a
 handful of help-center docs and a golden Q&A set — see `data/`. Nothing here
@@ -215,7 +262,8 @@ ollama pull llama3.1:8b      # one-time download, ~4.7GB
 python3 tools/golden_eval.py
 python3 tools/groundedness_check.py
 python3 tools/llm_judge.py
-python3 tools/drift_check.py       # no model needed, runs immediately
+python3 tools/drift_check.py       # no model needed: real baseline vs synthetic runs
+python3 tools/run_eval.py          # full pass on every answer + drift vs baseline
 ```
 
 Each script runs a small demo against `data/sample_candidate_runs.json`,
@@ -227,6 +275,7 @@ differ across the three.
 
 ```bash
 python3 tests/test_tools_smoke.py
+# all 49 tests run offline -- each tests/*.py file also runs standalone
 # or, with pytest installed:
 pip install -r requirements.txt && pytest
 ```

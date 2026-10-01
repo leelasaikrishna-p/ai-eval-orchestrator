@@ -26,17 +26,30 @@ QUESTION: {question}
 ANSWER: {answer}
 
 Respond with ONLY a JSON object, no other text:
-{{"score": <overall float 0-10>, "breakdown": {{"correctness": <0-10>, \
-"clarity": <0-10>, "tone": <0-10>}}, "reasoning": "<one sentence>"}}
+{{"breakdown": {{"correctness": <0-10>, "clarity": <0-10>, "tone": <0-10>}}, \
+"reasoning": "<one sentence>"}}
 """
+
+JUDGE_DIMENSIONS = ("correctness", "clarity", "tone")
 
 
 def llm_judge(question: str, answer: str, provider=None) -> dict:
+    """The model scores each dimension; the overall score is computed HERE
+    (an equal-weight mean), not taken from the model, so it is always
+    consistent with the breakdown and explainable."""
     provider = provider or get_provider()
     prompt = PROMPT_TEMPLATE.format(question=question, answer=answer)
     raw = provider.generate(prompt)
     result = extract_json(raw)
-    result["score"] = float(result["score"])
+    breakdown = result.get("breakdown") or {}
+    try:
+        scores = [float(breakdown[d]) for d in JUDGE_DIMENSIONS]
+    except (KeyError, TypeError, ValueError) as e:
+        # A judgment without a usable breakdown is a failed check, not a score.
+        raise ValueError(f"llm_judge needs numeric {JUDGE_DIMENSIONS} in 'breakdown'; got {breakdown!r}") from e
+    if "score" in result:
+        result["model_reported_score"] = result.pop("score")
+    result["score"] = round(sum(scores) / len(scores), 1)
     return result
 
 
