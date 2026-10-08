@@ -1,13 +1,13 @@
 {
   "provider": "gemini",
   "model": "gemini-3.5-flash-lite",
-  "recorded_at": "2026-10-08T18:02:40+00:00",
+  "recorded_at": "2026-10-08T18:48:39+00:00",
   "judge_mode": "reference",
   "n": 3,
   "metrics": {
     "avg_golden_similarity": 0.6,
     "avg_groundedness": 0.3333,
-    "avg_judge_score": 7.2
+    "avg_judge_score": 7.4333
   },
   "per_answer": [
     {
@@ -22,7 +22,7 @@
       "label": "hallucinated / ungrounded",
       "golden_score": 0.0,
       "grounded": false,
-      "judge_score": 5.3
+      "judge_score": 6.0
     },
     {
       "id": "q5",
