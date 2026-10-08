@@ -41,3 +41,6 @@ jobs:
 
       - name: Judge measurement tests (recorded measurement, no LLM)
         run: python3 tests/test_measure_judge.py
+
+      - name: Prompt-injection tests (rule-based check, recorded measurement, no LLM)
+        run: python3 tests/test_injection.py

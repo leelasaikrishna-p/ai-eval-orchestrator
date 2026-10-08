@@ -22,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from llm_provider import get_provider, extract_json  # noqa: E402
 from data_utils import load_golden_dataset, load_sample_candidate_runs  # noqa: E402
+from tools.untrusted import untrusted_block  # noqa: E402
 
 PROMPT_TEMPLATE = """You are grading a customer-support ANSWER to a QUESTION \
 on a 0-10 rubric across three dimensions:
@@ -29,9 +30,12 @@ on a 0-10 rubric across three dimensions:
 - clarity: is it easy to understand, free of jargon or ambiguity?
 - tone: is it professional and appropriately concise?
 
+{untrusted_note}
+
 QUESTION: {question}
 
-ANSWER: {answer}
+ANSWER:
+{answer}
 
 Respond with ONLY a JSON object, no other text:
 {{"breakdown": {{"correctness": <0-10>, "clarity": <0-10>, "tone": <0-10>}}, \
@@ -50,11 +54,14 @@ does not support.
 - clarity: is it easy to understand, free of jargon or ambiguity?
 - tone: is it professional and appropriately concise?
 
+{untrusted_note}
+
 QUESTION: {question}
 
 REFERENCE ANSWER: {reference_answer}
 
-ANSWER: {answer}
+ANSWER:
+{answer}
 
 Respond with ONLY a JSON object, no other text:
 {{"breakdown": {{"correctness": <0-10>, "clarity": <0-10>, "tone": <0-10>}}, \
@@ -72,12 +79,13 @@ def llm_judge(question: str, answer: str, provider=None, reference_answer: str |
     With `reference_answer`, correctness is graded against it instead of
     the model's own beliefs. `mode` in the result records which was used."""
     provider = provider or get_provider()
+    note, block = untrusted_block(answer)
     if reference_answer:
         prompt = REFERENCE_PROMPT_TEMPLATE.format(
-            question=question, reference_answer=reference_answer, answer=answer
+            untrusted_note=note, question=question, reference_answer=reference_answer, answer=block
         )
     else:
-        prompt = PROMPT_TEMPLATE.format(question=question, answer=answer)
+        prompt = PROMPT_TEMPLATE.format(untrusted_note=note, question=question, answer=block)
     raw = provider.generate(prompt)
     result = extract_json(raw)
     breakdown = result.get("breakdown") or {}

@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from llm_provider import get_provider, extract_json  # noqa: E402
 from data_utils import load_golden_dataset, load_sample_candidate_runs  # noqa: E402
+from tools.untrusted import untrusted_block  # noqa: E402
 
 PROMPT_TEMPLATE = """You are checking whether an ANSWER is fully grounded in \
 a CONTEXT passage -- i.e. every factual claim the answer makes either appears \
@@ -21,9 +22,12 @@ in the context or is a direct, necessary consequence of it. Flag any claim \
 that goes beyond what the context actually supports, even if it sounds \
 plausible or helpful.
 
+{untrusted_note}
+
 CONTEXT: {context}
 
-ANSWER: {answer}
+ANSWER:
+{answer}
 
 Respond with ONLY a JSON object, no other text:
 {{"grounded": <true or false>, "unsupported_claims": ["<claim not supported \
@@ -33,7 +37,8 @@ by the context>", ...], "reasoning": "<one sentence>"}}
 
 def groundedness_check(context: str, answer: str, provider=None) -> dict:
     provider = provider or get_provider()
-    prompt = PROMPT_TEMPLATE.format(context=context, answer=answer)
+    note, block = untrusted_block(answer)
+    prompt = PROMPT_TEMPLATE.format(untrusted_note=note, context=context, answer=block)
     raw = provider.generate(prompt)
     result = extract_json(raw)
     result["grounded"] = bool(result["grounded"])

@@ -29,9 +29,10 @@ from mcp import ClientSession
 from mcp.client.stdio import StdioServerParameters, stdio_client
 
 sys.path.insert(0, str(Path(__file__).parent))
-from decision_policy import sign_off  # noqa: E402
+from decision_policy import injection_verdict, sign_off  # noqa: E402
 from data_utils import load_golden_dataset, load_sample_candidate_runs  # noqa: E402
 from llm_provider import get_provider  # noqa: E402
+from tools.injection_check import injection_check  # noqa: E402
 
 ROOT = Path(__file__).parent
 SERVERS = {
@@ -131,6 +132,9 @@ async def evaluate(question: str, golden_answer: str, context: str, candidate_an
         raise RuntimeError(f"Provider {provider.name!r} has no tool-calling chat(); use ollama or gemini.")
     trace: list[dict] = []
     collected: dict[str, dict] = {}
+    # Runs in code on every answer, not as a tool the model may choose: the
+    # model reads the answer too, so it could be talked out of calling it.
+    injection = injection_check(candidate_answer)
 
     async with AsyncExitStack() as stack:
         sessions = await _connect_all(stack)
@@ -191,15 +195,26 @@ async def evaluate(question: str, golden_answer: str, context: str, candidate_an
         "model": getattr(provider, "model", None),
         "trace": trace,
         "model_summary": summary,
-        "verdict": verdict_from_collected(collected, provider=provider.name, model=getattr(provider, "model", None)),
+        "injection_check": injection,
+        "verdict": verdict_from_collected(
+            collected, provider=provider.name, model=getattr(provider, "model", None), injection_result=injection
+        ),
     }
 
 
-def verdict_from_collected(collected: dict[str, dict], provider: str = "ollama", model: str | None = None) -> dict:
+def verdict_from_collected(
+    collected: dict[str, dict],
+    provider: str = "ollama",
+    model: str | None = None,
+    injection_result: dict | None = None,
+) -> dict:
     """Pure function: turns whatever tool results the agentic loop actually
     collected into a final verdict. Separated from `evaluate()` so this
     decision logic is unit-testable without spinning up MCP servers or a
     live model -- only the tool-calling loop above needs those."""
+    flagged = injection_verdict(injection_result)
+    if flagged:
+        return flagged
     if "golden_eval_tool" not in collected:
         return {
             "verdict": "escalate",
@@ -212,6 +227,7 @@ def verdict_from_collected(collected: dict[str, dict], provider: str = "ollama",
         judge_result=collected.get("llm_judge_tool"),
         provider=provider,
         model=model,
+        injection_result=injection_result,
     )
 
 

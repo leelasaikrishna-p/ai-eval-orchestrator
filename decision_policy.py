@@ -81,14 +81,33 @@ def resolve_profile(provider: str, model: str | None = None) -> tuple[str, dict]
     return "conservative (unmeasured)", CONSERVATIVE
 
 
+def injection_verdict(injection_result: dict | None) -> dict | None:
+    """An ESCALATE verdict if the answer was flagged as carrying text aimed
+    at its evaluator, else None. Checked before every other gate."""
+    if not (injection_result and injection_result["suspicious"]):
+        return None
+    found = ", ".join(m["pattern"] for m in injection_result["matches"])
+    return {
+        "verdict": "escalate",
+        "reasons": [f"candidate answer contains text aimed at the evaluator ({found})"],
+        "flags": [],
+    }
+
+
 def sign_off(
     golden_result: dict,
     groundedness_result: dict | None = None,
     judge_result: dict | None = None,
     provider: str = "ollama",
     model: str | None = None,
+    injection_result: dict | None = None,
 ) -> dict:
     """Combine one candidate answer's per-answer checks into a verdict.
+
+    `injection_result` is tools.injection_check's output. A flagged answer
+    escalates before anything else: when an answer carries instructions for
+    its evaluator, the LLM checks' scores can't be trusted (measured: one
+    attack fooled llama3.1:8b's groundedness check and judge).
 
     `groundedness_result`/`judge_result` may be None when an orchestrator
     short-circuited and didn't run them -- that's fine for an early ESCALATE
@@ -102,6 +121,10 @@ def sign_off(
     _, profile = resolve_profile(provider, model)
     reasons: list[str] = []
     flags: list[str] = []
+
+    flagged = injection_verdict(injection_result)
+    if flagged:
+        return flagged
 
     # Tier 1 -- hard gate. A failure here is sufficient to escalate on its
     # own, even if Tier 2 checks were never run.
