@@ -11,6 +11,11 @@ aggregates:
   avg_groundedness       share of answers judged grounded (0-1)
   avg_judge_score        mean llm_judge score (0-10, computed from its breakdown)
 
+The judge runs reference-guided (it sees the golden answer). A baseline
+records the judge mode it was measured with, and a run is only compared
+with a baseline from the same mode -- otherwise a "drift" would just be
+the method changing.
+
 Usage (PROVIDER / GEMINI_MODEL / OLLAMA_MODEL pick the model):
   python3 tools/run_eval.py --save-baseline   # record this model's baseline
   python3 tools/run_eval.py                   # compare a new run to it
@@ -41,6 +46,8 @@ from tools.golden_eval import golden_eval  # noqa: E402
 from tools.groundedness_check import groundedness_check  # noqa: E402
 from tools.llm_judge import llm_judge  # noqa: E402
 
+JUDGE_MODE = "reference"
+
 
 def evaluate_all(provider) -> list[dict]:
     """Every tool on every labeled answer -- no agent, no short-circuits."""
@@ -50,7 +57,7 @@ def evaluate_all(provider) -> list[dict]:
         item = golden[run["id"]]
         g = golden_eval(item["question"], item["golden_answer"], run["candidate_answer"], provider)
         gr = groundedness_check(item["context"], run["candidate_answer"], provider)
-        j = llm_judge(item["question"], run["candidate_answer"], provider)
+        j = llm_judge(item["question"], run["candidate_answer"], provider, reference_answer=item["golden_answer"])
         results.append({
             "id": run["id"],
             "label": run["label"],
@@ -94,6 +101,7 @@ def main(argv: list[str] | None = None) -> int:
             "provider": provider.name,
             "model": model,
             "recorded_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "judge_mode": JUDGE_MODE,
             "n": len(results),
             "metrics": metrics,
             "per_answer": results,
@@ -104,6 +112,11 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     baseline = load_baseline_scores(provider.name, model)
+    baseline_mode = baseline.get("judge_mode", "no_reference")
+    if baseline_mode != JUDGE_MODE:
+        print(f"Baseline was recorded with judge mode {baseline_mode!r}, this run uses {JUDGE_MODE!r} -- "
+              f"not comparable. Re-record it: PROVIDER={provider.name} python3 tools/run_eval.py --save-baseline")
+        return 2
     drift = drift_check(metrics, baseline)
     verdict = run_level_check(drift)
     print(f"Compared with baseline recorded {baseline['recorded_at']}:")

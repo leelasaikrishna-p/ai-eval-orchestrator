@@ -34,13 +34,34 @@ CONSERVATIVE = {
     "tier2_mode": "or",         # either groundedness or judge flagging is enough
 }
 
+
+def judge_gate_value(judge_result: dict) -> tuple[str, float]:
+    """What the judge floor is applied to: the CORRECTNESS dimension when the
+    judge returned one, not the mean of correctness, clarity and tone.
+
+    Measured (tools/measure_judge.py, reference-guided judge): Gemini scored
+    the hallucination correctness 0 and the subtly wrong answer 3 -- both
+    caught -- but clarity and tone of 8 lifted their means to 5.3 and 6.3,
+    over the floor, so gating on the mean let both through. A clearly
+    written, polite wrong answer is still wrong. Results recorded before the
+    judge returned a breakdown fall back to the overall score."""
+    breakdown = judge_result.get("breakdown") or {}
+    if "correctness" in breakdown:
+        return "correctness", float(breakdown["correctness"])
+    return "score", float(judge_result["score"])
+
 GATE_PROFILES = {
     # Measured: golden_eval 0 FP; groundedness 1 FP (flagged a correct
     # paraphrase); judge 1 FN (rated the subtly wrong answer 8/10).
+    # Reference-guided judge (tools/measure_judge.py): FN 2 -> 1, no new FP
+    # -- still misses q5 (correctness 8), so it hasn't earned AND.
     "ollama/llama3.1:8b": dict(CONSERVATIVE),
     # Measured: golden_eval 0 FP but missed the subtle error (0.80);
     # groundedness 3/3 correct; judge 2 FN (rated the hallucination 9/10 and
     # the subtly wrong answer 10/10). Keeps OR: AND would approve q5.
+    # Reference-guided judge, gated on correctness: 0 FN, 0 FP (q3 = 0,
+    # q5 = 3). With groundedness also 3/3, AND would give the right verdicts
+    # here -- but 3 labeled answers isn't enough evidence to relax the gate.
     "gemini/gemini-3.5-flash-lite": dict(CONSERVATIVE),
     # "anthropic/<model>": {..., "tier2_mode": "and"},  # once calibrated
 }
@@ -95,14 +116,17 @@ def sign_off(
     # DID run first: in OR mode a single real flag is sufficient to escalate,
     # so a skipped check must not mask it behind "insufficient evidence".
     groundedness_flagged = groundedness_result is not None and not groundedness_result["grounded"]
-    judge_flagged = judge_result is not None and judge_result["score"] < profile["judge_score_floor"]
+    judge_flagged = False
+    if judge_result is not None:
+        judge_basis, judge_value = judge_gate_value(judge_result)
+        judge_flagged = judge_value < profile["judge_score_floor"]
 
     if groundedness_flagged:
         flags.append(
             f"groundedness_check flagged unsupported claims: {groundedness_result['unsupported_claims']}"
         )
     if judge_flagged:
-        flags.append(f"llm_judge score {judge_result['score']:.1f} below floor {profile['judge_score_floor']}")
+        flags.append(f"llm_judge {judge_basis} {judge_value:.1f} below floor {profile['judge_score_floor']}")
 
     if profile["tier2_mode"] == "or" and flags:
         return {"verdict": "escalate", "reasons": flags, "flags": []}

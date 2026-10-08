@@ -7,7 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from orchestrator import verdict_from_collected  # noqa: E402
+from orchestrator import bind_arguments, verdict_from_collected  # noqa: E402
 
 
 def test_no_golden_eval_call_escalates():
@@ -68,6 +68,26 @@ def test_full_evidence_clean_answer_approves():
     }
     result = verdict_from_collected(collected)
     assert result["verdict"] == "approve"
+
+
+INPUTS = {"question": "Q", "golden_answer": "G", "source_context": "C", "candidate_answer": "A"}
+
+
+def test_bind_arguments_fills_what_the_model_dropped():
+    """Real llama3.1 run: the judge was called without `question`."""
+    bound = bind_arguments({"candidate_answer": "A"}, {"question", "candidate_answer", "golden_answer"}, INPUTS)
+    assert bound == {"question": "Q", "candidate_answer": "A", "golden_answer": "G"}
+
+
+def test_bind_arguments_uses_the_real_inputs_not_the_models_copy():
+    """A model retyping the candidate answer could paraphrase it."""
+    bound = bind_arguments({"candidate_answer": "a reworded answer"}, {"candidate_answer"}, INPUTS)
+    assert bound == {"candidate_answer": "A"}
+
+
+def test_bind_arguments_drops_parameters_the_tool_does_not_take():
+    bound = bind_arguments({"question": "Q", "extra": 1}, {"source_context", "candidate_answer"}, INPUTS)
+    assert bound == {"source_context": "C", "candidate_answer": "A"}
 
 
 if __name__ == "__main__":

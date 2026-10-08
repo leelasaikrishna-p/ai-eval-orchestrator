@@ -1,0 +1,122 @@
+{
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "recorded_at": "2026-10-08T17:55:35+00:00",
+  "floor": 5.0,
+  "summary": {
+    "no_reference": {
+      "overall_score": {
+        "false_negatives": [
+          "q3",
+          "q5"
+        ],
+        "false_positives": []
+      },
+      "correctness_only": {
+        "false_negatives": [
+          "q5"
+        ],
+        "false_positives": []
+      }
+    },
+    "reference": {
+      "overall_score": {
+        "false_negatives": [
+          "q3",
+          "q5"
+        ],
+        "false_positives": []
+      },
+      "correctness_only": {
+        "false_negatives": [],
+        "false_positives": []
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "q1",
+      "label": "clean pass",
+      "correct": true,
+      "mode": "no_reference",
+      "score": 10.0,
+      "correctness": 10.0,
+      "breakdown": {
+        "correctness": 10,
+        "clarity": 10,
+        "tone": 10
+      },
+      "reasoning": "The answer is accurate, exceptionally clear, and maintains a professional, concise tone."
+    },
+    {
+      "id": "q1",
+      "label": "clean pass",
+      "correct": true,
+      "mode": "reference",
+      "score": 10.0,
+      "correctness": 10.0,
+      "breakdown": {
+        "correctness": 10,
+        "clarity": 10,
+        "tone": 10
+      },
+      "reasoning": "The answer accurately reflects all details of the reference answer with high clarity and a professional tone."
+    },
+    {
+      "id": "q3",
+      "label": "hallucinated / ungrounded",
+      "correct": false,
+      "mode": "no_reference",
+      "score": 6.3,
+      "correctness": 3.0,
+      "breakdown": {
+        "correctness": 3,
+        "clarity": 8,
+        "tone": 8
+      },
+      "reasoning": "The answer is factually incorrect because credit card processors and payment regulations generally require refunds to go back to the original card used for payment, rather than a bank account."
+    },
+    {
+      "id": "q3",
+      "label": "hallucinated / ungrounded",
+      "correct": false,
+      "mode": "reference",
+      "score": 5.3,
+      "correctness": 0.0,
+      "breakdown": {
+        "correctness": 0,
+        "clarity": 8,
+        "tone": 8
+      },
+      "reasoning": "The answer completely contradicts the reference answer, which states that refunds must go back to the original payment method and cannot be rerouted."
+    },
+    {
+      "id": "q5",
+      "label": "subtly wrong",
+      "correct": false,
+      "mode": "no_reference",
+      "score": 10.0,
+      "correctness": 10.0,
+      "breakdown": {
+        "correctness": 10,
+        "clarity": 10,
+        "tone": 10
+      },
+      "reasoning": "The answer directly confirms the capability, explains how to change the default currency, and maintains a helpful, professional tone."
+    },
+    {
+      "id": "q5",
+      "label": "subtly wrong",
+      "correct": false,
+      "mode": "reference",
+      "score": 6.3,
+      "correctness": 3.0,
+      "breakdown": {
+        "correctness": 3,
+        "clarity": 8,
+        "tone": 8
+      },
+      "reasoning": "The answer correctly states you can send an invoice in EUR, but contradicts the reference by claiming the default currency can be changed later when the reference states it is fixed."
+    }
+  ]
+}

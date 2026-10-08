@@ -58,6 +58,16 @@ python3 orchestrator.py   # runs all three sample cases, prints the full trace
   tested code was right; the model's free-form judgment was wrong. That's
   the entire argument for keeping the verdict deterministic instead of
   trusting the agent's own conclusion.
+- **Why those calls failed, and the fix:** llama names tool arguments after
+  the labels in its prompt (`SOURCE CONTEXT` becomes `source_context`), but
+  only `golden_eval_tool` used those names, and it sometimes dropped
+  arguments entirely (calling the judge without `question`). Two changes:
+  every tool now uses the same parameter names (`question`, `golden_answer`,
+  `source_context`, `candidate_answer`), and the orchestrator fills the
+  task's inputs in code (`bind_arguments`) instead of trusting the model to
+  retype them. The model still decides *which* tools to call; code supplies
+  the facts, which also means the model can't paraphrase the answer it is
+  evaluating. After the fix, every live tool call on llama succeeded.
 - **A real bug this caught:** the first version of the orchestrator stored
   a failed tool call's error as if it were a real result, which would have
   crashed `sign_off()` the moment it tried to read a `"grounded"` key that
@@ -91,7 +101,7 @@ PROVIDER=gemini python3 orchestrator.py
 Two workflows, both verified live on real GitHub Actions infrastructure,
 not just written and assumed to work:
 
-- **`ci.yml`** — runs all four test suites (mock/no-LLM) on every push.
+- **`ci.yml`** — runs every test suite (mock/no-LLM) on every push.
 - **`evaluate-and-approve.yml`** — the Harness-shaped demo: an `evaluate`
   job computes a verdict via `decision_policy.sign_off()` against one of
   the real recorded score sets from the Ollama run, feeding a
@@ -194,6 +204,59 @@ correctness to `golden_eval` and `groundedness_check`.
 recorded at the time. The judge now computes its overall score in code -- see
 below.)
 
+### Reference-guided judging: measured
+
+`llm_judge` now takes an optional reference answer. With it, correctness is
+graded against the known-correct answer, with anchors (0-3 means it
+contradicts the reference or adds an unsupported fact) instead of the model's
+own beliefs about a product it has never seen. The orchestrator and
+`run_eval.py` pass the golden answer; the original no-reference prompt is
+kept for comparison.
+
+```bash
+python3 tools/measure_judge.py          # both modes on every labeled answer
+python3 tools/measure_judge.py --save   # record to data/measurements/
+```
+
+On llama3.1:8b (floor 5.0; recorded in `data/measurements/`):
+
+| Answer | No reference | With reference | |
+|---|---|---|---|
+| q1 correct | 8.3 (correctness 8) | 8.7 (correctness 8) | still passes ✓ |
+| q3 hallucinated | 6.0 (correctness 6) ✗ | **4.7 (correctness 0)** ✓ | **now caught** |
+| q5 subtly wrong | 8.3 (correctness 8) ✗ | 8.7 (correctness 8) ✗ | still missed |
+
+On gemini-3.5-flash-lite:
+
+| Answer | No reference | With reference | |
+|---|---|---|---|
+| q1 correct | 10.0 (correctness 10) | 10.0 (correctness 10) | passes ✓ |
+| q3 hallucinated | 6.3 (correctness 3) | 5.3 (**correctness 0**) | caught only on correctness |
+| q5 subtly wrong | 10.0 (correctness 10) ✗ | 6.3 (**correctness 3**) | caught only on correctness |
+
+- **The reference helps both models, and no new false positives.** llama's
+  misses drop from 2 to 1. Gemini's correctness score catches both wrong
+  answers, where without a reference it rated the subtly wrong one 10/10.
+- **Averaging hid correctness, so the gate now uses correctness.** Gemini
+  scored the two wrong answers correctness 0 and 3, but clarity and tone of
+  8 lifted their means to 5.3 and 6.3, over the floor. Gated on the mean,
+  the judge would still have let both through. A clearly written, polite
+  wrong answer is still wrong, so the judge floor now applies to the
+  correctness dimension (`judge_gate_value` in `decision_policy.py`).
+  Result: Gemini's judge has 0 false negatives and 0 false positives; llama
+  is unchanged (correctness alone gives the same result as the mean there).
+- **llama still misses the subtle error.** Its reasoning noticed the extra
+  claim ("you can change the default currency later") but read it as
+  off-topic, not as contradicting "fixed at USD". Catching that probably
+  needs claim-by-claim checking, which should be tested on a larger labeled
+  set, not tuned until these three answers pass.
+- **The gate structure stays OR for both.** llama's judge still has a miss.
+  For Gemini, groundedness and the judge are now both 3/3, so AND would give
+  the right verdicts here, but three labeled answers is not enough evidence
+  to relax a gate. One more caveat: with a reference, the judge's
+  correctness overlaps with `golden_eval`, so the two checks are less
+  independent than before.
+
 ## Run-level drift (`tools/run_eval.py`)
 
 The per-answer gate above decides whether one answer ships. Drift asks a
@@ -218,6 +281,10 @@ python3 tools/run_eval.py                   # compare a new run to it (exit 1 on
   profiles -- a different model has a different normal. The committed
   `ollama__llama3.1_8b.json` comes from a real full pass (an earlier version
   of this repo shipped hand-written placeholder numbers; they were replaced).
+- **Each baseline records its judge mode.** A run is only compared with a
+  baseline from the same mode (otherwise a "drift" would just be the method
+  changing); `run_eval.py` refuses and says how to re-record. Both
+  baselines were re-recorded with the reference-guided judge.
 - **A real edge case it exposed:** llama judged all three answers
   ungrounded (including its known false positive on the correct one), so its
   groundedness baseline is **0.0**. A relative drop from 0 is undefined, so
@@ -229,12 +296,15 @@ python3 tools/run_eval.py                   # compare a new run to it (exit 1 on
   |---|---|---|---|
   | golden similarity | 0.57 | 0.60 | — |
   | grounded share | **0.00** | **0.33** | **0.33** (only q1 is correct) |
-  | judge score | 7.53 | **9.77** | should be low for q3 and q5 |
+  | judge score | 7.37 | 7.20 | should be low for q3 and q5 |
 
-  Gemini's groundedness matches the correct rate exactly; its judge rates
-  everything high, including 9.3 for the hallucination. Comparing a Gemini
-  run against llama's baseline would report a large "improvement" that is
-  just a different model's normal.
+  Gemini's groundedness matches the correct rate exactly. Before the judge
+  saw the reference answer, Gemini's average judge score was **9.77**: it
+  rated everything high, including the hallucination. With the reference
+  it is 7.20, and its correctness scores (10, 0, 3) separate the correct
+  answer from the wrong ones. Comparing a Gemini run against llama's
+  baseline would still report differences that are just a different
+  model's normal.
 - **What a flag means here:** the candidate answers are fixed, so a drift
   flag means the *evaluator's* judgments changed (for example, a provider
   silently updating a model). Pointed at a live RAG bot's answers, the same
@@ -287,7 +357,7 @@ differ across the three.
 
 ```bash
 python3 tests/test_tools_smoke.py
-# all 49 tests run offline -- each tests/*.py file also runs standalone
+# all 60 tests run offline -- each tests/*.py file also runs standalone
 # or, with pytest installed:
 pip install -r requirements.txt && pytest
 ```
@@ -333,10 +403,9 @@ Two details that mattered:
 - **The MCP SDK starts tool servers with a minimal environment**, so
   `PROVIDER` and the API key are forwarded to them explicitly (and nothing
   else) -- otherwise the tools would silently keep using the default provider.
-- **Gemini's gate profile is provisional** -- a copy of the most conservative
-  measured profile -- until Gemini is measured against the labeled sample
-  runs the same way llama3.1:8b was. Any unmeasured provider gets that
-  conservative profile rather than unearned trust.
+- **Gemini's gate profile comes from measurement** against the labeled
+  sample runs (see the table above), the same way llama3.1:8b's did. Any
+  unmeasured model gets the conservative profile rather than unearned trust.
 
 **Planned:** `PROVIDER=groq` (fast hosted Llama, free tier) and
 `PROVIDER=anthropic`, each a drop-in class in `llm_provider.py`. Nothing in

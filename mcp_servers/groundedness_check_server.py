@@ -11,15 +11,18 @@ mcp = MCPServer("groundedness-check")
 
 
 @mcp.tool()
-def groundedness_check_tool(context: str, answer: str) -> dict:
-    """Check whether every factual claim in `answer` is actually supported
-    by `context`, flagging anything the answer asserts that goes beyond
-    what the context backs up.
+def groundedness_check_tool(source_context: str, candidate_answer: str) -> dict:
+    """Check whether every factual claim in `candidate_answer` is actually
+    supported by `source_context`, flagging anything the answer asserts
+    that goes beyond what the context backs up.
 
     Use this to catch hallucination in RAG-style answers -- a claim can
     sound plausible and still not be grounded in the retrieved source.
     """
-    return groundedness_check(context, answer)
+    # Parameter names match the other tools and the orchestrator's prompt
+    # labels: models fill tool arguments from those labels, and live runs
+    # failed when this tool alone was named (context, answer).
+    return groundedness_check(source_context, candidate_answer)
 
 
 if __name__ == "__main__":

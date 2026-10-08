@@ -72,7 +72,7 @@ async def _test_groundedness_check_server_with_mock():
     result = await call_tool(
         "groundedness_check_server.py",
         "groundedness_check_tool",
-        {"context": "c", "answer": "a"},
+        {"source_context": "c", "candidate_answer": "a"},
         env_extra={
             "PROVIDER": "mock",
             "MOCK_RESPONSE": '{"grounded": true, "unsupported_claims": [], "reasoning": "ok"}',
@@ -86,7 +86,7 @@ async def _test_llm_judge_server_with_mock():
     result = await call_tool(
         "llm_judge_server.py",
         "llm_judge_tool",
-        {"question": "q?", "answer": "a"},
+        {"question": "q?", "candidate_answer": "a", "golden_answer": "the correct answer"},
         env_extra={
             "PROVIDER": "mock",
             "MOCK_RESPONSE": '{"score": 7.5, "breakdown": {"correctness": 8, "clarity": 7, "tone": 7}, "reasoning": "ok"}',
@@ -95,6 +95,8 @@ async def _test_llm_judge_server_with_mock():
     # Overall is computed from the breakdown (8, 7, 7 -> 7.3), not the model's 7.5.
     assert result["score"] == 7.3
     assert result["model_reported_score"] == 7.5
+    # The optional golden_answer argument reaches the judge as its reference.
+    assert result["mode"] == "reference"
     print("  ok  llm_judge_server responds correctly over real MCP stdio (mock provider)")
 
 

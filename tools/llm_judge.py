@@ -4,6 +4,14 @@ llm_judge -- rubric-based grading of an answer's overall quality
 
 This is the "LLM-as-judge" pattern: scalable, subjective quality scoring
 that a deterministic assertion can't express.
+
+Two modes:
+  - no reference (the original): the judge sees only the question and the
+    answer, so "correctness" is the model's own belief about the product.
+    Measured, it rated fluent wrong answers 8-10/10 -- it can't know the
+    facts of a product it has never seen.
+  - reference-guided: the judge also gets the known-correct answer and
+    grades correctness against it. Pass `reference_answer` to use it.
 """
 from __future__ import annotations
 
@@ -30,15 +38,46 @@ Respond with ONLY a JSON object, no other text:
 "reasoning": "<one sentence>"}}
 """
 
+REFERENCE_PROMPT_TEMPLATE = """You are grading a customer-support ANSWER to a QUESTION \
+on a 0-10 rubric across three dimensions. A REFERENCE ANSWER, known to be \
+correct, is provided.
+- correctness: judge ONLY against the REFERENCE ANSWER, not your own \
+knowledge of the product.
+  9-10: consistent with the reference; nothing contradicts it.
+  4-8: consistent but missing or blurring part of the reference.
+  0-3: contradicts the reference, or adds a factual claim the reference \
+does not support.
+- clarity: is it easy to understand, free of jargon or ambiguity?
+- tone: is it professional and appropriately concise?
+
+QUESTION: {question}
+
+REFERENCE ANSWER: {reference_answer}
+
+ANSWER: {answer}
+
+Respond with ONLY a JSON object, no other text:
+{{"breakdown": {{"correctness": <0-10>, "clarity": <0-10>, "tone": <0-10>}}, \
+"reasoning": "<one sentence>"}}
+"""
+
 JUDGE_DIMENSIONS = ("correctness", "clarity", "tone")
 
 
-def llm_judge(question: str, answer: str, provider=None) -> dict:
+def llm_judge(question: str, answer: str, provider=None, reference_answer: str | None = None) -> dict:
     """The model scores each dimension; the overall score is computed HERE
     (an equal-weight mean), not taken from the model, so it is always
-    consistent with the breakdown and explainable."""
+    consistent with the breakdown and explainable.
+
+    With `reference_answer`, correctness is graded against it instead of
+    the model's own beliefs. `mode` in the result records which was used."""
     provider = provider or get_provider()
-    prompt = PROMPT_TEMPLATE.format(question=question, answer=answer)
+    if reference_answer:
+        prompt = REFERENCE_PROMPT_TEMPLATE.format(
+            question=question, reference_answer=reference_answer, answer=answer
+        )
+    else:
+        prompt = PROMPT_TEMPLATE.format(question=question, answer=answer)
     raw = provider.generate(prompt)
     result = extract_json(raw)
     breakdown = result.get("breakdown") or {}
@@ -50,6 +89,7 @@ def llm_judge(question: str, answer: str, provider=None) -> dict:
     if "score" in result:
         result["model_reported_score"] = result.pop("score")
     result["score"] = round(sum(scores) / len(scores), 1)
+    result["mode"] = "reference" if reference_answer else "no_reference"
     return result
 
 

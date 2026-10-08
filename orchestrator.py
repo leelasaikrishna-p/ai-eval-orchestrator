@@ -59,7 +59,8 @@ question is trustworthy enough to ship. You have three tools:
 
 - golden_eval_tool: scores semantic similarity to a known-correct reference answer (0.0-1.0)
 - groundedness_check_tool: checks whether the answer's claims are actually supported by the source context
-- llm_judge_tool: rates general answer quality on a 0-10 rubric
+- llm_judge_tool: rates answer quality on a 0-10 rubric; pass golden_answer \
+so correctness is graded against it
 
 Call whichever tools you need, in whatever order makes sense, to decide if \
 this answer is safe to approve. You do not need to call every tool -- for \
@@ -108,6 +109,20 @@ async def _mcp_tools_as_ollama_schema(sessions: dict[str, ClientSession]) -> lis
     return schemas
 
 
+def bind_arguments(model_args: dict, allowed: set[str], inputs: dict[str, str]) -> dict:
+    """Pure function: the arguments actually sent to a tool.
+
+    The model decides WHICH tool to call; the task's own inputs are filled
+    in by code, not retyped by the model. Live runs showed llama3.1 dropping
+    or renaming arguments (e.g. calling the judge without `question`), and
+    a model that retypes the candidate answer could also paraphrase it.
+    Model-supplied values are kept only for parameters the task doesn't
+    provide, and anything the tool doesn't accept is dropped."""
+    bound = {k: v for k, v in model_args.items() if k in allowed}
+    bound.update({k: v for k, v in inputs.items() if k in allowed})
+    return bound
+
+
 async def evaluate(question: str, golden_answer: str, context: str, candidate_answer: str) -> dict:
     """Runs the full agentic loop for one candidate answer. Returns the
     trace of tool calls made, the model's summary, and the final verdict."""
@@ -120,6 +135,16 @@ async def evaluate(question: str, golden_answer: str, context: str, candidate_an
     async with AsyncExitStack() as stack:
         sessions = await _connect_all(stack)
         tools_schema = await _mcp_tools_as_ollama_schema(sessions)
+        params = {
+            t["function"]["name"]: set((t["function"]["parameters"] or {}).get("properties", {}))
+            for t in tools_schema
+        }
+        inputs = {
+            "question": question,
+            "golden_answer": golden_answer,
+            "source_context": context,
+            "candidate_answer": candidate_answer,
+        }
 
         user_prompt = (
             f"QUESTION: {question}\n\nGOLDEN ANSWER: {golden_answer}\n\n"
@@ -142,7 +167,8 @@ async def evaluate(question: str, golden_answer: str, context: str, candidate_an
             messages.append(message)
             for call in tool_calls:
                 name = call["function"]["name"]
-                args = call["function"]["arguments"]
+                model_args = call["function"]["arguments"] or {}
+                args = bind_arguments(model_args, params[name], inputs)
                 session = sessions[name]
                 result = await session.call_tool(name, args)
                 if result.is_error:
@@ -150,12 +176,12 @@ async def evaluate(question: str, golden_answer: str, context: str, candidate_an
                     # of `collected` entirely so sign_off() sees None (missing),
                     # not a malformed dict it might crash trying to read.
                     error_text = result.content[0].text if result.content else "unknown error"
-                    trace.append({"tool": name, "arguments": args, "result": {"error": error_text}})
+                    trace.append({"tool": name, "arguments": args, "model_arguments": model_args, "result": {"error": error_text}})
                     messages.append({"role": "tool", "tool_name": name, "content": json.dumps({"error": error_text})})
                     continue
                 result_data = json.loads(result.content[0].text)
                 collected[name] = result_data
-                trace.append({"tool": name, "arguments": args, "result": result_data})
+                trace.append({"tool": name, "arguments": args, "model_arguments": model_args, "result": result_data})
                 messages.append({"role": "tool", "tool_name": name, "content": json.dumps(result_data)})
         else:
             summary = "(stopped -- exceeded max tool-call rounds)"

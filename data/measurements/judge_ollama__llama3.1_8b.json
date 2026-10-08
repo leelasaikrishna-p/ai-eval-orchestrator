@@ -1,0 +1,124 @@
+{
+  "provider": "ollama",
+  "model": "llama3.1:8b",
+  "recorded_at": "2026-10-08T17:20:27+00:00",
+  "floor": 5.0,
+  "summary": {
+    "no_reference": {
+      "overall_score": {
+        "false_negatives": [
+          "q3",
+          "q5"
+        ],
+        "false_positives": []
+      },
+      "correctness_only": {
+        "false_negatives": [
+          "q3",
+          "q5"
+        ],
+        "false_positives": []
+      }
+    },
+    "reference": {
+      "overall_score": {
+        "false_negatives": [
+          "q5"
+        ],
+        "false_positives": []
+      },
+      "correctness_only": {
+        "false_negatives": [
+          "q5"
+        ],
+        "false_positives": []
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "q1",
+      "label": "clean pass",
+      "correct": true,
+      "mode": "no_reference",
+      "score": 8.3,
+      "correctness": 8.0,
+      "breakdown": {
+        "correctness": 8,
+        "clarity": 9,
+        "tone": 8
+      },
+      "reasoning": "The answer accurately addresses the customer's question, but could be more precise in its phrasing, e.g., 'mostly locked' could be clarified to 'read-only' or 'non-editable'."
+    },
+    {
+      "id": "q1",
+      "label": "clean pass",
+      "correct": true,
+      "mode": "reference",
+      "score": 8.7,
+      "correctness": 8.0,
+      "breakdown": {
+        "correctness": 8,
+        "clarity": 9,
+        "tone": 9
+      },
+      "reasoning": "The answer is mostly consistent with the reference, but it uses 'mostly locked' instead of 'most of the invoice is locked', which is a minor deviation."
+    },
+    {
+      "id": "q3",
+      "label": "hallucinated / ungrounded",
+      "correct": false,
+      "mode": "no_reference",
+      "score": 6.0,
+      "correctness": 6.0,
+      "breakdown": {
+        "correctness": 6,
+        "clarity": 4,
+        "tone": 8
+      },
+      "reasoning": "The answer is partially correct, but it introduces an unnecessary step and doesn't directly address the customer's question about refunding to a bank account."
+    },
+    {
+      "id": "q3",
+      "label": "hallucinated / ungrounded",
+      "correct": false,
+      "mode": "reference",
+      "score": 4.7,
+      "correctness": 0.0,
+      "breakdown": {
+        "correctness": 0,
+        "clarity": 8,
+        "tone": 6
+      },
+      "reasoning": "The answer contradicts the reference by suggesting a manual workaround, which is not supported by the reference."
+    },
+    {
+      "id": "q5",
+      "label": "subtly wrong",
+      "correct": false,
+      "mode": "no_reference",
+      "score": 8.3,
+      "correctness": 8.0,
+      "breakdown": {
+        "correctness": 8,
+        "clarity": 9,
+        "tone": 8
+      },
+      "reasoning": "The answer is mostly correct, but it doesn't directly address the customer's question about sending an invoice in EUR, instead providing additional information about changing the default currency."
+    },
+    {
+      "id": "q5",
+      "label": "subtly wrong",
+      "correct": false,
+      "mode": "reference",
+      "score": 8.7,
+      "correctness": 8.0,
+      "breakdown": {
+        "correctness": 8,
+        "clarity": 9,
+        "tone": 9
+      },
+      "reasoning": "The answer is mostly consistent with the reference, but incorrectly implies that changing the default currency is relevant to the question about issuing invoices in EUR."
+    }
+  ]
+}

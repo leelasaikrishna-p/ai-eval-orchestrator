@@ -38,3 +38,6 @@ jobs:
 
       - name: Run-level drift tests (real recorded baseline, no LLM)
         run: python3 tests/test_run_eval.py
+
+      - name: Judge measurement tests (recorded measurement, no LLM)
+        run: python3 tests/test_measure_judge.py

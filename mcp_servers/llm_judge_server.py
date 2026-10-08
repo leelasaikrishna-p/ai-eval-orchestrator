@@ -11,16 +11,17 @@ mcp = MCPServer("llm-judge")
 
 
 @mcp.tool()
-def llm_judge_tool(question: str, answer: str) -> dict:
+def llm_judge_tool(question: str, candidate_answer: str, golden_answer: str | None = None) -> dict:
     """Grade an answer's overall quality on a 0-10 rubric across
-    correctness, clarity, and tone -- independent of any reference answer.
+    correctness, clarity, and tone.
 
-    Use this for general quality scoring. Note: this check alone is NOT
-    sufficient to catch factual errors against a source -- pair it with
-    groundedness_check for that (see this project's decision_policy.py
-    for why judge scores can miss real problems on their own).
+    Pass the known-correct answer as `golden_answer` whenever you have
+    one: correctness is then graded against it instead of the model's own
+    beliefs, which measurably catches more wrong answers. Even so, this
+    check alone is NOT sufficient to catch factual errors -- pair it with
+    groundedness_check (see this project's decision_policy.py for why).
     """
-    return llm_judge(question, answer)
+    return llm_judge(question, candidate_answer, reference_answer=golden_answer)
 
 
 if __name__ == "__main__":

@@ -59,6 +59,21 @@ def test_llm_judge_parses_breakdown():
     assert result["breakdown"]["correctness"] == 9
 
 
+def test_llm_judge_default_mode_has_no_reference():
+    provider = MockProvider('{"breakdown": {"correctness": 9, "clarity": 9, "tone": 9}, "reasoning": "ok"}')
+    result = llm_judge("q?", "answer", provider)
+    assert result["mode"] == "no_reference"
+    assert "REFERENCE ANSWER" not in provider.calls[0]
+
+
+def test_llm_judge_reference_mode_grades_against_reference():
+    provider = MockProvider('{"breakdown": {"correctness": 0, "clarity": 8, "tone": 6}, "reasoning": "contradicts"}')
+    result = llm_judge("q?", "answer", provider, reference_answer="the known-correct answer")
+    assert result["mode"] == "reference"
+    assert "REFERENCE ANSWER: the known-correct answer" in provider.calls[0]
+    assert result["score"] == 4.7
+
+
 def test_llm_judge_without_breakdown_is_a_failed_check():
     provider = MockProvider('{"score": 9.0, "reasoning": "looks fine"}')
     try:

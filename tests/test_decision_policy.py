@@ -146,6 +146,35 @@ def test_and_mode_would_also_have_missed_q5_on_gemini():
     del GATE_PROFILES["gemini_and_demo"]
 
 
+# Verbatim reference-guided judge results from tools/measure_judge.py on
+# gemini-3.5-flash-lite (data/measurements/judge_gemini__gemini-3.5-flash-lite.json).
+GEMINI_REF_JUDGE = {
+    "q1": {"score": 10.0, "breakdown": {"correctness": 10, "clarity": 10, "tone": 10}, "mode": "reference"},
+    "q3": {"score": 5.3, "breakdown": {"correctness": 0, "clarity": 8, "tone": 8}, "mode": "reference"},
+    "q5": {"score": 6.3, "breakdown": {"correctness": 3, "clarity": 8, "tone": 8}, "mode": "reference"},
+}
+
+
+def test_judge_gates_on_correctness_not_the_mean():
+    """The real Gemini case: both wrong answers had means above the floor
+    (5.3, 6.3) only because clarity and tone were 8. Gated on correctness,
+    the judge flags both, and passes the correct answer."""
+    golden_ok = {"score": 0.8, "reasoning": ""}
+    grounded = {"grounded": True, "unsupported_claims": []}
+    for case, expected in (("q1", "approve"), ("q3", "escalate"), ("q5", "escalate")):
+        result = sign_off(golden_ok, grounded, GEMINI_REF_JUDGE[case], provider="gemini", model="gemini-3.5-flash-lite")
+        assert result["verdict"] == expected, case
+    reasons = sign_off(golden_ok, grounded, GEMINI_REF_JUDGE["q5"])["reasons"]
+    assert reasons == ["llm_judge correctness 3.0 below floor 5.0"]
+
+
+def test_judge_without_breakdown_falls_back_to_overall_score():
+    from decision_policy import judge_gate_value
+
+    assert judge_gate_value({"score": 4.0, "breakdown": {}}) == ("score", 4.0)
+    assert judge_gate_value(GEMINI_REF_JUDGE["q3"]) == ("correctness", 0.0)
+
+
 if __name__ == "__main__":
     tests = [v for k, v in list(globals().items()) if k.startswith("test_")]
     for t in tests:
