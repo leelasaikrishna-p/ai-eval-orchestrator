@@ -28,5 +28,65 @@
     "question": "I set my account's default currency to USD at signup. Can I still send an invoice in EUR?",
     "context": "An account's default currency is set once at account creation and cannot be changed afterward, though individual invoices can still be issued in any of the four supported currencies regardless of the account default.",
     "golden_answer": "Yes -- even though your account's default currency is fixed at USD, you can still issue any individual invoice in EUR, GBP, or CAD."
+  },
+  {
+    "id": "q6",
+    "question": "Can a customer pay only part of an invoice?",
+    "context": "Every invoice supports partial payments -- a customer can pay any amount up to the invoice total, and the invoice stays open until the full balance is paid.",
+    "golden_answer": "Yes -- every invoice supports partial payments. A customer can pay any amount up to the invoice total, and the invoice stays open until the full balance is paid."
+  },
+  {
+    "id": "q7",
+    "question": "If I change my default payment terms to Net 15, do my existing invoices change too?",
+    "context": "Default payment terms are Net 30. Account owners can change the default to Net 15, Net 45, or Net 60 in Settings > Billing. Changing the default only affects invoices created after the change -- existing invoices keep their original terms.",
+    "golden_answer": "No -- changing the default only affects invoices created after the change. Existing invoices keep their original terms."
+  },
+  {
+    "id": "q8",
+    "question": "How long after a payment can I issue a refund?",
+    "context": "Refunds can be issued for any payment within 180 days of the payment date. A refund can be partial or full.",
+    "golden_answer": "Up to 180 days after the payment date. The refund can be partial or full."
+  },
+  {
+    "id": "q9",
+    "question": "Are late fees turned on automatically?",
+    "context": "Late fees are off by default. When enabled in Settings > Billing, a late fee (flat amount or percentage) is applied automatically 1 day after an invoice's due date, and again every 30 days the invoice remains unpaid, up to a cap the account owner sets.",
+    "golden_answer": "No -- late fees are off by default. You can turn them on in Settings > Billing."
+  },
+  {
+    "id": "q10",
+    "question": "If I pause a recurring invoice, what happens to the invoices it already sent?",
+    "context": "Pausing a recurring schedule stops future invoices but does not affect invoices already sent. A recurring schedule can be edited at any time; changes apply only to invoices created after the edit.",
+    "golden_answer": "Nothing -- pausing stops future invoices but doesn't affect invoices that were already sent."
+  },
+  {
+    "id": "q11",
+    "question": "When does Ledgerly send payment reminders?",
+    "context": "Ledgerly can send automatic payment reminders by email. Reminders are off by default. When turned on, a reminder is sent 3 days before the due date and again on the due date. Reminders stop automatically once an invoice is fully paid. Reminders cannot be sent by text message.",
+    "golden_answer": "Reminders are off by default. When turned on, one is sent 3 days before the due date and another on the due date, and they stop once the invoice is fully paid."
+  },
+  {
+    "id": "q12",
+    "question": "Can Ledgerly send payment reminders by text message?",
+    "context": "Ledgerly can send automatic payment reminders by email. Reminders are off by default. When turned on, a reminder is sent 3 days before the due date and again on the due date. Reminders stop automatically once an invoice is fully paid. Reminders cannot be sent by text message.",
+    "golden_answer": "No -- reminders can only be sent by email, not by text message."
+  },
+  {
+    "id": "q13",
+    "question": "Does Ledgerly calculate sales tax automatically based on my customer's location?",
+    "context": "Up to two tax rates can be applied to each invoice line item. Tax rates are set up in Settings > Taxes and are not calculated automatically -- Ledgerly does not look up tax rates by location.",
+    "golden_answer": "No -- you set up tax rates yourself in Settings > Taxes, and up to two can be applied to each line item. Ledgerly doesn't look up tax rates by location."
+  },
+  {
+    "id": "q14",
+    "question": "Can an Admin change the account's late fee settings?",
+    "context": "An account has exactly one Owner. The Owner can invite team members as Admin or Viewer. Admins can create, edit, and send invoices and issue refunds, but only the Owner can change billing settings (payment terms and late fees) or delete the account. Viewers can see invoices and reports but cannot change anything.",
+    "golden_answer": "No -- Admins can create, edit and send invoices and issue refunds, but only the Owner can change billing settings such as payment terms and late fees."
+  },
+  {
+    "id": "q15",
+    "question": "Can I export my invoices directly to QuickBooks?",
+    "context": "Invoices and payments can be exported to CSV at any time from Reports. PDF copies of individual invoices can be downloaded from the invoice page. Ledgerly does not offer a direct export to accounting software.",
+    "golden_answer": "No -- Ledgerly doesn't offer a direct export to accounting software. You can export invoices and payments to CSV from Reports."
   }
 ]

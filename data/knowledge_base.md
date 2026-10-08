@@ -35,3 +35,33 @@ Ledgerly supports invoicing in USD, EUR, GBP, and CAD. An account's default
 currency is set once at account creation and cannot be changed afterward,
 though individual invoices can still be issued in any of the four supported
 currencies regardless of the account default.
+
+## Recurring invoices
+Recurring invoices can repeat weekly, monthly, or quarterly. Each occurrence
+is created as a new invoice on its scheduled date and sent automatically.
+Pausing a recurring schedule stops future invoices but does not affect
+invoices already sent. A recurring schedule can be edited at any time;
+changes apply only to invoices created after the edit.
+
+## Payment reminders
+Ledgerly can send automatic payment reminders by email. Reminders are off
+by default. When turned on, a reminder is sent 3 days before the due date
+and again on the due date. Reminders stop automatically once an invoice is
+fully paid. Reminders cannot be sent by text message.
+
+## Sales tax
+Up to two tax rates can be applied to each invoice line item. Tax rates are
+set up in Settings > Taxes and are not calculated automatically -- Ledgerly
+does not look up tax rates by location.
+
+## Team members and roles
+An account has exactly one Owner. The Owner can invite team members as
+Admin or Viewer. Admins can create, edit, and send invoices and issue
+refunds, but only the Owner can change billing settings (payment terms and
+late fees) or delete the account. Viewers can see invoices and reports but
+cannot change anything.
+
+## Exports
+Invoices and payments can be exported to CSV at any time from Reports. PDF
+copies of individual invoices can be downloaded from the invoice page.
+Ledgerly does not offer a direct export to accounting software.

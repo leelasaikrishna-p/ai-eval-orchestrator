@@ -397,6 +397,67 @@ Tools the injection fooled:
   scores them 0.00. Small factual swaps are llama's blind spot, which is
   one reason `golden_eval` isn't the only gate.
 
+## Measured against 60 human-labeled answers
+
+Every number above came from 3 labeled answers, too few to trust. So the
+golden set grew to 15 questions (the help-center docs gained five
+sections), with 60 candidate answers: correct ones, short ones, wrong
+facts, invented features, invented extras, subtle errors, and answers that
+leave something out.
+
+**How the labels were made.** A person labeled all 60 blind, on a small
+labeling page (`labeling/labeling.html`), against one rule: *acceptable
+means you'd be fine with a customer receiving it: nothing false, nothing
+invented, nothing left out that would mislead.* The page never showed the
+labels proposed when the answers were written. The two sets of labels
+agreed on 56 of 59, kappa 0.90. Disagreements were reviewed with the
+labeler: one was a missed detail ("Net 90" isn't an option), one "unsure"
+was resolved, and two stayed as judgment calls (answers that leave
+something out but don't mislead, in the labeler's view). Final agreement
+58/60, kappa 0.93; first-pass labels are kept in `data/labeled_answers.json`.
+
+```bash
+python3 tools/measure_agreement.py run      # run the 3 LLM checks on all 60 answers
+python3 tools/measure_agreement.py report   # score against the human labels
+```
+
+Against the final labels (35 not acceptable, 25 acceptable; 95% Wilson
+intervals in `data/measurements/agreement_report_*.json`):
+
+| Check | llama3.1:8b catches | llama false alarms | gemini catches | gemini false alarms |
+|---|---|---|---|---|
+| `golden_eval` (floor 0.3) | 26% | 4% | 51% | 0% |
+| `groundedness_check` | 91% | 16% | **100%** | 20% |
+| `llm_judge` (correctness < 5, with reference) | 63% | 16% | 60% | 0% |
+| **Policy, OR (as shipped)** | **94%** | **28%** | **100%** | **20%** |
+| Policy, AND | 63% | 4% | 60% | 0% |
+
+"Catches" is the share of not-acceptable answers a check flags; "false
+alarms" is the share of acceptable answers it flags.
+
+- **Three answers told the wrong story about AND.** On the original three,
+  Gemini's groundedness and judge were both 3/3, so requiring both to agree
+  looked safe. On 60 answers, AND lets 40% of bad answers through on Gemini
+  and 37% on llama. OR stays on both models, now with the cost measured:
+  about one good answer in four (llama) or five (Gemini) goes to a human.
+- **Groundedness does the real work.** It is the only check that catches
+  invented features and extras: 11/11 on Gemini and 9/11 on llama, where
+  `golden_eval` caught none and the judge 3-4. Its false alarms are
+  reasonable inferences ("a card payment is refunded to the card", from
+  "refunds go to the original payment method") and very short answers
+  ("No, only the Owner can.").
+- **`golden_eval` is a precise gate, not a broad one.** It almost never
+  flags a good answer (Gemini: none), but at 0.3 it only catches blatant
+  wrong facts (17/17 on Gemini, 9/17 on llama) and scores invented extras
+  around 0.8. On llama, a 0.9 floor would catch 80% with 12% false alarms;
+  that floor was picked on these same 60 answers, so it is a candidate to
+  test on new answers, not a change.
+- **What still gets through on llama:** two invented features, "set a
+  different term on any individual invoice" and "after 180 days, contact
+  support to approve a refund". No check flagged either.
+- **No gate changed.** The measurements confirmed the OR rule and the
+  floors; they didn't justify relaxing anything.
+
 ## The four tools
 
 | Tool | Question it answers | LLM call? |
@@ -435,7 +496,7 @@ differ across the three.
 
 ```bash
 python3 tests/test_tools_smoke.py
-# all 69 tests run offline -- each tests/*.py file also runs standalone
+# all 75 tests run offline -- each tests/*.py file also runs standalone
 # or, with pytest installed:
 pip install -r requirements.txt && pytest
 ```
@@ -497,8 +558,10 @@ required to prove the core architecture:
 - Measure Groq and Anthropic the same way Ollama and Gemini were measured,
   and let a model proven reliable enough graduate a check from Tier 2 into a
   trusted Tier 1 hard gate (see `GATE_PROFILES` in `decision_policy.py`).
-- A larger human-labeled golden set with agreement metrics: three labeled
-  answers is too few to relax any gate.
+- Re-test the candidate thresholds (e.g. `golden_eval` at 0.9 on llama) on
+  a second set of labeled answers they weren't chosen on.
+- Reduce groundedness false alarms on reasonable inferences without losing
+  its catches of invented features, measured on the same labels.
 - An HTTP-transport MCP deployment, if this ever needs to be network-reachable
   rather than local-only (see MCP servers section above).
 - A real Harness pipeline alongside the GitHub Actions one, since Harness is

@@ -1,0 +1,487 @@
+[
+  {
+    "id": "L01",
+    "qid": "q1",
+    "candidate_answer": "You can change the due date after a partial payment.",
+    "proposed_label": "not_acceptable",
+    "type": "missing_condition",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L02",
+    "qid": "q1",
+    "candidate_answer": "Yes, you can edit any part of the invoice until it's fully paid.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L03",
+    "qid": "q1",
+    "candidate_answer": "Only partly -- once a payment comes in, you can still change the due date and the notes, but nothing else on the invoice.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L04",
+    "qid": "q1",
+    "candidate_answer": "After a partial payment you can still edit the due date and notes. If you need to change the amount, you can void the invoice and issue a new one.",
+    "proposed_label": "not_acceptable",
+    "type": "unsupported_claim",
+    "human_label": "not_acceptable",
+    "human_note": "there is no details about voiding the invoice and issuing a new one  in order to change amount"
+  },
+  {
+    "id": "L05",
+    "qid": "q2",
+    "candidate_answer": "Net 30 by default. The account owner can switch the default to Net 15, Net 45, Net 60, or Net 90 in Settings > Billing.",
+    "proposed_label": "not_acceptable",
+    "type": "subtle_extra",
+    "human_label": "not_acceptable",
+    "human_label_first_pass": "acceptable"
+  },
+  {
+    "id": "L06",
+    "qid": "q2",
+    "candidate_answer": "Net 30 -- and you can set a different term on any individual invoice if a customer needs more time.",
+    "proposed_label": "not_acceptable",
+    "type": "unsupported_claim",
+    "human_label": "not_acceptable",
+    "human_note": "these are for new invoices, any invoice is a broader term , not sure if we can change the term after an invoice is created",
+    "human_label_first_pass": "unsure"
+  },
+  {
+    "id": "L07",
+    "qid": "q2",
+    "candidate_answer": "New invoices use Net 30 by default.",
+    "proposed_label": "acceptable",
+    "type": "correct_concise",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L08",
+    "qid": "q2",
+    "candidate_answer": "The default is Net 15, and you can change it in Settings.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L09",
+    "qid": "q3",
+    "candidate_answer": "Yes -- choose 'bank account' as the refund destination when you issue the refund.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L10",
+    "qid": "q3",
+    "candidate_answer": "No, it has to go back to the card. If the card has expired, the refund is sent as a check instead.",
+    "proposed_label": "not_acceptable",
+    "type": "unsupported_claim",
+    "human_label": "not_acceptable",
+    "human_note": "no details about checks and card expiry"
+  },
+  {
+    "id": "L11",
+    "qid": "q3",
+    "candidate_answer": "No, refunds go back to the card that was used. They usually post within 5-10 business days.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L12",
+    "qid": "q3",
+    "candidate_answer": "No. Refunds always go back to the original payment method, so a card payment is refunded to the card.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L13",
+    "qid": "q4",
+    "candidate_answer": "A late fee is added every 7 days after the due date until the invoice is paid.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L14",
+    "qid": "q4",
+    "candidate_answer": "If late fees are turned on, the first one is added 1 day after the due date, then another every 30 days while it's unpaid, up to the cap you set.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L15",
+    "qid": "q4",
+    "candidate_answer": "Every 30 days after the due date.",
+    "proposed_label": "not_acceptable",
+    "type": "subtle_wrong",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L16",
+    "qid": "q4",
+    "candidate_answer": "One day after the due date, and every 30 days after that -- with no limit until the invoice is paid.",
+    "proposed_label": "not_acceptable",
+    "type": "subtle_extra",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L17",
+    "qid": "q5",
+    "candidate_answer": "Yes, you can send it in EUR. Ledgerly converts the payment back to USD at the daily exchange rate.",
+    "proposed_label": "not_acceptable",
+    "type": "unsupported_claim",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L18",
+    "qid": "q5",
+    "candidate_answer": "No -- invoices always use your account's default currency.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L19",
+    "qid": "q5",
+    "candidate_answer": "Yes. Your account default stays USD, but any single invoice can be issued in EUR, GBP or CAD.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L20",
+    "qid": "q5",
+    "candidate_answer": "Yes, you can invoice in EUR, and you can also switch your account default to EUR in Settings if you prefer.",
+    "proposed_label": "not_acceptable",
+    "type": "subtle_extra",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L21",
+    "qid": "q6",
+    "candidate_answer": "Yes, but the invoice is marked as paid once the customer has paid at least half.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L22",
+    "qid": "q6",
+    "candidate_answer": "Only if you enable partial payments on the invoice first -- they're off by default.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L23",
+    "qid": "q6",
+    "candidate_answer": "Yes, partial payments are supported.",
+    "proposed_label": "acceptable",
+    "type": "correct_concise",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L24",
+    "qid": "q6",
+    "candidate_answer": "Yes. A customer can pay any amount up to the total, and the invoice stays open until the rest is paid.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L25",
+    "qid": "q7",
+    "candidate_answer": "No, existing invoices keep their terms. You can bulk-update them from the Invoices page if you want them to match.",
+    "proposed_label": "not_acceptable",
+    "type": "unsupported_claim",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L26",
+    "qid": "q7",
+    "candidate_answer": "No, it only affects new invoices.",
+    "proposed_label": "acceptable",
+    "type": "correct_concise",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L27",
+    "qid": "q7",
+    "candidate_answer": "No -- the new default only applies to invoices you create after the change. Existing invoices keep their original terms.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L28",
+    "qid": "q7",
+    "candidate_answer": "Yes, all open invoices are updated to the new term.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L29",
+    "qid": "q8",
+    "candidate_answer": "Refunds are available for 90 days after payment.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L30",
+    "qid": "q8",
+    "candidate_answer": "Within 180 days of the payment. After that, you'd need to contact Ledgerly support to approve a refund.",
+    "proposed_label": "not_acceptable",
+    "type": "unsupported_claim",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L31",
+    "qid": "q8",
+    "candidate_answer": "You can refund a payment for up to 180 days after the payment date, either partially or in full.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L32",
+    "qid": "q8",
+    "candidate_answer": "Within 180 days of the invoice date.",
+    "proposed_label": "not_acceptable",
+    "type": "subtle_wrong",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L33",
+    "qid": "q9",
+    "candidate_answer": "No, they're off by default, and once enabled they only apply to invoices over $100.",
+    "proposed_label": "not_acceptable",
+    "type": "unsupported_claim",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L34",
+    "qid": "q9",
+    "candidate_answer": "Yes, a 1.5% late fee is applied automatically unless you turn it off.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L35",
+    "qid": "q9",
+    "candidate_answer": "No. Once you turn them on, you can choose a flat amount or a percentage.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L36",
+    "qid": "q9",
+    "candidate_answer": "No, late fees are off by default. You can turn them on in Settings > Billing.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L37",
+    "qid": "q10",
+    "candidate_answer": "Nothing happens to them. Pausing only stops future invoices; anything already sent stays as it is.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L38",
+    "qid": "q10",
+    "candidate_answer": "Already-sent invoices aren't affected. You can resume the schedule later and Ledgerly will send any invoices that were skipped while it was paused.",
+    "proposed_label": "not_acceptable",
+    "type": "unsupported_claim",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L39",
+    "qid": "q10",
+    "candidate_answer": "Pausing cancels the invoices it already sent, so customers won't owe them.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L40",
+    "qid": "q10",
+    "candidate_answer": "They aren't affected.",
+    "proposed_label": "acceptable",
+    "type": "correct_concise",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L41",
+    "qid": "q11",
+    "candidate_answer": "Ledgerly sends a reminder every day after the due date until the invoice is paid.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L42",
+    "qid": "q11",
+    "candidate_answer": "3 days before the due date and on the due date.",
+    "proposed_label": "not_acceptable",
+    "type": "missing_condition",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L43",
+    "qid": "q11",
+    "candidate_answer": "Reminders are off by default. If you turn them on, one goes out 3 days before the due date and another on the due date, and they stop once the invoice is paid in full.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L44",
+    "qid": "q11",
+    "candidate_answer": "If turned on, 3 days before the due date, on the due date, and again 7 days after if it's still unpaid.",
+    "proposed_label": "not_acceptable",
+    "type": "subtle_extra",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L45",
+    "qid": "q12",
+    "candidate_answer": "Not by text -- reminders go out by email, and only once you've turned them on.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L46",
+    "qid": "q12",
+    "candidate_answer": "Yes, you can choose email or text for each customer.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L47",
+    "qid": "q12",
+    "candidate_answer": "No, reminders are only sent by email.",
+    "proposed_label": "acceptable",
+    "type": "correct_concise",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L48",
+    "qid": "q12",
+    "candidate_answer": "No, only email. But you can connect Twilio to send text reminders.",
+    "proposed_label": "not_acceptable",
+    "type": "unsupported_claim",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L49",
+    "qid": "q13",
+    "candidate_answer": "No, you add tax rates yourself. You can apply up to three rates per line item.",
+    "proposed_label": "not_acceptable",
+    "type": "subtle_wrong",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L50",
+    "qid": "q13",
+    "candidate_answer": "No, you enter rates yourself, and Ledgerly files your sales tax returns at the end of each quarter.",
+    "proposed_label": "not_acceptable",
+    "type": "unsupported_claim",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L51",
+    "qid": "q13",
+    "candidate_answer": "Yes, Ledgerly calculates tax automatically from your customer's billing address.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L52",
+    "qid": "q13",
+    "candidate_answer": "No. You set up your own tax rates in Settings > Taxes and apply them to line items; Ledgerly doesn't look up rates by location.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L53",
+    "qid": "q14",
+    "candidate_answer": "No, only the Owner can.",
+    "proposed_label": "acceptable",
+    "type": "correct_concise",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L54",
+    "qid": "q14",
+    "candidate_answer": "Yes, Admins have full access to all settings.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L55",
+    "qid": "q14",
+    "candidate_answer": "No. Only the account Owner can change billing settings like late fees and payment terms. Admins can still create, send and refund invoices.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L56",
+    "qid": "q14",
+    "candidate_answer": "No, that's Owner-only. The Owner can grant an Admin billing permission from the Team page, though.",
+    "proposed_label": "not_acceptable",
+    "type": "unsupported_claim",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L57",
+    "qid": "q15",
+    "candidate_answer": "Yes, go to Settings > Integrations and connect QuickBooks.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L58",
+    "qid": "q15",
+    "candidate_answer": "No direct export, but you can download a CSV of invoices and payments from Reports, or a PDF of any invoice from its page.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  },
+  {
+    "id": "L59",
+    "qid": "q15",
+    "candidate_answer": "No, and Ledgerly doesn't let you export your data at all.",
+    "proposed_label": "not_acceptable",
+    "type": "wrong_fact",
+    "human_label": "not_acceptable"
+  },
+  {
+    "id": "L60",
+    "qid": "q15",
+    "candidate_answer": "Not directly. Ledgerly has no direct export to accounting software, but you can export invoices and payments as a CSV from Reports.",
+    "proposed_label": "acceptable",
+    "type": "correct",
+    "human_label": "acceptable"
+  }
+]

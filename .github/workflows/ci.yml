@@ -44,3 +44,6 @@ jobs:
 
       - name: Prompt-injection tests (rule-based check, recorded measurement, no LLM)
         run: python3 tests/test_injection.py
+
+      - name: Agreement with human labels (recorded results, no LLM)
+        run: python3 tests/test_agreement.py

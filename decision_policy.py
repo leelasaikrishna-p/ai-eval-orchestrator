@@ -55,13 +55,16 @@ GATE_PROFILES = {
     # paraphrase); judge 1 FN (rated the subtly wrong answer 8/10).
     # Reference-guided judge (tools/measure_judge.py): FN 2 -> 1, no new FP
     # -- still misses q5 (correctness 8), so it hasn't earned AND.
+    # 60 human-labeled answers (tools/measure_agreement.py): OR catches 94%
+    # of bad answers with 28% false alarms; AND catches only 63%. OR stays.
     "ollama/llama3.1:8b": dict(CONSERVATIVE),
     # Measured: golden_eval 0 FP but missed the subtle error (0.80);
     # groundedness 3/3 correct; judge 2 FN (rated the hallucination 9/10 and
     # the subtly wrong answer 10/10). Keeps OR: AND would approve q5.
     # Reference-guided judge, gated on correctness: 0 FN, 0 FP (q3 = 0,
-    # q5 = 3). With groundedness also 3/3, AND would give the right verdicts
-    # here -- but 3 labeled answers isn't enough evidence to relax the gate.
+    # q5 = 3). With groundedness also 3/3, AND looked safe on 3 answers --
+    # 60 human-labeled answers showed it isn't: AND catches 60% of bad
+    # answers, OR 100% (20% false alarms, all from groundedness). OR stays.
     "gemini/gemini-3.5-flash-lite": dict(CONSERVATIVE),
     # "anthropic/<model>": {..., "tier2_mode": "and"},  # once calibrated
 }

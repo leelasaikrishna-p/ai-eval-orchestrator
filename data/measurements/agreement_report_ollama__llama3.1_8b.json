@@ -1,0 +1,364 @@
+{
+  "provider": "ollama",
+  "model": "llama3.1:8b",
+  "floors": {
+    "golden_eval": 0.3,
+    "llm_judge": 5.0
+  },
+  "annotators": {
+    "n": 60,
+    "agree": 58,
+    "kappa": 0.931,
+    "disagreements": [
+      {
+        "id": "L01",
+        "type": "missing_condition",
+        "proposed": "not_acceptable",
+        "human": "acceptable",
+        "note": ""
+      },
+      {
+        "id": "L42",
+        "type": "missing_condition",
+        "proposed": "not_acceptable",
+        "human": "acceptable",
+        "note": ""
+      }
+    ],
+    "unsure": []
+  },
+  "at_current_floors": {
+    "n": 60,
+    "checks": {
+      "golden_eval": {
+        "tp": 9,
+        "fp": 1,
+        "fn": 26,
+        "tn": 24,
+        "recall": 0.257,
+        "recall_ci95": [
+          0.142,
+          0.421
+        ],
+        "false_alarm_rate": 0.04,
+        "false_alarm_ci95": [
+          0.007,
+          0.195
+        ],
+        "precision": 0.9,
+        "kappa": 0.19,
+        "errors": 0
+      },
+      "groundedness_check": {
+        "tp": 31,
+        "fp": 4,
+        "fn": 3,
+        "tn": 21,
+        "recall": 0.912,
+        "recall_ci95": [
+          0.77,
+          0.97
+        ],
+        "false_alarm_rate": 0.16,
+        "false_alarm_ci95": [
+          0.064,
+          0.347
+        ],
+        "precision": 0.886,
+        "kappa": 0.756,
+        "errors": 1
+      },
+      "llm_judge": {
+        "tp": 22,
+        "fp": 4,
+        "fn": 13,
+        "tn": 21,
+        "recall": 0.629,
+        "recall_ci95": [
+          0.463,
+          0.768
+        ],
+        "false_alarm_rate": 0.16,
+        "false_alarm_ci95": [
+          0.064,
+          0.347
+        ],
+        "precision": 0.846,
+        "kappa": 0.446,
+        "errors": 0
+      },
+      "policy_or": {
+        "tp": 33,
+        "fp": 7,
+        "fn": 2,
+        "tn": 18,
+        "recall": 0.943,
+        "recall_ci95": [
+          0.814,
+          0.984
+        ],
+        "false_alarm_rate": 0.28,
+        "false_alarm_ci95": [
+          0.143,
+          0.476
+        ],
+        "precision": 0.825,
+        "kappa": 0.682,
+        "errors": 0
+      },
+      "policy_and": {
+        "tp": 22,
+        "fp": 1,
+        "fn": 13,
+        "tn": 24,
+        "recall": 0.629,
+        "recall_ci95": [
+          0.463,
+          0.768
+        ],
+        "false_alarm_rate": 0.04,
+        "false_alarm_ci95": [
+          0.007,
+          0.195
+        ],
+        "precision": 0.957,
+        "kappa": 0.551,
+        "errors": 0
+      }
+    },
+    "by_type": {
+      "golden_eval": {
+        "correct": {
+          "caught_or_passed": 17,
+          "n": 17
+        },
+        "correct_concise": {
+          "caught_or_passed": 6,
+          "n": 6
+        },
+        "missing_condition": {
+          "caught_or_passed": 1,
+          "n": 2
+        },
+        "subtle_extra": {
+          "caught_or_passed": 0,
+          "n": 4
+        },
+        "subtle_wrong": {
+          "caught_or_passed": 0,
+          "n": 3
+        },
+        "unsupported_claim": {
+          "caught_or_passed": 0,
+          "n": 11
+        },
+        "wrong_fact": {
+          "caught_or_passed": 9,
+          "n": 17
+        }
+      },
+      "groundedness_check": {
+        "correct": {
+          "caught_or_passed": 14,
+          "n": 17
+        },
+        "correct_concise": {
+          "caught_or_passed": 6,
+          "n": 6
+        },
+        "missing_condition": {
+          "caught_or_passed": 1,
+          "n": 2
+        },
+        "subtle_extra": {
+          "caught_or_passed": 4,
+          "n": 4
+        },
+        "subtle_wrong": {
+          "caught_or_passed": 2,
+          "n": 2
+        },
+        "unsupported_claim": {
+          "caught_or_passed": 9,
+          "n": 11
+        },
+        "wrong_fact": {
+          "caught_or_passed": 16,
+          "n": 17
+        }
+      },
+      "llm_judge": {
+        "correct": {
+          "caught_or_passed": 16,
+          "n": 17
+        },
+        "correct_concise": {
+          "caught_or_passed": 5,
+          "n": 6
+        },
+        "missing_condition": {
+          "caught_or_passed": 0,
+          "n": 2
+        },
+        "subtle_extra": {
+          "caught_or_passed": 1,
+          "n": 4
+        },
+        "subtle_wrong": {
+          "caught_or_passed": 1,
+          "n": 3
+        },
+        "unsupported_claim": {
+          "caught_or_passed": 4,
+          "n": 11
+        },
+        "wrong_fact": {
+          "caught_or_passed": 16,
+          "n": 17
+        }
+      },
+      "policy_or": {
+        "correct": {
+          "caught_or_passed": 13,
+          "n": 17
+        },
+        "correct_concise": {
+          "caught_or_passed": 5,
+          "n": 6
+        },
+        "missing_condition": {
+          "caught_or_passed": 0,
+          "n": 2
+        },
+        "subtle_extra": {
+          "caught_or_passed": 4,
+          "n": 4
+        },
+        "subtle_wrong": {
+          "caught_or_passed": 3,
+          "n": 3
+        },
+        "unsupported_claim": {
+          "caught_or_passed": 9,
+          "n": 11
+        },
+        "wrong_fact": {
+          "caught_or_passed": 17,
+          "n": 17
+        }
+      },
+      "policy_and": {
+        "correct": {
+          "caught_or_passed": 17,
+          "n": 17
+        },
+        "correct_concise": {
+          "caught_or_passed": 6,
+          "n": 6
+        },
+        "missing_condition": {
+          "caught_or_passed": 1,
+          "n": 2
+        },
+        "subtle_extra": {
+          "caught_or_passed": 1,
+          "n": 4
+        },
+        "subtle_wrong": {
+          "caught_or_passed": 2,
+          "n": 3
+        },
+        "unsupported_claim": {
+          "caught_or_passed": 4,
+          "n": 11
+        },
+        "wrong_fact": {
+          "caught_or_passed": 15,
+          "n": 17
+        }
+      }
+    }
+  },
+  "judge_sweep": [
+    {
+      "floor": 2,
+      "recall": 0.371,
+      "false_alarm_rate": 0.04,
+      "kappa": 0.296
+    },
+    {
+      "floor": 3,
+      "recall": 0.371,
+      "false_alarm_rate": 0.04,
+      "kappa": 0.296
+    },
+    {
+      "floor": 4,
+      "recall": 0.371,
+      "false_alarm_rate": 0.04,
+      "kappa": 0.296
+    },
+    {
+      "floor": 5,
+      "recall": 0.629,
+      "false_alarm_rate": 0.16,
+      "kappa": 0.446
+    },
+    {
+      "floor": 6,
+      "recall": 0.629,
+      "false_alarm_rate": 0.16,
+      "kappa": 0.446
+    },
+    {
+      "floor": 7,
+      "recall": 0.771,
+      "false_alarm_rate": 0.2,
+      "kappa": 0.562
+    },
+    {
+      "floor": 8,
+      "recall": 0.771,
+      "false_alarm_rate": 0.2,
+      "kappa": 0.562
+    },
+    {
+      "floor": 9,
+      "recall": 1.0,
+      "false_alarm_rate": 0.4,
+      "kappa": 0.636
+    }
+  ],
+  "golden_sweep": [
+    {
+      "floor": 0.1,
+      "recall": 0.257,
+      "false_alarm_rate": 0.04,
+      "kappa": 0.19
+    },
+    {
+      "floor": 0.3,
+      "recall": 0.257,
+      "false_alarm_rate": 0.04,
+      "kappa": 0.19
+    },
+    {
+      "floor": 0.5,
+      "recall": 0.257,
+      "false_alarm_rate": 0.04,
+      "kappa": 0.19
+    },
+    {
+      "floor": 0.7,
+      "recall": 0.286,
+      "false_alarm_rate": 0.04,
+      "kappa": 0.216
+    },
+    {
+      "floor": 0.9,
+      "recall": 0.8,
+      "false_alarm_rate": 0.12,
+      "kappa": 0.665
+    }
+  ]
+}

@@ -1,0 +1,1170 @@
+{
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "recorded_at": "2026-10-08T21:24:17+00:00",
+  "rows": [
+    {
+      "id": "L01",
+      "golden_eval": {
+        "score": 0.7
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 8.7,
+        "breakdown": {
+          "correctness": 6,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L02",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "until it's fully paid"
+        ]
+      },
+      "llm_judge": {
+        "score": 6.0,
+        "breakdown": {
+          "correctness": 0,
+          "clarity": 10,
+          "tone": 8
+        }
+      }
+    },
+    {
+      "id": "L03",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L04",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "If you need to change the amount, you can void the invoice and issue a new one."
+        ]
+      },
+      "llm_judge": {
+        "score": 9.3,
+        "breakdown": {
+          "correctness": 8,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L05",
+      "golden_eval": {
+        "score": 0.9
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "Net 90"
+        ]
+      },
+      "llm_judge": {
+        "score": 9.3,
+        "breakdown": {
+          "correctness": 8,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L06",
+      "golden_eval": {
+        "score": 0.9
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "you can set a different term on any individual invoice if a customer needs more time"
+        ]
+      },
+      "llm_judge": {
+        "score": 9.3,
+        "breakdown": {
+          "correctness": 8,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L07",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 9.0,
+        "breakdown": {
+          "correctness": 7,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L08",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "The default is Net 15"
+        ]
+      },
+      "llm_judge": {
+        "score": 7.7,
+        "breakdown": {
+          "correctness": 3,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L09",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "choose 'bank account' as the refund destination when you issue the refund"
+        ]
+      },
+      "llm_judge": {
+        "score": 5.3,
+        "breakdown": {
+          "correctness": 0,
+          "clarity": 8,
+          "tone": 8
+        }
+      }
+    },
+    {
+      "id": "L10",
+      "golden_eval": {
+        "score": 0.8
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "If the card has expired, the refund is sent as a check instead."
+        ]
+      },
+      "llm_judge": {
+        "score": 8.7,
+        "breakdown": {
+          "correctness": 6,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L11",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "refunds go back to the card"
+        ]
+      },
+      "llm_judge": {
+        "score": 9.7,
+        "breakdown": {
+          "correctness": 9,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L12",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "so a card payment is refunded to the card"
+        ]
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L13",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "A late fee is added every 7 days after the due date until the invoice is paid."
+        ]
+      },
+      "llm_judge": {
+        "score": 6.7,
+        "breakdown": {
+          "correctness": 0,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L14",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L15",
+      "golden_eval": {
+        "score": 0.6
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "Every 30 days after the due date."
+        ]
+      },
+      "llm_judge": {
+        "score": 8.7,
+        "breakdown": {
+          "correctness": 6,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L16",
+      "golden_eval": {
+        "score": 0.8
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "with no limit until the invoice is paid"
+        ]
+      },
+      "llm_judge": {
+        "score": 9.0,
+        "breakdown": {
+          "correctness": 7,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L17",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly converts the payment back to USD at the daily exchange rate."
+        ]
+      },
+      "llm_judge": {
+        "score": 8.7,
+        "breakdown": {
+          "correctness": 6,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L18",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "invoices always use your account's default currency"
+        ]
+      },
+      "llm_judge": {
+        "score": 6.0,
+        "breakdown": {
+          "correctness": 0,
+          "clarity": 10,
+          "tone": 8
+        }
+      }
+    },
+    {
+      "id": "L19",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "Your account default stays USD",
+          "EUR, GBP or CAD"
+        ]
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L20",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "you can also switch your account default to EUR in Settings if you prefer"
+        ]
+      },
+      "llm_judge": {
+        "score": 7.0,
+        "breakdown": {
+          "correctness": 5,
+          "clarity": 8,
+          "tone": 8
+        }
+      }
+    },
+    {
+      "id": "L21",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "the invoice is marked as paid once the customer has paid at least half"
+        ]
+      },
+      "llm_judge": {
+        "score": 5.3,
+        "breakdown": {
+          "correctness": 0,
+          "clarity": 8,
+          "tone": 8
+        }
+      }
+    },
+    {
+      "id": "L22",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "Only if you enable partial payments on the invoice first -- they're off by default."
+        ]
+      },
+      "llm_judge": {
+        "score": 5.3,
+        "breakdown": {
+          "correctness": 0,
+          "clarity": 8,
+          "tone": 8
+        }
+      }
+    },
+    {
+      "id": "L23",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 9.3,
+        "breakdown": {
+          "correctness": 8,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L24",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L25",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "You can bulk-update them from the Invoices page if you want them to match."
+        ]
+      },
+      "llm_judge": {
+        "score": 8.7,
+        "breakdown": {
+          "correctness": 6,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L26",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L27",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L28",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "all open invoices are updated to the new term"
+        ]
+      },
+      "llm_judge": {
+        "score": 6.0,
+        "breakdown": {
+          "correctness": 0,
+          "clarity": 10,
+          "tone": 8
+        }
+      }
+    },
+    {
+      "id": "L29",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "Refunds are available for 90 days after payment."
+        ]
+      },
+      "llm_judge": {
+        "score": 7.3,
+        "breakdown": {
+          "correctness": 2,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L30",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "After that, you'd need to contact Ledgerly support to approve a refund."
+        ]
+      },
+      "llm_judge": {
+        "score": 9.3,
+        "breakdown": {
+          "correctness": 8,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L31",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L32",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "invoice date"
+        ]
+      },
+      "llm_judge": {
+        "score": 9.3,
+        "breakdown": {
+          "correctness": 8,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L33",
+      "golden_eval": {
+        "score": 0.8
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "once enabled they only apply to invoices over $100"
+        ]
+      },
+      "llm_judge": {
+        "score": 7.0,
+        "breakdown": {
+          "correctness": 3,
+          "clarity": 9,
+          "tone": 9
+        }
+      }
+    },
+    {
+      "id": "L34",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "a 1.5% late fee is applied",
+          "unless you turn it off"
+        ]
+      },
+      "llm_judge": {
+        "score": 5.3,
+        "breakdown": {
+          "correctness": 0,
+          "clarity": 8,
+          "tone": 8
+        }
+      }
+    },
+    {
+      "id": "L35",
+      "golden_eval": {
+        "score": 0.8
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 8.7,
+        "breakdown": {
+          "correctness": 7,
+          "clarity": 9,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L36",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L37",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L38",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "You can resume the schedule later and Ledgerly will send any invoices that were skipped while it was paused."
+        ]
+      },
+      "llm_judge": {
+        "score": 8.7,
+        "breakdown": {
+          "correctness": 6,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L39",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "Pausing cancels the invoices it already sent, so customers won't owe them."
+        ]
+      },
+      "llm_judge": {
+        "score": 6.7,
+        "breakdown": {
+          "correctness": 0,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L40",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "They"
+        ]
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L41",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly sends a reminder every day after the due date until the invoice is paid."
+        ]
+      },
+      "llm_judge": {
+        "score": 6.7,
+        "breakdown": {
+          "correctness": 0,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L42",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 8.7,
+        "breakdown": {
+          "correctness": 6,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L43",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L44",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "again 7 days after if it's still unpaid"
+        ]
+      },
+      "llm_judge": {
+        "score": 6.3,
+        "breakdown": {
+          "correctness": 3,
+          "clarity": 8,
+          "tone": 8
+        }
+      }
+    },
+    {
+      "id": "L45",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L46",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "you can choose email or text for each customer"
+        ]
+      },
+      "llm_judge": {
+        "score": 5.3,
+        "breakdown": {
+          "correctness": 0,
+          "clarity": 8,
+          "tone": 8
+        }
+      }
+    },
+    {
+      "id": "L47",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L48",
+      "golden_eval": {
+        "score": 0.5
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "you can connect Twilio to send text reminders"
+        ]
+      },
+      "llm_judge": {
+        "score": 6.3,
+        "breakdown": {
+          "correctness": 3,
+          "clarity": 8,
+          "tone": 8
+        }
+      }
+    },
+    {
+      "id": "L49",
+      "golden_eval": {
+        "score": 0.8
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "You can apply up to three rates per line item."
+        ]
+      },
+      "llm_judge": {
+        "score": 8.7,
+        "breakdown": {
+          "correctness": 6,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L50",
+      "golden_eval": {
+        "score": 0.5
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly files your sales tax returns at the end of each quarter."
+        ]
+      },
+      "llm_judge": {
+        "score": 6.3,
+        "breakdown": {
+          "correctness": 3,
+          "clarity": 8,
+          "tone": 8
+        }
+      }
+    },
+    {
+      "id": "L51",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly calculates tax automatically",
+          "tax is calculated from your customer's billing address"
+        ]
+      },
+      "llm_judge": {
+        "score": 6.3,
+        "breakdown": {
+          "correctness": 0,
+          "clarity": 10,
+          "tone": 9
+        }
+      }
+    },
+    {
+      "id": "L52",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L53",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "No, only the Owner can."
+        ]
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L54",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "Admins have full access to all settings."
+        ]
+      },
+      "llm_judge": {
+        "score": 6.0,
+        "breakdown": {
+          "correctness": 0,
+          "clarity": 10,
+          "tone": 8
+        }
+      }
+    },
+    {
+      "id": "L55",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L56",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "The Owner can grant an Admin billing permission from the Team page, though."
+        ]
+      },
+      "llm_judge": {
+        "score": 8.0,
+        "breakdown": {
+          "correctness": 6,
+          "clarity": 9,
+          "tone": 9
+        }
+      }
+    },
+    {
+      "id": "L57",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "go to Settings > Integrations and connect QuickBooks"
+        ]
+      },
+      "llm_judge": {
+        "score": 6.0,
+        "breakdown": {
+          "correctness": 0,
+          "clarity": 10,
+          "tone": 8
+        }
+      }
+    },
+    {
+      "id": "L58",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 9.7,
+        "breakdown": {
+          "correctness": 9,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    },
+    {
+      "id": "L59",
+      "golden_eval": {
+        "score": 0.0
+      },
+      "groundedness_check": {
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly doesn't let you export your data at all."
+        ]
+      },
+      "llm_judge": {
+        "score": 6.0,
+        "breakdown": {
+          "correctness": 2,
+          "clarity": 10,
+          "tone": 6
+        }
+      }
+    },
+    {
+      "id": "L60",
+      "golden_eval": {
+        "score": 1.0
+      },
+      "groundedness_check": {
+        "grounded": true,
+        "unsupported_claims": []
+      },
+      "llm_judge": {
+        "score": 10.0,
+        "breakdown": {
+          "correctness": 10,
+          "clarity": 10,
+          "tone": 10
+        }
+      }
+    }
+  ]
+}
