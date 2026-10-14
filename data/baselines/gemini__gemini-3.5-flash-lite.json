@@ -1,8 +1,9 @@
 {
   "provider": "gemini",
   "model": "gemini-3.5-flash-lite",
-  "recorded_at": "2026-10-08T18:48:39+00:00",
+  "recorded_at": "2026-10-14T18:32:16+00:00",
   "judge_mode": "reference",
+  "groundedness_mode": "claims",
   "n": 3,
   "metrics": {
     "avg_golden_similarity": 0.6,
