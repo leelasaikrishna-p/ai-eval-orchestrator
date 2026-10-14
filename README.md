@@ -503,11 +503,31 @@ python3 tools/measure_repeatability.py report [--temperature 0.7]
 - **Caveat.** Gemini covers the first 30 answers only, to fit the free
   quota, so its false-alarm rates rest on about 11 acceptable answers.
 
-**What it changes:** nothing in the shipped gates yet. It does change how
-the numbers above should be read (each is one sample, with a few points of
-run-to-run noise), and it suggests a cheap signal: an answer whose verdict
-flips between two runs is uncertain by definition, and could go to a human
-whatever the single run said. That's measured next, not assumed.
+**Should a flipping verdict go to a human?** With pass/flag verdicts,
+"escalate when runs disagree" is the same rule as "escalate if any of k
+runs flags": if every run passes nothing flipped, and if any run flags the
+answer is escalated either way. Averaged over every combination of the
+recorded runs (policy OR, temperature 0; cost counts only the extra runs
+needed, since a later run is made only on answers still passing):
+
+| Runs | llama catches | llama false alarms | gemini catches | gemini false alarms | cost |
+|---|---|---|---|---|---|
+| 1 (as shipped) | 95% | 25% | 100% | 33% | 1x |
+| 2 | 96% | 30% | 100% | 39% | ~1.3x |
+| 5 | 97% | 36% | 100% | 46% | ~2x |
+
+- **It moves along the same trade-off; it doesn't escape it.** On llama,
+  five runs catch about one more bad answer in 35 and send about three more
+  good answers in 25 to a human. On Gemini, which already catches every bad
+  answer, extra runs only add false alarms.
+- **Its real benefit is steadier recall, not higher recall.** One llama run
+  caught anywhere from 91% to 97%; two runs narrow that to 94-97%, four or
+  more give 97% every time. At temperature 0.7 two runs lift llama from 88%
+  to 94%, so repeated runs matter more the noisier the model.
+- **Not shipped.** The gate stays one run per answer. Each number in this
+  README is read as one sample with a few points of noise, and repeated runs
+  stay an option for a noisier model or a check where steady recall matters
+  more than review load.
 
 ## The four tools
 
@@ -547,7 +567,7 @@ differ across the three.
 
 ```bash
 python3 tests/test_tools_smoke.py
-# all 83 tests run offline -- each tests/*.py file also runs standalone
+# all 84 tests run offline -- each tests/*.py file also runs standalone
 # or, with pytest installed:
 pip install -r requirements.txt && pytest
 ```
@@ -609,8 +629,6 @@ required to prove the core architecture:
 - Measure Groq and Anthropic the same way Ollama and Gemini were measured,
   and let a model proven reliable enough graduate a check from Tier 2 into a
   trusted Tier 1 hard gate (see `GATE_PROFILES` in `decision_policy.py`).
-- Treat a verdict that flips between runs as a reason to escalate, and
-  measure what that catches and costs (see Repeatability above).
 - Re-test the candidate thresholds (e.g. `golden_eval` at 0.9 on llama) on
   a second set of labeled answers they weren't chosen on.
 - Reduce groundedness false alarms on reasonable inferences without losing

@@ -165,5 +165,77 @@
     "unsupported_claim": 2,
     "correct_concise": 1,
     "missing_condition": 1
-  }
+  },
+  "escalate_if_any_run": [
+    {
+      "runs": 1,
+      "recall": 0.948,
+      "recall_range": [
+        0.914,
+        0.971
+      ],
+      "false_alarms": 0.248,
+      "false_alarm_range": [
+        0.24,
+        0.28
+      ],
+      "cost_in_runs": 1.0
+    },
+    {
+      "runs": 2,
+      "recall": 0.963,
+      "recall_range": [
+        0.943,
+        0.971
+      ],
+      "false_alarms": 0.296,
+      "false_alarm_range": [
+        0.24,
+        0.36
+      ],
+      "cost_in_runs": 1.33
+    },
+    {
+      "runs": 3,
+      "recall": 0.968,
+      "recall_range": [
+        0.943,
+        0.971
+      ],
+      "false_alarms": 0.324,
+      "false_alarm_range": [
+        0.28,
+        0.36
+      ],
+      "cost_in_runs": 1.64
+    },
+    {
+      "runs": 4,
+      "recall": 0.971,
+      "recall_range": [
+        0.971,
+        0.971
+      ],
+      "false_alarms": 0.344,
+      "false_alarm_range": [
+        0.32,
+        0.36
+      ],
+      "cost_in_runs": 1.94
+    },
+    {
+      "runs": 5,
+      "recall": 0.971,
+      "recall_range": [
+        0.971,
+        0.971
+      ],
+      "false_alarms": 0.36,
+      "false_alarm_range": [
+        0.36,
+        0.36
+      ],
+      "cost_in_runs": 2.22
+    }
+  ]
 }

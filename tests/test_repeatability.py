@@ -11,8 +11,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from llm_provider import MockProvider  # noqa: E402
 from tools.measure_repeatability import (  # noqa: E402
-    MEASUREMENT_DIR, FixedTemperature, majority, report, run, score_spread,
-    single_vs_majority, stability, verdicts_by_answer,
+    MEASUREMENT_DIR, FixedTemperature, escalate_if_any_run, majority, report,
+    run, score_spread, single_vs_majority, stability, verdicts_by_answer,
 )
 
 
@@ -76,6 +76,25 @@ def test_single_runs_and_the_majority_vote_are_scored_against_labels():
     assert m["single_run_recall"] == [0.0, 1.0]  # one run missed it
     assert m["majority_recall"] == 1.0  # the vote over three runs catches it
     assert m["majority_false_alarms"] == 0.0
+
+
+def test_escalating_on_a_flip_is_escalating_if_any_run_flags():
+    items = [
+        {"id": "BAD", "human_label": "not_acceptable", "type": "subtle_wrong"},
+        {"id": "GOOD", "human_label": "acceptable", "type": "correct"},
+        {"id": "OK", "human_label": "acceptable", "type": "correct"},
+    ]
+    # BAD is caught in run 2 only; GOOD is wrongly flagged in run 1 only.
+    results = [
+        [_row("BAD"), _row("GOOD", grounded=False), _row("OK")],
+        [_row("BAD", grounded=False), _row("GOOD"), _row("OK")],
+    ]
+    one, two = escalate_if_any_run(verdicts_by_answer(results, 0.3, 5), items, runs=2)
+    assert one["recall"] == 0.5 and one["recall_range"] == [0.0, 1.0]
+    assert two["recall"] == 1.0  # the flip on BAD gets it caught
+    assert two["false_alarms"] == 0.5  # ...and the flip on GOOD costs a review
+    # The second run is only needed for answers the first run passed.
+    assert two["cost_in_runs"] == round(1 + 2 / 3, 2)
 
 
 def test_the_temperature_override_reaches_the_provider():

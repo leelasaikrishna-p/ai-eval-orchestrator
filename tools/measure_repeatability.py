@@ -182,6 +182,46 @@ def single_vs_majority(per_answer: dict, items: list[dict], runs: int) -> dict:
     return out
 
 
+def escalate_if_any_run(per_answer: dict, items: list[dict], runs: int, check: str = "policy_or") -> list[dict]:
+    """Pure function: "a verdict that flips goes to a human". With pass/flag
+    verdicts that is the same rule as "escalate if any of k runs flags": if
+    every run passes nothing flipped, and if any run flags the answer is
+    escalated either way. For k = 1..runs, average recall and false alarms
+    over every combination of k recorded runs, against the human labels.
+    Cost counts runs actually needed: run j is only made on answers that all
+    earlier runs passed, so cost is 1 + the share still passing before each
+    extra run."""
+    from itertools import combinations
+
+    labels = {it["id"]: it.get("human_label") for it in items}
+    ids = [a for a in per_answer if labels.get(a) in ("acceptable", "not_acceptable")]
+    out = []
+    for k in range(1, runs + 1):
+        recalls, fas, costs = [], [], []
+        for combo in combinations(range(runs), k):
+            pairs, cost = [], 1.0
+            for j in range(1, k):
+                still_passing = [a for a in ids if not any(per_answer[a][check][r] for r in combo[:j])]
+                cost += len(still_passing) / len(ids)
+            for a in ids:
+                votes = [per_answer[a][check][r] for r in combo if per_answer[a][check][r] is not None]
+                if votes:
+                    pairs.append((any(votes), labels[a] == "not_acceptable"))
+            m = metrics(confusion(pairs))
+            recalls.append(m["recall"])
+            fas.append(m["false_alarm_rate"])
+            costs.append(cost)
+        out.append({
+            "runs": k,
+            "recall": round(statistics.mean(recalls), 3),
+            "recall_range": [min(recalls), max(recalls)],
+            "false_alarms": round(statistics.mean(fas), 3),
+            "false_alarm_range": [min(fas), max(fas)],
+            "cost_in_runs": round(statistics.mean(costs), 2),
+        })
+    return out
+
+
 def flips_by_type(per_answer: dict, items: list[dict], check: str) -> dict:
     """Which answer types the flips land on, for one check."""
     types = {it["id"]: it["type"] for it in items}
@@ -205,6 +245,7 @@ def report(path: Path) -> dict:
         "score_spread": score_spread(record["results"]),
         "single_vs_majority": single_vs_majority(per_answer, items, record["runs"]),
         "policy_or_flips_by_type": flips_by_type(per_answer, items, "policy_or"),
+        "escalate_if_any_run": escalate_if_any_run(per_answer, items, record["runs"]),
     }
 
 
@@ -232,6 +273,11 @@ def print_report(rep: dict) -> None:
     flips = rep["stability"]["policy_or"]["flipped_ids"]
     print(f"\n  policy (OR) flipped on: {', '.join(flips) or 'none'}"
           + (f"  by type: {rep['policy_or_flips_by_type']}" if flips else ""))
+    print("\n  flip = escalate (policy OR): escalate if any of k runs flags, averaged over every set of k runs")
+    print(f"  {'k runs':<8}{'recall':>8}{'range':>12}{'false alarms':>14}{'range':>12}{'cost (runs)':>13}")
+    for e in rep["escalate_if_any_run"]:
+        print(f"  {e['runs']:<8}{_pct(e['recall']):>8}{_range(e['recall_range']):>12}"
+              f"{_pct(e['false_alarms']):>14}{_range(e['false_alarm_range']):>12}{e['cost_in_runs']:>13}")
 
 
 def main(argv: list[str] | None = None) -> int:
