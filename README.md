@@ -14,6 +14,29 @@ real quality gate). This project tries to actually earn both words: real
 evaluation methodology (golden sets, groundedness, drift), and a real
 orchestrator that decides what to run next based on what it's already seen.
 
+## Findings at a glance
+
+Every change was measured against human labels before it was kept, on two
+models (llama3.1:8b via Ollama, gemini-3.5-flash-lite). Details are in the
+sections below.
+
+| What was tried | What the measurement showed | Decision |
+|---|---|---|
+| Require two checks to agree before escalating (AND) | Looked safe on 3 answers; on 60 blind-labeled answers it let ~40% of bad answers through | Kept OR: 94-100% caught, 20-28% of good answers sent to a human |
+| LLM judge without a reference answer | Rated fluent hallucinations 9-10/10 | Judge gets the reference answer and gates on correctness only |
+| Prompt marking against prompt injection | Fully protected Gemini, made llama worse | Defenses that matter live outside the model: code supplies tool inputs, a rule-based check escalates first (3/3 attacks, 0 false alarms on 16 normal answers) |
+| Trusting one run at temperature 0 | 10-12% of final verdicts changed across 5 identical runs; one run's catch rate ranged 91-97% | Every number here is read as one sample, with a few points of noise |
+| Escalate when runs disagree | Caught at most ~1 more bad answer in 35 and added several good answers to the review queue | Not shipped; helps only by steadying recall on a noisy model |
+| Claim-by-claim groundedness (llama) | Halved false alarms on the 7 questions it was designed on; quadrupled them on 8 held-out questions | Not shipped; Gemini measurement pending |
+
+**Gates changed by measurement:** the judge's gate (reference answer,
+correctness only) and the injection check that runs first. **Gates kept
+after measurement:** the OR rule, the golden-set floor, one run per answer,
+whole-answer groundedness. **Limits:** one labeler, 60 answers, a 7B-8B
+local model and a small hosted one; the measured false-alarm rates mean
+per-answer human review only suits high-stakes answers (see "Cutting
+groundedness false alarms").
+
 ## Status
 
 **M1 — done.** Four evaluation tools work standalone, verified against a
