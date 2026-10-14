@@ -58,7 +58,8 @@ def test_committed_reports_match_a_fresh_scoring_of_their_results():
     assert len(reports) >= 2
     for rp in reports:
         results = MEASUREMENT_DIR / rp.name.replace("agreement_report_", "agreement_")
-        fresh = json.loads(json.dumps(report(results)))  # tuples -> lists, as saved
+        label_set = "fresh" if rp.stem.endswith("_fresh") else "original"
+        fresh = json.loads(json.dumps(report(results, label_set)))  # tuples -> lists, as saved
         assert fresh == json.loads(rp.read_text()), rp.name
 
 

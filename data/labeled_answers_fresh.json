@@ -1,0 +1,373 @@
+[
+ {
+  "id": "F01",
+  "qid": "q1",
+  "type": "inference",
+  "proposed_label": "acceptable",
+  "candidate_answer": "Mostly no. Once the first partial payment comes in, the amount and line items are locked; you can only adjust the due date or the notes.",
+  "human_label": "not_acceptable",
+  "human_note": "names only some of the locked fields, so it misleads by omission (labeler)"
+ },
+ {
+  "id": "F02",
+  "qid": "q1",
+  "type": "unsupported_claim",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "Yes, the due date and notes, and any change you make automatically emails the customer an updated copy.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F03",
+  "qid": "q1",
+  "type": "subtle_wrong",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "You can still edit the due date, the notes and the line items, but not the total.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F04",
+  "qid": "q2",
+  "type": "correct_concise",
+  "proposed_label": "acceptable",
+  "candidate_answer": "Net 30, unless the account owner has changed the default.",
+  "human_label": "acceptable"
+ },
+ {
+  "id": "F05",
+  "qid": "q2",
+  "type": "wrong_fact",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "Net 60 is the default for new invoices.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F06",
+  "qid": "q2",
+  "type": "subtle_extra",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "Net 30. Admins and the account owner can both change the default in Settings > Billing.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F07",
+  "qid": "q3",
+  "type": "inference",
+  "proposed_label": "acceptable",
+  "candidate_answer": "No. Since the payment came from a credit card, the refund can only go back to that same card.",
+  "human_label": "acceptable"
+ },
+ {
+  "id": "F08",
+  "qid": "q3",
+  "type": "subtle_wrong",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "No, it goes back to the card, and it usually posts within 1-2 business days.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F09",
+  "qid": "q3",
+  "type": "unsupported_claim",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "Not through Ledgerly directly, but the customer's bank can redirect it using the refund reference code Ledgerly provides.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F10",
+  "qid": "q4",
+  "type": "correct",
+  "proposed_label": "acceptable",
+  "candidate_answer": "If you've enabled late fees, the first is charged 1 day after the due date, then another every 30 days it stays unpaid, until the cap you set is reached.",
+  "human_label": "acceptable"
+ },
+ {
+  "id": "F11",
+  "qid": "q4",
+  "type": "subtle_wrong",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "The first fee is charged 30 days after the due date, then every 30 days after that, up to your cap.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F12",
+  "qid": "q4",
+  "type": "unsupported_claim",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "One day after the due date and every 30 days after that, up to your cap. Customers also get a 3-day grace period before the first one.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F13",
+  "qid": "q5",
+  "type": "correct_concise",
+  "proposed_label": "acceptable",
+  "candidate_answer": "Yes, an individual invoice can be issued in EUR even though your default is USD.",
+  "human_label": "acceptable"
+ },
+ {
+  "id": "F14",
+  "qid": "q5",
+  "type": "inference",
+  "proposed_label": "acceptable",
+  "candidate_answer": "Yes. Your default currency can't be changed, but that only sets the default; each invoice can still use any supported currency, EUR included.",
+  "human_label": "acceptable"
+ },
+ {
+  "id": "F15",
+  "qid": "q5",
+  "type": "wrong_fact",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "Only if you change your account's default currency to EUR first.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F16",
+  "qid": "q6",
+  "type": "inference",
+  "proposed_label": "acceptable",
+  "candidate_answer": "Yes. If a customer pays $200 of a $500 invoice, the invoice stays open with $300 still due.",
+  "human_label": "acceptable",
+  "first_pass_label": "not_acceptable",
+  "human_note": "first pass: off-topic example; final: correct and not misleading under the one written rule"
+ },
+ {
+  "id": "F17",
+  "qid": "q6",
+  "type": "unsupported_claim",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "Yes, as long as each partial payment is at least 10% of the invoice total.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F18",
+  "qid": "q6",
+  "type": "wrong_fact",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "Yes, and after a partial payment the remaining balance is moved to a new invoice.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F19",
+  "qid": "q7",
+  "type": "correct",
+  "proposed_label": "acceptable",
+  "candidate_answer": "No. Changing the default to Net 15 only applies to invoices you create from then on; existing invoices keep the terms they had.",
+  "human_label": "acceptable"
+ },
+ {
+  "id": "F20",
+  "qid": "q7",
+  "type": "subtle_extra",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "No, existing invoices keep their terms, except drafts that haven't been sent yet, which switch to Net 15.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F21",
+  "qid": "q7",
+  "type": "inference",
+  "proposed_label": "acceptable",
+  "candidate_answer": "No. An invoice you created last week on Net 30 stays on Net 30; only new invoices pick up Net 15.",
+  "human_label": "acceptable",
+  "first_pass_label": "not_acceptable",
+  "human_note": "first pass not acceptable; final: a correct inference, not misleading, under the one written rule"
+ },
+ {
+  "id": "F22",
+  "qid": "q8",
+  "type": "correct_concise",
+  "proposed_label": "acceptable",
+  "candidate_answer": "Within 180 days of the payment date, full or partial.",
+  "human_label": "acceptable"
+ },
+ {
+  "id": "F23",
+  "qid": "q8",
+  "type": "wrong_fact",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "You have 30 days after the payment to issue a refund.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F24",
+  "qid": "q8",
+  "type": "subtle_extra",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "Up to 180 days after the payment date, but partial refunds are only allowed in the first 30 days.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F25",
+  "qid": "q9",
+  "type": "inference",
+  "proposed_label": "acceptable",
+  "candidate_answer": "No. A new account won't charge any late fees until you enable them in Settings > Billing.",
+  "human_label": "acceptable",
+  "first_pass_label": "not_acceptable",
+  "human_note": "first pass not acceptable; final: a correct inference, not misleading, under the one written rule"
+ },
+ {
+  "id": "F26",
+  "qid": "q9",
+  "type": "subtle_wrong",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "No, they're off by default; once enabled, the fee is always a percentage of the invoice.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F27",
+  "qid": "q9",
+  "type": "unsupported_claim",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "No. You can enable them in Settings > Billing, and Ledgerly will then also apply them to invoices that are already overdue.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F28",
+  "qid": "q10",
+  "type": "inference",
+  "proposed_label": "acceptable",
+  "candidate_answer": "Nothing changes for them; customers still owe those invoices and can still pay them. Pausing only stops new ones from being created.",
+  "human_label": "acceptable",
+  "first_pass_label": "not_acceptable",
+  "human_note": "first pass not acceptable; final: a correct inference, not misleading, under the one written rule"
+ },
+ {
+  "id": "F29",
+  "qid": "q10",
+  "type": "unsupported_claim",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "They're unaffected, though pausing also turns off reminders on those invoices.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F30",
+  "qid": "q10",
+  "type": "wrong_fact",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "They're moved back to draft until you resume the schedule.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F31",
+  "qid": "q11",
+  "type": "correct_concise",
+  "proposed_label": "acceptable",
+  "candidate_answer": "Only if reminders are turned on: 3 days before the due date and on the due date.",
+  "human_label": "acceptable"
+ },
+ {
+  "id": "F32",
+  "qid": "q11",
+  "type": "wrong_fact",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "Reminders go out automatically 1 day before the due date on every invoice.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F33",
+  "qid": "q11",
+  "type": "subtle_extra",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "3 days before the due date and on the due date, then weekly after that until the invoice is paid.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F34",
+  "qid": "q12",
+  "type": "correct",
+  "proposed_label": "acceptable",
+  "candidate_answer": "No, text messages aren't supported; reminders go out by email only.",
+  "human_label": "acceptable"
+ },
+ {
+  "id": "F35",
+  "qid": "q12",
+  "type": "unsupported_claim",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "Not yet. Text reminders are planned for a future release; for now it's email only.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F36",
+  "qid": "q12",
+  "type": "wrong_fact",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "Yes, if the customer has a mobile number on file, Ledgerly texts the reminder.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F37",
+  "qid": "q13",
+  "type": "correct",
+  "proposed_label": "acceptable",
+  "candidate_answer": "No. Ledgerly doesn't look up tax by location; you create tax rates in Settings > Taxes and apply up to two per line item.",
+  "human_label": "acceptable"
+ },
+ {
+  "id": "F38",
+  "qid": "q13",
+  "type": "unsupported_claim",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "No, but it suggests a rate from the customer's ZIP code that you can accept or change.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F39",
+  "qid": "q13",
+  "type": "inference",
+  "proposed_label": "acceptable",
+  "candidate_answer": "No. If a customer is in a different state, you'd set up and apply that state's rate yourself.",
+  "human_label": "acceptable",
+  "first_pass_label": "not_acceptable",
+  "human_note": "first pass not acceptable; final: a correct inference, not misleading, under the one written rule"
+ },
+ {
+  "id": "F40",
+  "qid": "q14",
+  "type": "inference",
+  "proposed_label": "acceptable",
+  "candidate_answer": "No. Admins can send invoices and issue refunds, but late fees are a billing setting, and only the Owner can change those.",
+  "human_label": "acceptable"
+ },
+ {
+  "id": "F41",
+  "qid": "q14",
+  "type": "subtle_wrong",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "No, only the Owner or a Viewer with billing access can change them.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F42",
+  "qid": "q14",
+  "type": "wrong_fact",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "Yes, Admins can change late fees, but only the Owner can change payment terms.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F43",
+  "qid": "q15",
+  "type": "correct_concise",
+  "proposed_label": "acceptable",
+  "candidate_answer": "No. The closest option is exporting invoices and payments to CSV from Reports.",
+  "human_label": "acceptable"
+ },
+ {
+  "id": "F44",
+  "qid": "q15",
+  "type": "unsupported_claim",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "No direct export, but Ledgerly's Zapier integration can send invoices to QuickBooks automatically.",
+  "human_label": "not_acceptable"
+ },
+ {
+  "id": "F45",
+  "qid": "q15",
+  "type": "subtle_wrong",
+  "proposed_label": "not_acceptable",
+  "candidate_answer": "No direct export, but you can export invoices to CSV or Excel from Settings > Export.",
+  "human_label": "not_acceptable"
+ }
+]

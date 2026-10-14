@@ -85,6 +85,10 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
 .map button.not_acceptable{background:var(--bad-soft);color:var(--bad);border-color:var(--bad);}
 .map button.unsure{background:var(--unsure-soft);color:var(--unsure);border-color:var(--unsure);}
 .map button.current{outline:2px solid var(--accent);outline-offset:1px;color:var(--ink);}
+.setup{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:13.5px;}
+.setup label{display:flex;align-items:center;gap:8px;font-weight:600;}
+.setup select{font-family:var(--sans);font-size:13.5px;padding:5px 8px;border-radius:7px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);}
+.setup-note{flex-basis:100%;margin:0;color:var(--muted);font-size:12.5px;}
 .empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:28px 20px;text-align:center;color:var(--muted);font-size:14px;}
 .done{background:var(--ok-soft);color:var(--ok);border:1px solid var(--ok);border-radius:10px;padding:12px 14px;font-size:14px;}
 @media (prefers-reduced-motion: reduce){.bar span{transition:none;}}
@@ -93,7 +97,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
 <div class="wrap">
   <header>
     <h1>Ledgerly Answer Labeling</h1>
-    <p class="sub">60 support-bot answers to 15 help-center questions. Label each one the way you would review a reply before a customer sees it. Your labels become the ground truth the evaluation checks are measured against.</p>
+    <p class="sub">Support-bot answers to 15 help-center questions. Label each one the way you would review a reply before a customer sees it. Your labels become the ground truth the evaluation checks are measured against.</p>
   </header>
 
   <div class="rule">
@@ -103,19 +107,35 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
       <li>it doesn't invent features, steps, or rules the passage doesn't mention,</li>
       <li>it doesn't leave out something that would mislead the customer.</li>
     </ul>
-    Short is fine if it's accurate. Use <b>Unsure</b> when you can't decide, and add a note.
+    Short is fine if it's accurate. A correct inference or example that isn't word for word in the passage is fine too, as long as it doesn't mislead. Use <b>Unsure</b> when you can't decide, and add a note.
+  </div>
+
+  <div class="setup">
+    <label>Batch
+      <select id="batch">
+        <option value="fresh">Fresh answers</option>
+        <option value="original">Original 60 answers</option>
+      </select>
+    </label>
+    <label>Labeler
+      <select id="labeler">
+        <option value="a">Labeler A</option>
+        <option value="b">Labeler B (second labeler)</option>
+      </select>
+    </label>
+    <p class="setup-note">Each labeler's labels are saved separately, and you only ever see your own.</p>
   </div>
 
   <section class="progress" aria-label="Progress">
     <div class="progress-top">
-      <span class="count" id="count">0 of 60 labeled</span>
+      <span class="count" id="count">0 labeled</span>
       <span class="tally" id="tally"></span>
     </div>
     <div class="bar"><span id="bar"></span></div>
   </section>
 
   <div id="main">
-    <div class="empty" id="empty">Loading the 60 answers. They appear here once the page connects to its saved data.</div>
+    <div class="empty" id="empty">Loading the answers. They appear here once the page connects to its saved data.</div>
   </div>
 
   <section aria-label="All answers">
@@ -127,13 +147,16 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
 <script>
 (function(){
   var LABELS = {acceptable: "Acceptable", not_acceptable: "Not acceptable", unsure: "Unsure"};
-  var state = {db: null, items: [], labels: {}, idx: 0};
+  var state = {db: null, allItems: [], items: [], labels: {}, idx: 0, batch: "fresh", labeler: "a", unsubLabels: null};
+  // Per-viewer convenience only: which batch and labeler this browser last used.
+  try { state.batch = localStorage.getItem("ledgerly-batch") || "fresh"; state.labeler = localStorage.getItem("ledgerly-labeler") || "a"; } catch (e) {}
+  function labelsCollection(){ return state.labeler === "b" ? "labels_b" : "labels"; }
   var main = document.getElementById("main");
 
   function el(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
 
   function renderProgress(){
-    var total = state.items.length || 60;
+    var total = state.items.length;
     var counts = {acceptable: 0, not_acceptable: 0, unsure: 0};
     Object.keys(state.labels).forEach(function(id){ var l = state.labels[id].label; if (counts[l] != null) counts[l]++; });
     var done = counts.acceptable + counts.not_acceptable + counts.unsure;
@@ -221,7 +244,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
     renderMap();
     renderCard();
     if (state.items.length && done === state.items.length){
-      main.insertBefore(el("div","done","All 60 answers are labeled. Tell Claude you're done, and it will compare your labels and measure the checks. You can still change any label."), main.firstChild);
+      main.insertBefore(el("div","done","All " + state.items.length + " answers in this batch are labeled. Tell Claude you're done, and it will compare your labels and measure the checks. You can still change any label."), main.firstChild);
     }
   }
 
@@ -243,7 +266,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
     render();
     setSaveState("Saving…");
     try {
-      await state.db.doc("labels/" + it.id).set(body);
+      await state.db.doc(labelsCollection() + "/" + it.id).set(body);
       setSaveState("Saved " + it.id);
     } catch (e) {
       setSaveState("Couldn't save " + it.id + ". Click the label again to retry.", true);
@@ -274,20 +297,19 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
     var n = nextUnlabeled(-1); if (n !== -1) state.idx = n;
   }
 
-  async function start(){
-    var db = window.claude && window.claude.use ? await window.claude.use("db") : null;
-    if (!db){ showEmpty("This view can't reach the saved data, so labeling is unavailable here. Open the page from claude.ai while signed in."); return; }
-    state.db = db;
-    db.collection("items").onSnapshot(function(snap){
-      state.items = snap.docs.filter(function(d){ return d.exists; })
-        .map(function(d){ var x = d.data(); return {id: d.id, qid: x.qid, question: x.question, context: x.context, reference: x.reference, answer: x.answer}; })
-        .sort(function(a, b){ return a.id < b.id ? -1 : 1; });
-      if (!state.items.length){ showEmpty("No answers loaded yet. Claude adds them right after publishing this page."); renderProgress(); return; }
-      if (state.idx >= state.items.length) state.idx = 0;
-      jumpToFirstUnlabeled();
-      render();
-    }, function(){ showEmpty("Lost the connection to the saved answers. Reload the page to reconnect."); });
-    db.collection("labels").onSnapshot(function(snap){
+  function applyBatch(){
+    state.items = state.allItems.filter(function(it){ return (it.batch || "original") === state.batch; });
+    if (state.idx >= state.items.length) state.idx = 0;
+    state.jumped = false;
+    if (!state.items.length){ showEmpty("No answers in this batch yet."); renderProgress(); document.getElementById("map").textContent = ""; return; }
+    jumpToFirstUnlabeled();
+    render();
+  }
+
+  function subscribeLabels(){
+    if (state.unsubLabels) state.unsubLabels();
+    state.labels = {}; state.labelsLoaded = false; state.jumped = false;
+    state.unsubLabels = state.db.collection(labelsCollection()).onSnapshot(function(snap){
       var labels = {};
       snap.docs.forEach(function(d){ if (d.exists) labels[d.id] = d.data(); });
       state.labels = labels;
@@ -295,6 +317,28 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
       jumpToFirstUnlabeled();
       if (state.items.length) render();
     }, function(){ setSaveState("Lost the connection to saved labels. Reload to reconnect.", true); });
+  }
+
+  function setupControls(){
+    var b = document.getElementById("batch"), l = document.getElementById("labeler");
+    b.value = state.batch; l.value = state.labeler;
+    b.addEventListener("change", function(){ state.batch = b.value; try { localStorage.setItem("ledgerly-batch", b.value); } catch (e) {} state.idx = 0; applyBatch(); });
+    l.addEventListener("change", function(){ state.labeler = l.value; try { localStorage.setItem("ledgerly-labeler", l.value); } catch (e) {} state.idx = 0; subscribeLabels(); });
+  }
+
+  async function start(){
+    var db = window.claude && window.claude.use ? await window.claude.use("db") : null;
+    if (!db){ showEmpty("This view can't reach the saved data, so labeling is unavailable here. Open the page from claude.ai while signed in."); return; }
+    state.db = db;
+    setupControls();
+    db.collection("items").onSnapshot(function(snap){
+      state.allItems = snap.docs.filter(function(d){ return d.exists; })
+        .map(function(d){ var x = d.data(); return {id: d.id, qid: x.qid, question: x.question, context: x.context, reference: x.reference, answer: x.answer, batch: x.batch}; })
+        .sort(function(a, b){ return a.id < b.id ? -1 : 1; });
+      if (!state.allItems.length){ showEmpty("No answers loaded yet. Claude adds them right after publishing this page."); renderProgress(); return; }
+      applyBatch();
+    }, function(){ showEmpty("Lost the connection to the saved answers. Reload the page to reconnect."); });
+    subscribeLabels();
   }
   start();
 })();

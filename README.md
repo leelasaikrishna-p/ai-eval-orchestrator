@@ -26,9 +26,10 @@ sections below.
 | LLM judge without a reference answer | Rated fluent hallucinations 9-10/10 | Judge gets the reference answer and gates on correctness only |
 | Prompt marking against prompt injection | Fully protected Gemini, made llama worse | Defenses that matter live outside the model: code supplies tool inputs, a rule-based check escalates first (3/3 attacks, 0 false alarms on 16 normal answers) |
 | Regex injection check alone, on 29 attacks in 7 styles | Caught 24% (every crude attack, almost nothing reworded) | Added an LLM classifier as a second signal: either flags -> escalate. llama 81% caught, Gemini 100% (28 genuine + 1 malformed reply), no genuine false alarms on 124 normal answers |
+| Re-test on 45 fresh answers, labeled blind after every gate was chosen | OR held (llama 93% caught / 18% false alarms; Gemini 100% / 12%); AND again let ~40% through; the golden_eval 0.9 candidate caught 68%, not the 80% it showed on the original 60 | No gate changed; the 0.9 floor isn't adopted |
 | Trusting one run at temperature 0 | 10-12% of final verdicts changed across 5 identical runs; one run's catch rate ranged 91-97% | Every number here is read as one sample, with a few points of noise |
 | Escalate when runs disagree | Caught at most ~1 more bad answer in 35 and added several good answers to the review queue | Not shipped; helps only by steadying recall on a noisy model |
-| Claim-by-claim groundedness | Gemini: held-out false alarms 14% -> 2% at 100% caught; llama: they quadrupled on held-out questions | **Shipped for Gemini only** (per-model setting): its share of live answers sent to a human falls from ~26% to ~8% |
+| Claim-by-claim groundedness | Gemini: held-out false alarms 14% -> 2% at 100% caught; llama: they quadrupled on held-out questions | **Shipped for Gemini only** (per-model setting): projected share of live answers sent to a human falls from ~26% to ~8% on held-out questions, ~16% on a fresh set rich in inference answers |
 
 **Gates changed by measurement:** the judge's gate (reference answer,
 correctness only), the injection screen that runs first (rule check plus LLM
@@ -535,6 +536,56 @@ answer Gemini "flagged" was a 502 server error, escalated the same way.
   so they may share blind spots; Gemini ran once; 29 attacks is a start,
   not a benchmark.
 
+## Re-tested on 45 fresh answers
+
+Every gate above was chosen on the same 60 answers it was scored on. To
+check the choices on answers they never saw, 45 new answers were written
+for the same 15 questions (`data/labeled_answers_fresh.json`): 3 each,
+with more "reasonable inference" answers on purpose, since those drive
+false alarms. They were labeled blind on the same page, as a separate
+batch, after the gates were set.
+
+```bash
+python3 tools/measure_agreement.py run --set fresh
+python3 tools/measure_agreement.py report --set fresh
+```
+
+| | llama, original 60 | **llama, fresh 45** | Gemini, original 60* | **Gemini, fresh 45** |
+|---|---|---|---|---|
+| Policy OR (shipped): catches | 94% | **93%** | 100% | **100%** |
+| Policy OR: false alarms | 28% | **18%** | 20% | **12%** |
+| Policy AND: catches | 63% | **61%** | 60% | **61%** |
+| groundedness: catches / false alarms | 91% / 16% | **93% / 18%** | 100% / 20% | **100% / 12%** |
+
+\* Gemini's original 60 used whole-answer groundedness; its fresh run uses
+the claim-by-claim mode it now ships with.
+
+- **The OR rule holds on new answers.** Requiring both checks to agree
+  (AND) again lets about 40% of bad answers through, on both models.
+- **The golden_eval candidate didn't hold.** A 0.9 floor on llama looked
+  like 80% caught / 12% false alarms on the 60 it was picked from; on the
+  fresh answers it catches 68% alone, and inside the policy it adds about
+  one catch and one false alarm. The floor stays at 0.3.
+- **Gemini's claim-by-claim groundedness holds, with a caveat.** 100% of
+  bad answers caught; its two false alarms (2 of 17 good answers) were both
+  reasonable inferences ("a card payment can only go back to that same
+  card", "$300 still due"), the hardest case on purpose. That's more than
+  the 2% seen on the held-out questions, so the projected review load is
+  closer to 16% than 8% on a set this rich in inferences.
+- **Labeling needed a written rule for inferences.** The first pass agreed
+  with the labels proposed when the answers were written on 39 of 45
+  (kappa 0.71); all 6 disagreements were inference answers. The rule is now
+  explicit on the labeling page: a correct inference or example is fine
+  unless it misleads, and leaving something out counts only when it
+  misleads (F01, which names only some of the locked fields, stays not
+  acceptable). Final agreement 44/45, kappa 0.95; first-pass labels are
+  kept in the data. The page now also supports a second, independent
+  labeler.
+- **One candidate to re-test later:** a judge correctness floor of 7 on
+  Gemini looked good on both sets (83% / 8% and 82% / 0% alone). Inside the
+  policy it would add nothing today, since groundedness already catches
+  everything on Gemini, so it isn't adopted.
+
 ## Same answer, same verdict? Repeatability
 
 Every number above comes from one run per answer. An LLM can answer the
@@ -775,8 +826,9 @@ required to prove the core architecture:
 - Measure Groq and Anthropic the same way Ollama and Gemini were measured,
   and let a model proven reliable enough graduate a check from Tier 2 into a
   trusted Tier 1 hard gate (see `GATE_PROFILES` in `decision_policy.py`).
-- Re-test the candidate thresholds (e.g. `golden_eval` at 0.9 on llama) on
-  a second set of labeled answers they weren't chosen on.
+- A second, independent labeler on the fresh answers (the labeling page
+  supports it), for agreement between people rather than with the
+  proposed labels.
 - Reduce groundedness false alarms on reasonable inferences without losing
   its catches of invented features, measured on the same labels.
 - An HTTP-transport MCP deployment, if this ever needs to be network-reachable

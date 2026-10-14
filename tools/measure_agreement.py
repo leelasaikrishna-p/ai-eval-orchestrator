@@ -43,8 +43,17 @@ def _safe(provider: str, model: str | None) -> str:
     return f"{provider}__{model or 'default'}".replace("/", "_").replace(":", "_")
 
 
-def results_path(provider: str, model: str | None) -> Path:
-    return MEASUREMENT_DIR / f"agreement_{_safe(provider, model)}.json"
+# "original": the 60 answers every gate was chosen on. "fresh": 45 answers
+# written afterwards and labeled blind, to re-test those choices.
+LABEL_SETS = {"original": "labeled_answers.json", "fresh": "labeled_answers_fresh.json"}
+
+
+def _suffix(label_set: str) -> str:
+    return "" if label_set == "original" else f"_{label_set}"
+
+
+def results_path(provider: str, model: str | None, label_set: str = "original") -> Path:
+    return MEASUREMENT_DIR / f"agreement_{_safe(provider, model)}{_suffix(label_set)}.json"
 
 
 # ---------------------------------------------------------------- run
@@ -77,10 +86,10 @@ def check_row(it: dict, q: dict, provider) -> dict:
     return row
 
 
-def run(provider) -> dict:
+def run(provider, label_set: str = "original") -> dict:
     golden = load_golden_dataset()
     rows = []
-    items = load_json("labeled_answers.json")
+    items = load_json(LABEL_SETS[label_set])
     for n, it in enumerate(items, 1):
         rows.append(check_row(it, golden[it["qid"]], provider))
         print(f"  [{n:>2}/{len(items)}] {it['id']} done", flush=True)
@@ -219,9 +228,9 @@ def annotator_agreement(items: list[dict]) -> dict:
     return {"n": len(both), "agree": c["tp"] + c["tn"], "kappa": cohens_kappa(c), "disagreements": disagreements, "unsure": unsure}
 
 
-def report(path: Path) -> dict:
+def report(path: Path, label_set: str = "original") -> dict:
     record = json.loads(path.read_text())
-    items = load_json("labeled_answers.json")
+    items = load_json(LABEL_SETS[label_set])
     gf, jf = CONSERVATIVE["golden_eval_floor"], CONSERVATIVE["judge_score_floor"]
     return {
         "provider": record["provider"],
@@ -267,6 +276,8 @@ def print_report(rep: dict) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("step", choices=["run", "report"])
+    parser.add_argument("--set", dest="label_set", choices=sorted(LABEL_SETS), default="original",
+                        help="which labeled answers: the original 60, or the fresh re-test set")
     args = parser.parse_args(argv)
 
     import os
@@ -276,10 +287,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.step == "run":
         provider = get_provider()
         model = getattr(provider, "model", None)
-        path = results_path(provider.name, model)
+        path = results_path(provider.name, model, args.label_set)
         print(f"Running all checks on every labeled answer: {provider.name}/{model}")
         try:
-            record = run(provider)
+            record = run(provider, args.label_set)
         except QuotaExhausted as e:
             print(f"\nStopped, nothing saved: {e}")
             return 3
@@ -291,17 +302,17 @@ def main(argv: list[str] | None = None) -> int:
     # Scoring reads recorded results only: no model calls, so no API key.
     provider_name = os.environ.get("PROVIDER", "ollama")
     model = active_model(provider_name)
-    path = results_path(provider_name, model)
+    path = results_path(provider_name, model, args.label_set)
     if not path.exists():
         print(f"No recorded results for {provider_name}/{model}. Run: PROVIDER={provider_name} python3 tools/measure_agreement.py run")
         return 2
-    items = load_json("labeled_answers.json")
+    items = load_json(LABEL_SETS[args.label_set])
     if not any(it.get("human_label") for it in items):
-        print("No human labels in data/labeled_answers.json yet.")
+        print(f"No human labels in data/{LABEL_SETS[args.label_set]} yet.")
         return 2
-    rep = report(path)
+    rep = report(path, args.label_set)
     print_report(rep)
-    (MEASUREMENT_DIR / f"agreement_report_{_safe(provider_name, model)}.json").write_text(json.dumps(rep, indent=2) + "\n", encoding="utf-8")
+    (MEASUREMENT_DIR / f"agreement_report_{_safe(provider_name, model)}{_suffix(args.label_set)}.json").write_text(json.dumps(rep, indent=2) + "\n", encoding="utf-8")
     return 0
 
 
