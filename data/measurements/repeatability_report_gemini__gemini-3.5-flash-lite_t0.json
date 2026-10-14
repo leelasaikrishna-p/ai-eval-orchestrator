@@ -1,0 +1,147 @@
+{
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "temperature": 0.0,
+  "runs": 5,
+  "answers": 30,
+  "floors": {
+    "golden_eval": 0.3,
+    "llm_judge": 5.0
+  },
+  "stability": {
+    "golden_eval": {
+      "answers": 30,
+      "flipped": 0,
+      "flip_rate": 0.0,
+      "flipped_ids": [],
+      "errors": 0
+    },
+    "groundedness_check": {
+      "answers": 30,
+      "flipped": 3,
+      "flip_rate": 0.1,
+      "flipped_ids": [
+        "L07",
+        "L11",
+        "L24"
+      ],
+      "errors": 0
+    },
+    "llm_judge": {
+      "answers": 30,
+      "flipped": 3,
+      "flip_rate": 0.1,
+      "flipped_ids": [
+        "L10",
+        "L16",
+        "L20"
+      ],
+      "errors": 0
+    },
+    "policy_or": {
+      "answers": 30,
+      "flipped": 3,
+      "flip_rate": 0.1,
+      "flipped_ids": [
+        "L07",
+        "L11",
+        "L24"
+      ],
+      "errors": 0
+    },
+    "policy_and": {
+      "answers": 30,
+      "flipped": 3,
+      "flip_rate": 0.1,
+      "flipped_ids": [
+        "L10",
+        "L16",
+        "L20"
+      ],
+      "errors": 0
+    }
+  },
+  "score_spread": {
+    "golden_eval": {
+      "mean_range": 0.03,
+      "max_range": 0.3,
+      "mean_stdev": 0.011
+    },
+    "groundedness_check": {
+      "mean_range": 0.1,
+      "max_range": 1.0,
+      "mean_stdev": 0.043
+    },
+    "llm_judge": {
+      "mean_range": 0.833,
+      "max_range": 4.0,
+      "mean_stdev": 0.339
+    }
+  },
+  "single_vs_majority": {
+    "golden_eval": {
+      "single_run_recall": [
+        0.474,
+        0.474
+      ],
+      "single_run_false_alarms": [
+        0.0,
+        0.0
+      ],
+      "majority_recall": 0.474,
+      "majority_false_alarms": 0.0
+    },
+    "groundedness_check": {
+      "single_run_recall": [
+        1.0,
+        1.0
+      ],
+      "single_run_false_alarms": [
+        0.273,
+        0.364
+      ],
+      "majority_recall": 1.0,
+      "majority_false_alarms": 0.364
+    },
+    "llm_judge": {
+      "single_run_recall": [
+        0.474,
+        0.632
+      ],
+      "single_run_false_alarms": [
+        0.0,
+        0.0
+      ],
+      "majority_recall": 0.526,
+      "majority_false_alarms": 0.0
+    },
+    "policy_or": {
+      "single_run_recall": [
+        1.0,
+        1.0
+      ],
+      "single_run_false_alarms": [
+        0.273,
+        0.364
+      ],
+      "majority_recall": 1.0,
+      "majority_false_alarms": 0.364
+    },
+    "policy_and": {
+      "single_run_recall": [
+        0.474,
+        0.632
+      ],
+      "single_run_false_alarms": [
+        0.0,
+        0.0
+      ],
+      "majority_recall": 0.526,
+      "majority_false_alarms": 0.0
+    }
+  },
+  "policy_or_flips_by_type": {
+    "correct_concise": 1,
+    "correct": 2
+  }
+}

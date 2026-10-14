@@ -458,6 +458,57 @@ alarms" is the share of acceptable answers it flags.
 - **No gate changed.** The measurements confirmed the OR rule and the
   floors; they didn't justify relaxing anything.
 
+## Same answer, same verdict? Repeatability
+
+Every number above comes from one run per answer. An LLM can answer the
+same prompt differently from one call to the next, so the three LLM checks
+were run five times on each labeled answer, with nothing else changed:
+same model, same prompt, temperature 0 as shipped.
+
+```bash
+python3 tools/measure_repeatability.py run --runs 5 [--limit 30] [--temperature 0.7]
+python3 tools/measure_repeatability.py report [--temperature 0.7]
+```
+
+"Flipped" means the check's verdict was not the same in all five runs
+(`data/measurements/repeatability_report_*.json`):
+
+| Check | llama3.1:8b, 60 answers | gemini, first 30 answers |
+|---|---|---|
+| `golden_eval` | 0% | 0% |
+| `groundedness_check` | 15% | 10% |
+| `llm_judge` | 12% | 10% |
+| **Policy, OR (as shipped)** | **12%** | **10%** |
+
+- **Temperature 0 is not deterministic.** One answer in eight to ten got a
+  different final verdict from an identical run, on both models. The
+  judge's correctness score for the same answer moved by up to 4 points;
+  `golden_eval` moved by up to 0.3 but never crossed its floor.
+- **A single run is a sample.** Across the five llama runs, the policy's
+  catch rate ranged from 91% to 97% and its false alarms from 24% to 28%;
+  groundedness alone ranged from 8% to 21% false alarms. Any one of those
+  runs could have been reported as "the" number.
+- **The flips are the borderline answers.** On Gemini all three were
+  correct answers flagged in some runs and not others; on llama they mixed
+  correct, short, invented-feature and missing-condition answers.
+- **A majority vote steadies the numbers but is not free.** Over five runs,
+  llama's groundedness settled at 94% caught with 12% false alarms. On
+  Gemini the vote landed at the high end of false alarms (36%), because
+  borderline good answers were flagged in most runs. It also costs five
+  times the calls.
+- **Raising the temperature doubles the noise.** On llama's first 30
+  answers, temperature 0.7 took the policy's flips from 13% to 23% and the
+  judge's from 13% to 37%, and the judge's score spread from 4 points to 8.
+  Pinning temperature 0 is worth doing; it just isn't enough on its own.
+- **Caveat.** Gemini covers the first 30 answers only, to fit the free
+  quota, so its false-alarm rates rest on about 11 acceptable answers.
+
+**What it changes:** nothing in the shipped gates yet. It does change how
+the numbers above should be read (each is one sample, with a few points of
+run-to-run noise), and it suggests a cheap signal: an answer whose verdict
+flips between two runs is uncertain by definition, and could go to a human
+whatever the single run said. That's measured next, not assumed.
+
 ## The four tools
 
 | Tool | Question it answers | LLM call? |
@@ -496,7 +547,7 @@ differ across the three.
 
 ```bash
 python3 tests/test_tools_smoke.py
-# all 75 tests run offline -- each tests/*.py file also runs standalone
+# all 83 tests run offline -- each tests/*.py file also runs standalone
 # or, with pytest installed:
 pip install -r requirements.txt && pytest
 ```
@@ -558,6 +609,8 @@ required to prove the core architecture:
 - Measure Groq and Anthropic the same way Ollama and Gemini were measured,
   and let a model proven reliable enough graduate a check from Tier 2 into a
   trusted Tier 1 hard gate (see `GATE_PROFILES` in `decision_policy.py`).
+- Treat a verdict that flips between runs as a reason to escalate, and
+  measure what that catches and costs (see Repeatability above).
 - Re-test the candidate thresholds (e.g. `golden_eval` at 0.9 on llama) on
   a second set of labeled answers they weren't chosen on.
 - Reduce groundedness false alarms on reasonable inferences without losing

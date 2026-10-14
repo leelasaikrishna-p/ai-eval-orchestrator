@@ -47,33 +47,38 @@ def results_path(provider: str, model: str | None) -> Path:
 
 # ---------------------------------------------------------------- run
 
-def run(provider) -> dict:
+def check_row(it: dict, q: dict, provider) -> dict:
+    """Run the three LLM checks on one labeled answer; a failed check is
+    recorded as an error, not raised."""
     from tools.golden_eval import golden_eval
     from tools.groundedness_check import groundedness_check
     from tools.llm_judge import llm_judge
 
+    row = {"id": it["id"]}
+    for name, call in (
+        ("golden_eval", lambda: golden_eval(q["question"], q["golden_answer"], it["candidate_answer"], provider)),
+        ("groundedness_check", lambda: groundedness_check(q["context"], it["candidate_answer"], provider)),
+        ("llm_judge", lambda: llm_judge(q["question"], it["candidate_answer"], provider, reference_answer=q["golden_answer"])),
+    ):
+        try:
+            r = call()
+            if name == "golden_eval":
+                row[name] = {"score": r["score"]}
+            elif name == "groundedness_check":
+                row[name] = {"grounded": r["grounded"], "unsupported_claims": r.get("unsupported_claims", [])}
+            else:
+                row[name] = {"score": r["score"], "breakdown": r["breakdown"]}
+        except Exception as e:
+            row[name] = {"error": f"{type(e).__name__}: {e}"[:200]}
+    return row
+
+
+def run(provider) -> dict:
     golden = load_golden_dataset()
     rows = []
     items = load_json("labeled_answers.json")
     for n, it in enumerate(items, 1):
-        q = golden[it["qid"]]
-        row = {"id": it["id"]}
-        for name, call in (
-            ("golden_eval", lambda: golden_eval(q["question"], q["golden_answer"], it["candidate_answer"], provider)),
-            ("groundedness_check", lambda: groundedness_check(q["context"], it["candidate_answer"], provider)),
-            ("llm_judge", lambda: llm_judge(q["question"], it["candidate_answer"], provider, reference_answer=q["golden_answer"])),
-        ):
-            try:
-                r = call()
-                if name == "golden_eval":
-                    row[name] = {"score": r["score"]}
-                elif name == "groundedness_check":
-                    row[name] = {"grounded": r["grounded"], "unsupported_claims": r.get("unsupported_claims", [])}
-                else:
-                    row[name] = {"score": r["score"], "breakdown": r["breakdown"]}
-            except Exception as e:  # a failed check is recorded, not raised
-                row[name] = {"error": f"{type(e).__name__}: {e}"[:200]}
-        rows.append(row)
+        rows.append(check_row(it, golden[it["qid"]], provider))
         print(f"  [{n:>2}/{len(items)}] {it['id']} done", flush=True)
     return {
         "provider": provider.name,

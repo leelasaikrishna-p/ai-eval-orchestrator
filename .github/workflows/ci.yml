@@ -47,3 +47,6 @@ jobs:
 
       - name: Agreement with human labels (recorded results, no LLM)
         run: python3 tests/test_agreement.py
+
+      - name: Repeatability measurement tests (mock provider, no LLM)
+        run: python3 tests/test_repeatability.py
