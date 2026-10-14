@@ -32,7 +32,7 @@ sections below.
 **Gates changed by measurement:** the judge's gate (reference answer,
 correctness only) and the injection check that runs first. **Gates kept
 after measurement:** the OR rule, the golden-set floor, one run per answer,
-whole-answer groundedness. **Limits:** one labeler, 60 answers, a 7B-8B
+whole-answer groundedness. **Limits:** one labeler, 60 answers, an 8B
 local model and a small hosted one; the measured false-alarm rates mean
 per-answer human review only suits high-stakes answers (see "Cutting
 groundedness false alarms").
