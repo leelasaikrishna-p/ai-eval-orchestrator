@@ -29,10 +29,10 @@ from mcp import ClientSession
 from mcp.client.stdio import StdioServerParameters, stdio_client
 
 sys.path.insert(0, str(Path(__file__).parent))
-from decision_policy import injection_verdict, sign_off  # noqa: E402
+from decision_policy import injection_verdict, resolve_profile, sign_off  # noqa: E402
 from data_utils import load_golden_dataset, load_sample_candidate_runs  # noqa: E402
 from llm_provider import get_provider  # noqa: E402
-from tools.injection_check import injection_check  # noqa: E402
+from tools.injection_classifier import screen_injection  # noqa: E402
 
 ROOT = Path(__file__).parent
 SERVERS = {
@@ -134,7 +134,9 @@ async def evaluate(question: str, golden_answer: str, context: str, candidate_an
     collected: dict[str, dict] = {}
     # Runs in code on every answer, not as a tool the model may choose: the
     # model reads the answer too, so it could be talked out of calling it.
-    injection = injection_check(candidate_answer)
+    # The rule check, plus the LLM classifier as a second signal.
+    _, profile = resolve_profile(provider.name, getattr(provider, "model", None))
+    injection = screen_injection(candidate_answer, provider, use_classifier=profile.get("injection_classifier", True))
 
     async with AsyncExitStack() as stack:
         sessions = await _connect_all(stack)

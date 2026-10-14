@@ -33,6 +33,12 @@ CONSERVATIVE = {
     "judge_score_floor": 5.0,   # below this -> Tier 2 flag (0-10 scale)
     "tier2_mode": "or",         # either groundedness or judge flagging is enough
     "groundedness_mode": "whole",  # whole-answer check; "claims" must be earned per model
+    # LLM injection classifier next to the rule check. It can only add
+    # escalations, so it's on even for unmeasured models. Measured on 29
+    # attacks + 124 normal answers (tools/measure_injection_classifier.py):
+    # llama 24% -> 81% of attacks caught, gemini 24% -> 100%; no genuine
+    # false alarms on either.
+    "injection_classifier": True,
 }
 
 
@@ -94,12 +100,13 @@ def injection_verdict(injection_result: dict | None) -> dict | None:
     at its evaluator, else None. Checked before every other gate."""
     if not (injection_result and injection_result["suspicious"]):
         return None
-    found = ", ".join(m["pattern"] for m in injection_result["matches"])
-    return {
-        "verdict": "escalate",
-        "reasons": [f"candidate answer contains text aimed at the evaluator ({found})"],
-        "flags": [],
-    }
+    patterns = [m["pattern"] for m in injection_result["matches"]]
+    if patterns == ["classifier unavailable"]:
+        reason = "the injection classifier failed, so the answer couldn't be screened"
+    else:
+        found = ", ".join(p for p in patterns if p != "classifier unavailable")
+        reason = f"candidate answer contains text aimed at the evaluator ({found})"
+    return {"verdict": "escalate", "reasons": [reason], "flags": []}
 
 
 def sign_off(

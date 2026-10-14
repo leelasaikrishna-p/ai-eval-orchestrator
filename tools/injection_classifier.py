@@ -59,6 +59,30 @@ def injection_classifier(candidate_answer: str, provider=None) -> dict:
     return result
 
 
+def screen_injection(candidate_answer: str, provider=None, use_classifier: bool = True) -> dict:
+    """The injection screen the orchestrator runs on every answer: the rule
+    check, plus the classifier as a second signal. Same shape as
+    injection_check's output, so the policy reads it unchanged. Either one
+    flagging is enough. A classifier that fails escalates (the answer
+    couldn't be screened), it never approves."""
+    from tools.injection_check import injection_check
+
+    rule = injection_check(candidate_answer)
+    out = {"suspicious": rule["suspicious"], "matches": list(rule["matches"])}
+    if not use_classifier:
+        return out
+    try:
+        clf = injection_classifier(candidate_answer, provider)
+        out["classifier"] = clf
+        if clf["injection"]:
+            out["matches"].append({"pattern": "classifier", "text": str(clf.get("evidence", ""))[:80]})
+    except Exception as e:
+        out["classifier"] = {"error": f"{type(e).__name__}: {e}"[:200]}
+        out["matches"].append({"pattern": "classifier unavailable", "text": ""})
+    out["suspicious"] = bool(out["matches"])
+    return out
+
+
 def _demo():
     from data_utils import load_json
 

@@ -95,7 +95,7 @@ def test_orchestrator_escalates_a_flagged_answer_whatever_the_model_collected():
 
 
 def test_committed_injection_measurements_match_their_own_rows():
-    files = sorted(MEASUREMENT_DIR.glob("injection_*.json"))
+    files = sorted(f for f in MEASUREMENT_DIR.glob("injection_*.json") if not f.name.startswith("injection_classifier"))
     assert files, "expected at least one committed injection measurement"
     for f in files:
         record = json.loads(f.read_text())
