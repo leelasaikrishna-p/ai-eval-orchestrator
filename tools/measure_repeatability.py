@@ -35,6 +35,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from data_utils import load_golden_dataset, load_json  # noqa: E402
 from decision_policy import CONSERVATIVE, judge_gate_value  # noqa: E402
 from llm_provider import QuotaExhausted  # noqa: E402
+from tools.groundedness_check import mode_for  # noqa: E402
 from tools.measure_agreement import (  # noqa: E402
     CHECKS, MEASUREMENT_DIR, _safe, check_row, confusion, flags, metrics,
 )
@@ -76,6 +77,7 @@ def run(provider, runs: int, limit: int | None, temperature: float) -> dict:
         "provider": provider.name,
         "model": getattr(provider, "model", None),
         "temperature": temperature,
+        "groundedness_mode": mode_for(provider),
         "runs": runs,
         "recorded_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "results": all_runs,

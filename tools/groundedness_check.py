@@ -118,9 +118,19 @@ def grounded_from_claims(claims: list[dict], context: str, question: str = "") -
     return not unsupported, unsupported
 
 
+def mode_for(provider) -> str:
+    """The groundedness mode measured for this exact model ("whole" unless a
+    model has earned "claims"; see GATE_PROFILES in decision_policy.py)."""
+    from decision_policy import resolve_profile
+
+    _, profile = resolve_profile(provider.name, getattr(provider, "model", None))
+    return profile.get("groundedness_mode", "whole")
+
+
 def groundedness_check(context: str, answer: str, provider=None, question: str | None = None,
-                       mode: str = "whole") -> dict:
+                       mode: str | None = None) -> dict:
     provider = provider or get_provider()
+    mode = mode or mode_for(provider)
     note, block = untrusted_block(answer)
     if mode == "claims":
         prompt = CLAIMS_PROMPT_TEMPLATE.format(untrusted_note=note, question=question or "(not given)",

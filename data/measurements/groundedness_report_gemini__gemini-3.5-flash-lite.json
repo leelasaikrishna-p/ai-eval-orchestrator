@@ -1,0 +1,143 @@
+{
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "claims_runs": 3,
+  "whole_runs_per_answer": 3.5,
+  "groundedness": {
+    "design (q1-q7)": {
+      "whole": {
+        "bad": 17,
+        "good": 11,
+        "recall": 1.0,
+        "recall_ci95": [
+          0.816,
+          1.0
+        ],
+        "false_alarms": 0.318,
+        "false_alarm_ci95": [
+          0.152,
+          0.646
+        ]
+      },
+      "claims": {
+        "bad": 17,
+        "good": 11,
+        "recall": 0.961,
+        "recall_ci95": [
+          0.73,
+          0.99
+        ],
+        "false_alarms": 0.03,
+        "false_alarm_ci95": [
+          0.0,
+          0.259
+        ]
+      }
+    },
+    "held out (q8-q15)": {
+      "whole": {
+        "bad": 18,
+        "good": 14,
+        "recall": 1.0,
+        "recall_ci95": [
+          0.824,
+          1.0
+        ],
+        "false_alarms": 0.143,
+        "false_alarm_ci95": [
+          0.04,
+          0.399
+        ]
+      },
+      "claims": {
+        "bad": 18,
+        "good": 14,
+        "recall": 1.0,
+        "recall_ci95": [
+          0.824,
+          1.0
+        ],
+        "false_alarms": 0.024,
+        "false_alarm_ci95": [
+          0.0,
+          0.215
+        ]
+      }
+    },
+    "all 60": {
+      "whole": {
+        "bad": 35,
+        "good": 25,
+        "recall": 1.0,
+        "recall_ci95": [
+          0.901,
+          1.0
+        ],
+        "false_alarms": 0.22,
+        "false_alarm_ci95": [
+          0.115,
+          0.434
+        ]
+      },
+      "claims": {
+        "bad": 35,
+        "good": 25,
+        "recall": 0.981,
+        "recall_ci95": [
+          0.855,
+          0.995
+        ],
+        "false_alarms": 0.027,
+        "false_alarm_ci95": [
+          0.007,
+          0.195
+        ]
+      }
+    }
+  },
+  "policy_or": {
+    "whole": {
+      "bad": 35,
+      "good": 25,
+      "recall": 1.0,
+      "recall_ci95": [
+        0.901,
+        1.0
+      ],
+      "false_alarms": 0.22,
+      "false_alarm_ci95": [
+        0.115,
+        0.434
+      ],
+      "review_load_at_5pct_bad": 0.259
+    },
+    "claims": {
+      "bad": 35,
+      "good": 25,
+      "recall": 0.981,
+      "recall_ci95": [
+        0.855,
+        0.995
+      ],
+      "false_alarms": 0.027,
+      "false_alarm_ci95": [
+        0.007,
+        0.195
+      ],
+      "review_load_at_5pct_bad": 0.075
+    }
+  },
+  "invented_caught": {
+    "whole": {
+      "expected": 15.0,
+      "of": 15
+    },
+    "claims": {
+      "expected": 15.0,
+      "of": 15
+    }
+  },
+  "errors": {
+    "claims": 0
+  }
+}

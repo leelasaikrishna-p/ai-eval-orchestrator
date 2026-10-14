@@ -56,7 +56,7 @@ def _attempt(fn):
 
 def run_tools(item: dict, answer: str, provider) -> dict:
     g, g_err = _attempt(lambda: golden_eval(item["question"], item["golden_answer"], answer, provider))
-    gr, gr_err = _attempt(lambda: groundedness_check(item["context"], answer, provider))
+    gr, gr_err = _attempt(lambda: groundedness_check(item["context"], answer, provider, question=item["question"]))
     j, j_err = _attempt(lambda: llm_judge(item["question"], answer, provider, reference_answer=item["golden_answer"]))
     return {
         "golden_eval": {"score": g["score"]} if g else {"error": g_err},

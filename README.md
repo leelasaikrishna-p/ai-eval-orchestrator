@@ -27,12 +27,12 @@ sections below.
 | Prompt marking against prompt injection | Fully protected Gemini, made llama worse | Defenses that matter live outside the model: code supplies tool inputs, a rule-based check escalates first (3/3 attacks, 0 false alarms on 16 normal answers) |
 | Trusting one run at temperature 0 | 10-12% of final verdicts changed across 5 identical runs; one run's catch rate ranged 91-97% | Every number here is read as one sample, with a few points of noise |
 | Escalate when runs disagree | Caught at most ~1 more bad answer in 35 and added several good answers to the review queue | Not shipped; helps only by steadying recall on a noisy model |
-| Claim-by-claim groundedness (llama) | Halved false alarms on the 7 questions it was designed on; quadrupled them on 8 held-out questions | Not shipped; Gemini measurement pending |
+| Claim-by-claim groundedness | Gemini: held-out false alarms 14% -> 2% at 100% caught; llama: they quadrupled on held-out questions | **Shipped for Gemini only** (per-model setting): its share of live answers sent to a human falls from ~26% to ~8% |
 
 **Gates changed by measurement:** the judge's gate (reference answer,
-correctness only) and the injection check that runs first. **Gates kept
-after measurement:** the OR rule, the golden-set floor, one run per answer,
-whole-answer groundedness. **Limits:** one labeler, 60 answers, an 8B
+correctness only), the injection check that runs first, and claim-by-claim
+groundedness for Gemini. **Gates kept after measurement:** the OR rule, the
+golden-set floor, one run per answer, whole-answer groundedness for llama. **Limits:** one labeler, 60 answers, an 8B
 local model and a small hosted one; the measured false-alarm rates mean
 per-answer human review only suits high-stakes answers (see "Cutting
 groundedness false alarms").
@@ -594,9 +594,32 @@ the agreement run plus five repeatability runs; claim mode: three runs):
   recorded claims (exploratory, since the held-out answers had been seen by
   then): llama's own labels alone catch only 72% of held-out bad answers;
   each rule added back catches and false alarms together.
-- **Not shipped.** Whole-answer groundedness stays the default; claim mode
-  stays available, off by default. Gemini is measured next: a stronger
-  model may label claims well enough for the labels alone to work.
+- **Not shipped for llama.** Whole-answer groundedness stays its default.
+
+gemini-3.5-flash-lite, same split and rules, measured the same way:
+
+| | whole-answer catches | false alarms | claim-by-claim catches | false alarms |
+|---|---|---|---|---|
+| design (q1-q7) | 100% | 32% | 96% | 3% |
+| **held out (q8-q15)** | **100%** | **14%** | **100%** | **2%** |
+
+- **It generalizes on Gemini.** On the unseen questions false alarms fell
+  from 14% to 2% with every bad answer still caught, and every invented
+  feature or extra (15/15) still caught overall. Across three runs it missed
+  one subtle error ("every 30 days after the due date", which drops the
+  first fee one day after) in two of them.
+- **The review queue shrinks.** With Gemini's golden_eval and judge
+  unchanged, the OR policy goes from 100% caught / 22% false alarms to 98%
+  caught / 3% false alarms: at a 5% bad-answer rate, the share of live
+  answers sent to a human falls from about 26% to about 8%.
+- **The method needs a capable model.** llama's claim labels were too
+  lenient to stand on their own, and the evidence rules added to compensate
+  overfit the design questions. Gemini labels claims well enough.
+- **Shipped per model.** `GATE_PROFILES` now carries `groundedness_mode`:
+  `"claims"` for gemini-3.5-flash-lite, `"whole"` for llama and for any model
+  not yet measured. The groundedness tool now also takes the question, and
+  drift baselines record their groundedness mode, so a run is never compared
+  with a baseline made in the other mode.
 
 ## The four tools
 
@@ -636,7 +659,7 @@ differ across the three.
 
 ```bash
 python3 tests/test_tools_smoke.py
-# all 91 tests run offline -- each tests/*.py file also runs standalone
+# all 99 tests run offline -- each tests/*.py file also runs standalone
 # or, with pytest installed:
 pip install -r requirements.txt && pytest
 ```

@@ -11,7 +11,7 @@ mcp = MCPServer("groundedness-check")
 
 
 @mcp.tool()
-def groundedness_check_tool(source_context: str, candidate_answer: str) -> dict:
+def groundedness_check_tool(source_context: str, candidate_answer: str, question: str = "") -> dict:
     """Check whether every factual claim in `candidate_answer` is actually
     supported by `source_context`, flagging anything the answer asserts
     that goes beyond what the context backs up.
@@ -22,7 +22,9 @@ def groundedness_check_tool(source_context: str, candidate_answer: str) -> dict:
     # Parameter names match the other tools and the orchestrator's prompt
     # labels: models fill tool arguments from those labels, and live runs
     # failed when this tool alone was named (context, answer).
-    return groundedness_check(source_context, candidate_answer)
+    # The question lets claim-by-claim mode accept an answer that only
+    # repeats the user's own premise.
+    return groundedness_check(source_context, candidate_answer, question=question or None)
 
 
 if __name__ == "__main__":

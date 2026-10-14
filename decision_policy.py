@@ -32,6 +32,7 @@ CONSERVATIVE = {
     "golden_eval_floor": 0.3,   # below this -> Tier 1 auto-escalate
     "judge_score_floor": 5.0,   # below this -> Tier 2 flag (0-10 scale)
     "tier2_mode": "or",         # either groundedness or judge flagging is enough
+    "groundedness_mode": "whole",  # whole-answer check; "claims" must be earned per model
 }
 
 
@@ -65,7 +66,11 @@ GATE_PROFILES = {
     # q5 = 3). With groundedness also 3/3, AND looked safe on 3 answers --
     # 60 human-labeled answers showed it isn't: AND catches 60% of bad
     # answers, OR 100% (20% false alarms, all from groundedness). OR stays.
-    "gemini/gemini-3.5-flash-lite": dict(CONSERVATIVE),
+    # Claim-by-claim groundedness (tools/measure_groundedness.py), held out
+    # by question: false alarms on the 8 unseen questions 14% -> 2% at 100%
+    # caught; policy false alarms 22% -> 3%. The same mode failed on llama
+    # (held-out false alarms 6% -> 24%), so it is set per model.
+    "gemini/gemini-3.5-flash-lite": {**CONSERVATIVE, "groundedness_mode": "claims"},
     # "anthropic/<model>": {..., "tier2_mode": "and"},  # once calibrated
 }
 

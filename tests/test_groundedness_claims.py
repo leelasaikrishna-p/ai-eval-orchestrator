@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from llm_provider import MockProvider, QuotaExhausted  # noqa: E402
 from tools.groundedness_check import (  # noqa: E402
-    evidence_found, evidence_specific, grounded_from_claims, groundedness_check,
+    evidence_found, evidence_specific, grounded_from_claims, groundedness_check, mode_for,
 )
 from tools.measure_agreement import check_row  # noqa: E402
 from tools.measure_groundedness import expected_rates, flag_rates, review_load, run  # noqa: E402
@@ -96,6 +96,31 @@ def test_a_used_up_daily_quota_stops_a_measurement_instead_of_recording_errors()
         except QuotaExhausted:
             continue
         raise AssertionError("a used-up quota was recorded as an ordinary error")
+
+
+def test_claim_mode_is_used_only_by_the_model_that_earned_it():
+    class Model(MockProvider):
+        def __init__(self, name, model):
+            super().__init__()
+            self.name, self.model = name, model
+
+    assert mode_for(Model("gemini", "gemini-3.5-flash-lite")) == "claims"  # measured on held-out questions
+    assert mode_for(Model("ollama", "llama3.1:8b")) == "whole"  # measured: claim mode hurt
+    assert mode_for(Model("gemini", "some-unmeasured-model")) == "whole"  # no trust until measured
+    assert mode_for(MockProvider()) == "whole"
+
+
+def test_the_active_models_mode_is_used_unless_a_measurement_asks_for_one():
+    reply = json.dumps({"claims": [{"claim": "x", "label": "stated", "evidence": "original payment method"}]})
+
+    class Gemini(MockProvider):
+        name, model = "gemini", "gemini-3.5-flash-lite"
+
+    r = groundedness_check(CONTEXT, "answer", Gemini(reply), question=QUESTION)
+    assert "claims" in r and r["grounded"] is True
+    whole = groundedness_check(CONTEXT, "answer", Gemini('{"grounded": false, "unsupported_claims": ["x"]}'),
+                               question=QUESTION, mode="whole")
+    assert whole["grounded"] is False and "claims" not in whole
 
 
 if __name__ == "__main__":

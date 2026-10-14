@@ -43,7 +43,7 @@ from decision_policy import run_level_check  # noqa: E402
 from llm_provider import get_provider  # noqa: E402
 from tools.drift_check import drift_check  # noqa: E402
 from tools.golden_eval import golden_eval  # noqa: E402
-from tools.groundedness_check import groundedness_check  # noqa: E402
+from tools.groundedness_check import groundedness_check, mode_for  # noqa: E402
 from tools.llm_judge import llm_judge  # noqa: E402
 
 JUDGE_MODE = "reference"
@@ -56,7 +56,7 @@ def evaluate_all(provider) -> list[dict]:
     for run in load_sample_candidate_runs():
         item = golden[run["id"]]
         g = golden_eval(item["question"], item["golden_answer"], run["candidate_answer"], provider)
-        gr = groundedness_check(item["context"], run["candidate_answer"], provider)
+        gr = groundedness_check(item["context"], run["candidate_answer"], provider, question=item["question"])
         j = llm_judge(item["question"], run["candidate_answer"], provider, reference_answer=item["golden_answer"])
         results.append({
             "id": run["id"],
@@ -102,6 +102,7 @@ def main(argv: list[str] | None = None) -> int:
             "model": model,
             "recorded_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "judge_mode": JUDGE_MODE,
+            "groundedness_mode": mode_for(provider),
             "n": len(results),
             "metrics": metrics,
             "per_answer": results,
@@ -116,6 +117,12 @@ def main(argv: list[str] | None = None) -> int:
     if baseline_mode != JUDGE_MODE:
         print(f"Baseline was recorded with judge mode {baseline_mode!r}, this run uses {JUDGE_MODE!r} -- "
               f"not comparable. Re-record it: PROVIDER={provider.name} python3 tools/run_eval.py --save-baseline")
+        return 2
+    # Baselines recorded before claim mode existed used the whole-answer check.
+    if baseline.get("groundedness_mode", "whole") != mode_for(provider):
+        print(f"Baseline was recorded with groundedness mode {baseline.get('groundedness_mode', 'whole')!r}, "
+              f"this run uses {mode_for(provider)!r} -- not comparable. "
+              f"Re-record it: PROVIDER={provider.name} python3 tools/run_eval.py --save-baseline")
         return 2
     drift = drift_check(metrics, baseline)
     verdict = run_level_check(drift)

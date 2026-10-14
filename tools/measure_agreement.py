@@ -33,6 +33,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from data_utils import DATA_DIR, load_golden_dataset, load_json  # noqa: E402
 from decision_policy import CONSERVATIVE, judge_gate_value, sign_off  # noqa: E402
 from llm_provider import QuotaExhausted  # noqa: E402
+from tools.groundedness_check import mode_for  # noqa: E402
 
 MEASUREMENT_DIR = DATA_DIR / "measurements"
 CHECKS = ("golden_eval", "groundedness_check", "llm_judge", "policy_or", "policy_and")
@@ -58,7 +59,7 @@ def check_row(it: dict, q: dict, provider) -> dict:
     row = {"id": it["id"]}
     for name, call in (
         ("golden_eval", lambda: golden_eval(q["question"], q["golden_answer"], it["candidate_answer"], provider)),
-        ("groundedness_check", lambda: groundedness_check(q["context"], it["candidate_answer"], provider)),
+        ("groundedness_check", lambda: groundedness_check(q["context"], it["candidate_answer"], provider, question=q["question"])),
         ("llm_judge", lambda: llm_judge(q["question"], it["candidate_answer"], provider, reference_answer=q["golden_answer"])),
     ):
         try:
@@ -86,6 +87,7 @@ def run(provider) -> dict:
     return {
         "provider": provider.name,
         "model": getattr(provider, "model", None),
+        "groundedness_mode": mode_for(provider),
         "recorded_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "rows": rows,
     }
