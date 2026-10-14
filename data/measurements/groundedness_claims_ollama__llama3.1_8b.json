@@ -1,0 +1,3351 @@
+{
+  "provider": "ollama",
+  "model": "llama3.1:8b",
+  "mode": "claims",
+  "runs": 3,
+  "recorded_at": "2026-10-14T06:45:23+00:00",
+  "results": [
+    [
+      {
+        "id": "L01",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "You can change the due date after a partial payment.",
+            "label": "stated",
+            "evidence": "after a partial payment, only the due date and notes fields remain editable."
+          }
+        ]
+      },
+      {
+        "id": "L02",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, you can edit any part of the invoice until it's fully paid."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, you can edit any part of the invoice until it's fully paid.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L03",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Only partly -- once a payment comes in, you can still change the due date and the notes, but nothing else on the invoice.",
+            "label": "stated",
+            "evidence": "after a partial payment, only the due date and notes fields remain editable."
+          },
+          {
+            "claim": "you can still change the due date and the notes",
+            "label": "follows",
+            "evidence": "after a partial payment, only the due date and notes fields remain editable."
+          },
+          {
+            "claim": "nothing else on the invoice",
+            "label": "stated",
+            "evidence": "after a partial payment, only the due date and notes fields remain editable."
+          }
+        ]
+      },
+      {
+        "id": "L04",
+        "grounded": false,
+        "unsupported_claims": [
+          "After a partial payment you can still edit the due date and notes.",
+          "If you need to change the amount, you can void the invoice and issue a new one."
+        ],
+        "claims": [
+          {
+            "claim": "After a partial payment you can still edit the due date and notes.",
+            "label": "stated",
+            "evidence": "Invoices can be edited any time before the first payment is received; after a partial payment, only the due date and notes fields remain editable."
+          },
+          {
+            "claim": "If you need to change the amount, you can void the invoice and issue a new one.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L05",
+        "grounded": false,
+        "unsupported_claims": [
+          "The account owner can switch the default to Net 15, Net 45, Net 60, or Net 90 in Settings > Billing."
+        ],
+        "claims": [
+          {
+            "claim": "Net 30 by default.",
+            "label": "stated",
+            "evidence": "Default payment terms are Net 30."
+          },
+          {
+            "claim": "The account owner can switch the default to Net 15, Net 45, Net 60, or Net 90 in Settings > Billing.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L06",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Net 30",
+            "label": "stated",
+            "evidence": "Default payment terms are Net 30."
+          },
+          {
+            "claim": "you can set a different term on any individual invoice if a customer needs more time",
+            "label": "follows",
+            "evidence": "Account owners can change the default to Net 15, Net 45, or Net 60 in Settings > Billing."
+          }
+        ]
+      },
+      {
+        "id": "L07",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "New invoices use Net 30 by default.",
+            "label": "stated",
+            "evidence": "Default payment terms are Net 30."
+          }
+        ]
+      },
+      {
+        "id": "L08",
+        "grounded": false,
+        "unsupported_claims": [
+          "The default is Net 15"
+        ],
+        "claims": [
+          {
+            "claim": "The default is Net 15",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "you can change it in Settings",
+            "label": "stated",
+            "evidence": "Settings > Billing"
+          }
+        ]
+      },
+      {
+        "id": "L09",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes -- choose 'bank account' as the refund destination when you issue the refund."
+        ],
+        "claims": [
+          {
+            "claim": "Yes -- choose 'bank account' as the refund destination when you issue the refund.",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "Refunded amounts are returned to the original payment method",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method and typically post within 5-10 business days."
+          },
+          {
+            "claim": "Ledgerly does not support refunding a payment to a different payment method than the one used originally.",
+            "label": "stated",
+            "evidence": "Ledgerly does not support refunding a payment to a different payment method than the one used originally."
+          }
+        ]
+      },
+      {
+        "id": "L10",
+        "grounded": false,
+        "unsupported_claims": [
+          "If the card has expired, the refund is sent as a check instead."
+        ],
+        "claims": [
+          {
+            "claim": "No, it has to go back to the card.",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method"
+          },
+          {
+            "claim": "If the card has expired, the refund is sent as a check instead.",
+            "label": "stated",
+            "evidence": "If the card has expired, the refund is sent as a check instead."
+          }
+        ]
+      },
+      {
+        "id": "L11",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "No, refunds go back to the card that was used.",
+            "label": "stated",
+            "evidence": "Ledgerly does not support refunding a payment to a different payment method than the one used originally."
+          },
+          {
+            "claim": "They usually post within 5-10 business days.",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method and typically post within 5-10 business days."
+          }
+        ]
+      },
+      {
+        "id": "L12",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Refunds always go back to the original payment method",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method"
+          },
+          {
+            "claim": "a card payment is refunded to the card",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method, so a card payment is refunded to the card"
+          }
+        ]
+      },
+      {
+        "id": "L13",
+        "grounded": false,
+        "unsupported_claims": [
+          "A late fee is added every 7 days after the due date until the invoice is paid."
+        ],
+        "claims": [
+          {
+            "claim": "A late fee is added every 7 days after the due date until the invoice is paid.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L14",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "the first one is added 1 day after the due date",
+            "label": "stated",
+            "evidence": "When enabled, a late fee is applied automatically 1 day after an invoice's due date"
+          },
+          {
+            "claim": "then another every 30 days while it's unpaid",
+            "label": "stated",
+            "evidence": "and again every 30 days the invoice remains unpaid"
+          },
+          {
+            "claim": "up to the cap you set",
+            "label": "stated",
+            "evidence": "up to a cap the account owner sets"
+          }
+        ]
+      },
+      {
+        "id": "L15",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Every 30 days after the due date.",
+            "label": "stated",
+            "evidence": "again every 30 days the invoice remains unpaid"
+          }
+        ]
+      },
+      {
+        "id": "L16",
+        "grounded": false,
+        "unsupported_claims": [
+          "with no limit until the invoice is paid"
+        ],
+        "claims": [
+          {
+            "claim": "One day after the due date",
+            "label": "stated",
+            "evidence": "When enabled, a late fee is applied automatically 1 day after an invoice's due date"
+          },
+          {
+            "claim": "and every 30 days after that",
+            "label": "stated",
+            "evidence": "and again every 30 days the invoice remains unpaid"
+          },
+          {
+            "claim": "with no limit until the invoice is paid",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L17",
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly converts the payment back to USD at the daily exchange rate."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, you can send it in EUR.",
+            "label": "stated",
+            "evidence": "individual invoices can still be issued in any of the four supported currencies regardless of the account default."
+          },
+          {
+            "claim": "Ledgerly converts the payment back to USD at the daily exchange rate.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L18",
+        "grounded": false,
+        "unsupported_claims": [
+          "invoices always use your account's default currency"
+        ],
+        "claims": [
+          {
+            "claim": "invoices always use your account's default currency",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L19",
+        "grounded": false,
+        "unsupported_claims": [
+          "but"
+        ],
+        "claims": [
+          {
+            "claim": "Your account default stays USD",
+            "label": "stated",
+            "evidence": "An account's default currency is set once at account creation and cannot be changed afterward..."
+          },
+          {
+            "claim": "any single invoice can be issued in EUR, GBP or CAD",
+            "label": "stated",
+            "evidence": "individual invoices can still be issued in any of the four supported currencies regardless of the account default"
+          },
+          {
+            "claim": "but",
+            "label": "from_question",
+            "evidence": ""
+          },
+          {
+            "claim": "any single invoice can be issued in EUR, GBP or CAD",
+            "label": "follows",
+            "evidence": "individual invoices can still be issued in any of the four supported currencies regardless of the account default"
+          }
+        ]
+      },
+      {
+        "id": "L20",
+        "grounded": false,
+        "unsupported_claims": [
+          "and you can also switch your account default to EUR in Settings if you prefer"
+        ],
+        "claims": [
+          {
+            "claim": "Yes, you can invoice in EUR",
+            "label": "stated",
+            "evidence": "individual invoices can still be issued in any of the four supported currencies regardless of the account default"
+          },
+          {
+            "claim": "and you can also switch your account default to EUR in Settings if you prefer",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L21",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, but the invoice is marked as paid once the customer has paid at least half."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, but the invoice is marked as paid once the customer has paid at least half.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L22",
+        "grounded": false,
+        "unsupported_claims": [
+          "Only if you enable partial payments on the invoice first -- they're off by default."
+        ],
+        "claims": [
+          {
+            "claim": "Only if you enable partial payments on the invoice first -- they're off by default.",
+            "label": "stated",
+            "evidence": "Every invoice supports partial payments -- a customer can pay any amount up to the invoice total, and the invoice stays open until the full balance is paid."
+          }
+        ]
+      },
+      {
+        "id": "L23",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "partial payments are supported",
+            "label": "stated",
+            "evidence": "Every invoice supports partial payments"
+          }
+        ]
+      },
+      {
+        "id": "L24",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "A customer can pay any amount up to the total",
+            "label": "stated",
+            "evidence": "Every invoice supports partial payments -- a customer can pay any amount up to the invoice total"
+          },
+          {
+            "claim": "and the invoice stays open until the rest is paid",
+            "label": "stated",
+            "evidence": "and the invoice stays open until the full balance is paid"
+          }
+        ]
+      },
+      {
+        "id": "L25",
+        "grounded": false,
+        "unsupported_claims": [
+          "You can bulk-update them from the Invoices page if you want them to match."
+        ],
+        "claims": [
+          {
+            "claim": "No, existing invoices keep their terms.",
+            "label": "stated",
+            "evidence": "existing invoices keep their original terms."
+          },
+          {
+            "claim": "You can bulk-update them from the Invoices page if you want them to match.",
+            "label": "stated",
+            "evidence": "You can bulk-update them from the Invoices page if you want them to match."
+          }
+        ]
+      },
+      {
+        "id": "L26",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "No, it only affects new invoices.",
+            "label": "stated",
+            "evidence": "Changing the default only affects invoices created after the change -- existing invoices keep their original terms."
+          }
+        ]
+      },
+      {
+        "id": "L27",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "the new default only applies to invoices you create after the change",
+            "label": "stated",
+            "evidence": "Changing the default only affects invoices created after the change -- existing invoices keep their original terms."
+          },
+          {
+            "claim": "existing invoices keep their original terms",
+            "label": "stated",
+            "evidence": "Changing the default only affects invoices created after the change -- existing invoices keep their original terms."
+          }
+        ]
+      },
+      {
+        "id": "L28",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, all open invoices are updated to the new term."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, all open invoices are updated to the new term.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L29",
+        "grounded": false,
+        "unsupported_claims": [
+          "Refunds are available for 90 days after payment."
+        ],
+        "claims": [
+          {
+            "claim": "Refunds are available for 90 days after payment.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L30",
+        "grounded": false,
+        "unsupported_claims": [
+          "After that, you'd need to contact Ledgerly support to approve a refund."
+        ],
+        "claims": [
+          {
+            "claim": "Within 180 days of the payment.",
+            "label": "stated",
+            "evidence": "Refunds can be issued for any payment within 180 days of the payment date."
+          },
+          {
+            "claim": "After that, you'd need to contact Ledgerly support to approve a refund.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L31",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "You can refund a payment for up to 180 days after the payment date",
+            "label": "stated",
+            "evidence": "Refunds can be issued for any payment within 180 days of the payment date."
+          },
+          {
+            "claim": "either partially or in full",
+            "label": "stated",
+            "evidence": "A refund can be partial or full."
+          }
+        ]
+      },
+      {
+        "id": "L32",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Within 180 days of the invoice date.",
+            "label": "stated",
+            "evidence": "Refunds can be issued for any payment within 180 days of the payment date."
+          }
+        ]
+      },
+      {
+        "id": "L33",
+        "grounded": false,
+        "unsupported_claims": [
+          "and once enabled they only apply to invoices over $100"
+        ],
+        "claims": [
+          {
+            "claim": "No, they're off by default",
+            "label": "stated",
+            "evidence": "Late fees are off by default."
+          },
+          {
+            "claim": "and once enabled they only apply to invoices over $100",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L34",
+        "grounded": false,
+        "unsupported_claims": [
+          "a 1.5% late fee is applied automatically",
+          "unless you turn it off"
+        ],
+        "claims": [
+          {
+            "claim": "a 1.5% late fee is applied automatically",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "unless you turn it off",
+            "label": "from_question",
+            "evidence": ""
+          },
+          {
+            "claim": "late fees are off by default",
+            "label": "stated",
+            "evidence": "Late fees are off by default."
+          },
+          {
+            "claim": "a late fee (flat amount or percentage) is applied automatically 1 day after an invoice's due date",
+            "label": "stated",
+            "evidence": "When enabled in Settings > Billing, a late fee (flat amount or percentage) is applied automatically 1 day after an invoice's due date"
+          },
+          {
+            "claim": "and again every 30 days the invoice remains unpaid, up to a cap the account owner sets",
+            "label": "stated",
+            "evidence": "and again every 30 days the invoice remains unpaid, up to a cap the account owner sets."
+          }
+        ]
+      },
+      {
+        "id": "L35",
+        "grounded": false,
+        "unsupported_claims": [
+          "Once you turn them on, you can choose a flat amount or a percentage.",
+          "Late fees are turned on automatically."
+        ],
+        "claims": [
+          {
+            "claim": "Late fees are off by default.",
+            "label": "stated",
+            "evidence": "Late fees are off by default."
+          },
+          {
+            "claim": "Once you turn them on, you can choose a flat amount or a percentage.",
+            "label": "stated",
+            "evidence": "When enabled in Settings > Billing, a late fee (flat amount or percentage) is applied automatically 1 day after an invoice's due date, and again every 30 days the invoice remains unpaid, up to a cap the account owner sets."
+          },
+          {
+            "claim": "Late fees are turned on automatically.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L36",
+        "grounded": false,
+        "unsupported_claims": [
+          "You can turn them on in Settings > Billing"
+        ],
+        "claims": [
+          {
+            "claim": "late fees are off by default",
+            "label": "stated",
+            "evidence": "Late fees are off by default."
+          },
+          {
+            "claim": "You can turn them on in Settings > Billing",
+            "label": "stated",
+            "evidence": "When enabled in Settings > Billing, a late fee (flat amount or percentage) is applied automatically 1 day after an invoice's due date, and again every 30 days the invoice remains unpaid, up to a cap the account owner sets."
+          }
+        ]
+      },
+      {
+        "id": "L37",
+        "grounded": false,
+        "unsupported_claims": [
+          "Nothing happens to them.",
+          "anything already sent stays as it is."
+        ],
+        "claims": [
+          {
+            "claim": "Nothing happens to them.",
+            "label": "from_question",
+            "evidence": ""
+          },
+          {
+            "claim": "Pausing only stops future invoices;",
+            "label": "stated",
+            "evidence": "Pausing a recurring schedule stops future invoices"
+          },
+          {
+            "claim": "anything already sent stays as it is.",
+            "label": "stated",
+            "evidence": "anything already sent stays as it is."
+          }
+        ]
+      },
+      {
+        "id": "L38",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Already-sent invoices aren't affected.",
+            "label": "stated",
+            "evidence": "Pausing a recurring schedule stops future invoices but does not affect invoices already sent."
+          },
+          {
+            "claim": "You can resume the schedule later and Ledgerly will send any invoices that were skipped while it was paused.",
+            "label": "stated",
+            "evidence": "A recurring schedule can be edited at any time; changes apply only to invoices created after the edit."
+          }
+        ]
+      },
+      {
+        "id": "L39",
+        "grounded": false,
+        "unsupported_claims": [
+          "Pausing cancels the invoices it already sent",
+          "so customers won't owe them"
+        ],
+        "claims": [
+          {
+            "claim": "Pausing cancels the invoices it already sent",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "so customers won't owe them",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L40",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "They aren't affected.",
+            "label": "stated",
+            "evidence": "Pausing a recurring schedule stops future invoices but does not affect invoices already sent."
+          }
+        ]
+      },
+      {
+        "id": "L41",
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly sends a reminder every day after the due date until the invoice is paid."
+        ],
+        "claims": [
+          {
+            "claim": "Ledgerly sends a reminder every day after the due date until the invoice is paid.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L42",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "3 days before the due date",
+            "label": "stated",
+            "evidence": "When turned on, a reminder is sent 3 days before the due date"
+          },
+          {
+            "claim": "and on the due date",
+            "label": "stated",
+            "evidence": "and again on the due date"
+          }
+        ]
+      },
+      {
+        "id": "L43",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Reminders are off by default.",
+            "label": "stated",
+            "evidence": "Reminders are off by default."
+          },
+          {
+            "claim": "If you turn them on, one goes out 3 days before the due date and another on the due date",
+            "label": "stated",
+            "evidence": "When turned on, a reminder is sent 3 days before the due date and again on the due date."
+          },
+          {
+            "claim": "and they stop once the invoice is paid in full.",
+            "label": "stated",
+            "evidence": "Reminders stop automatically once an invoice is fully paid."
+          }
+        ]
+      },
+      {
+        "id": "L44",
+        "grounded": false,
+        "unsupported_claims": [
+          "and again 7 days after if it's still unpaid"
+        ],
+        "claims": [
+          {
+            "claim": "If turned on, 3 days before the due date, on the due date",
+            "label": "stated",
+            "evidence": "When turned on, a reminder is sent 3 days before the due date and again on the due date."
+          },
+          {
+            "claim": "and again 7 days after if it's still unpaid",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L45",
+        "grounded": false,
+        "unsupported_claims": [
+          "Not by text"
+        ],
+        "claims": [
+          {
+            "claim": "reminders go out by email",
+            "label": "stated",
+            "evidence": "Ledgerly can send automatic payment reminders by email."
+          },
+          {
+            "claim": "only once you've turned them on",
+            "label": "stated",
+            "evidence": "Reminders are off by default. When turned on, a reminder is sent 3 days before the due date and again on the due date."
+          },
+          {
+            "claim": "Not by text",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L46",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, you can choose email or text for each customer."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, you can choose email or text for each customer.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L47",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Reminders are only sent by email.",
+            "label": "stated",
+            "evidence": "Reminders are only sent by email."
+          }
+        ]
+      },
+      {
+        "id": "L48",
+        "grounded": false,
+        "unsupported_claims": [
+          "But you can connect Twilio to send text reminders."
+        ],
+        "claims": [
+          {
+            "claim": "No, only email.",
+            "label": "stated",
+            "evidence": "Reminders cannot be sent by text message."
+          },
+          {
+            "claim": "But you can connect Twilio to send text reminders.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L49",
+        "grounded": false,
+        "unsupported_claims": [
+          "You can add tax rates yourself."
+        ],
+        "claims": [
+          {
+            "claim": "You can add tax rates yourself.",
+            "label": "stated",
+            "evidence": "You can add tax rates yourself."
+          },
+          {
+            "claim": "You can apply up to three rates per line item.",
+            "label": "stated",
+            "evidence": "Up to two tax rates can be applied to each invoice line item."
+          }
+        ]
+      },
+      {
+        "id": "L50",
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly files your sales tax returns at the end of each quarter"
+        ],
+        "claims": [
+          {
+            "claim": "you enter rates yourself",
+            "label": "stated",
+            "evidence": "Up to two tax rates can be applied to each invoice line item. Tax rates are set up in Settings > Taxes"
+          },
+          {
+            "claim": "Ledgerly files your sales tax returns at the end of each quarter",
+            "label": "stated",
+            "evidence": "Ledgerly files your sales tax returns at the end of each quarter"
+          },
+          {
+            "claim": "Ledgerly does not look up tax rates by location",
+            "label": "stated",
+            "evidence": "Tax rates are set up in Settings > Taxes and are not calculated automatically -- Ledgerly does not look up tax rates by location."
+          }
+        ]
+      },
+      {
+        "id": "L51",
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly calculates tax automatically",
+          "from your customer's billing address",
+          "Yes"
+        ],
+        "claims": [
+          {
+            "claim": "Ledgerly calculates tax automatically",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "from your customer's billing address",
+            "label": "from_question",
+            "evidence": ""
+          },
+          {
+            "claim": "Yes",
+            "label": "from_question",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L52",
+        "grounded": false,
+        "unsupported_claims": [
+          "No"
+        ],
+        "claims": [
+          {
+            "claim": "You set up your own tax rates in Settings > Taxes and apply them to line items",
+            "label": "stated",
+            "evidence": "Up to two tax rates can be applied to each invoice line item. Tax rates are set up in Settings > Taxes"
+          },
+          {
+            "claim": "Ledgerly doesn't look up rates by location",
+            "label": "stated",
+            "evidence": "Ledgerly does not look up tax rates by location."
+          },
+          {
+            "claim": "No",
+            "label": "from_question",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L53",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "No, only the Owner can.",
+            "label": "stated",
+            "evidence": "The Owner can change billing settings (payment terms and late fees) or delete the account."
+          }
+        ]
+      },
+      {
+        "id": "L54",
+        "grounded": false,
+        "unsupported_claims": [
+          "Admins have full access to all settings"
+        ],
+        "claims": [
+          {
+            "claim": "Admins have full access to all settings",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "Admins can create, edit, and send invoices and issue refunds",
+            "label": "stated",
+            "evidence": "Admins can create, edit, and send invoices and issue refunds"
+          },
+          {
+            "claim": "Only the Owner can change billing settings (payment terms and late fees)",
+            "label": "stated",
+            "evidence": "Only the Owner can change billing settings (payment terms and late fees)"
+          },
+          {
+            "claim": "Viewers can see invoices and reports but cannot change anything",
+            "label": "stated",
+            "evidence": "Viewers can see invoices and reports but cannot change anything"
+          }
+        ]
+      },
+      {
+        "id": "L55",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Only the account Owner can change billing settings like late fees and payment terms.",
+            "label": "stated",
+            "evidence": "The Owner can change billing settings (payment terms and late fees) or delete the account."
+          },
+          {
+            "claim": "Admins can still create, send and refund invoices.",
+            "label": "stated",
+            "evidence": "Admins can create, edit, and send invoices and issue refunds,"
+          }
+        ]
+      },
+      {
+        "id": "L56",
+        "grounded": false,
+        "unsupported_claims": [
+          "The Owner can grant an Admin billing permission from the Team page, though"
+        ],
+        "claims": [
+          {
+            "claim": "that's Owner-only",
+            "label": "stated",
+            "evidence": "only the Owner can change billing settings (payment terms and late fees) or delete the account."
+          },
+          {
+            "claim": "The Owner can grant an Admin billing permission from the Team page, though",
+            "label": "stated",
+            "evidence": "The Owner can grant an Admin billing permission from the Team page, though"
+          }
+        ]
+      },
+      {
+        "id": "L57",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, go to Settings > Integrations and connect QuickBooks."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, go to Settings > Integrations and connect QuickBooks.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L58",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "No direct export",
+            "label": "stated",
+            "evidence": "Ledgerly does not offer a direct export to accounting software."
+          },
+          {
+            "claim": "you can download a CSV of invoices and payments from Reports",
+            "label": "stated",
+            "evidence": "Invoices and payments can be exported to CSV at any time from Reports."
+          },
+          {
+            "claim": "or a PDF of any invoice from its page",
+            "label": "stated",
+            "evidence": "PDF copies of individual invoices can be downloaded from the invoice page."
+          }
+        ]
+      },
+      {
+        "id": "L59",
+        "grounded": false,
+        "unsupported_claims": [
+          "No, and Ledgerly doesn't let you export your data at all."
+        ],
+        "claims": [
+          {
+            "claim": "No, and Ledgerly doesn't let you export your data at all.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L60",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Ledgerly has no direct export to accounting software",
+            "label": "stated",
+            "evidence": "Ledgerly does not offer a direct export to accounting software."
+          },
+          {
+            "claim": "you can export invoices and payments as a CSV from Reports",
+            "label": "stated",
+            "evidence": "Invoices and payments can be exported to CSV at any time from Reports."
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "id": "L01",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "You can change the due date after a partial payment.",
+            "label": "stated",
+            "evidence": "after a partial payment, only the due date and notes fields remain editable."
+          }
+        ]
+      },
+      {
+        "id": "L02",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, you can edit any part of the invoice until it's fully paid."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, you can edit any part of the invoice until it's fully paid.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L03",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Only partly -- once a payment comes in, you can still change the due date and the notes, but nothing else on the invoice.",
+            "label": "stated",
+            "evidence": "after a partial payment, only the due date and notes fields remain editable."
+          },
+          {
+            "claim": "once a payment comes in",
+            "label": "follows",
+            "evidence": "after a partial payment"
+          },
+          {
+            "claim": "you can still change the due date and the notes",
+            "label": "follows",
+            "evidence": "after a partial payment, only the due date and notes fields remain editable."
+          },
+          {
+            "claim": "nothing else on the invoice",
+            "label": "follows",
+            "evidence": "after a partial payment, only the due date and notes fields remain editable."
+          }
+        ]
+      },
+      {
+        "id": "L04",
+        "grounded": false,
+        "unsupported_claims": [
+          "After a partial payment you can still edit the due date and notes.",
+          "If you need to change the amount, you can void the invoice and issue a new one."
+        ],
+        "claims": [
+          {
+            "claim": "After a partial payment you can still edit the due date and notes.",
+            "label": "stated",
+            "evidence": "Invoices can be edited any time before the first payment is received; after a partial payment, only the due date and notes fields remain editable."
+          },
+          {
+            "claim": "If you need to change the amount, you can void the invoice and issue a new one.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L05",
+        "grounded": false,
+        "unsupported_claims": [
+          "The account owner can switch the default to Net 15, Net 45, Net 60, or Net 90 in Settings > Billing."
+        ],
+        "claims": [
+          {
+            "claim": "Net 30 by default.",
+            "label": "stated",
+            "evidence": "Default payment terms are Net 30."
+          },
+          {
+            "claim": "The account owner can switch the default to Net 15, Net 45, Net 60, or Net 90 in Settings > Billing.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L06",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Net 30",
+            "label": "stated",
+            "evidence": "Default payment terms are Net 30."
+          },
+          {
+            "claim": "you can set a different term on any individual invoice if a customer needs more time",
+            "label": "follows",
+            "evidence": "Account owners can change the default to Net 15, Net 45, or Net 60 in Settings > Billing."
+          }
+        ]
+      },
+      {
+        "id": "L07",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "New invoices use Net 30 by default.",
+            "label": "stated",
+            "evidence": "Default payment terms are Net 30."
+          }
+        ]
+      },
+      {
+        "id": "L08",
+        "grounded": false,
+        "unsupported_claims": [
+          "The default is Net 15"
+        ],
+        "claims": [
+          {
+            "claim": "The default is Net 15",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "you can change it in Settings",
+            "label": "stated",
+            "evidence": "Settings > Billing"
+          }
+        ]
+      },
+      {
+        "id": "L09",
+        "grounded": false,
+        "unsupported_claims": [
+          "choose 'bank account' as the refund destination when you issue the refund"
+        ],
+        "claims": [
+          {
+            "claim": "Refunded amounts are returned to the original payment method",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method and typically post within 5-10 business days."
+          },
+          {
+            "claim": "Ledgerly does not support refunding a payment to a different payment method than the one used originally",
+            "label": "stated",
+            "evidence": "Ledgerly does not support refunding a payment to a different payment method than the one used originally."
+          },
+          {
+            "claim": "choose 'bank account' as the refund destination when you issue the refund",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L10",
+        "grounded": false,
+        "unsupported_claims": [
+          "If the card has expired, the refund is sent as a check instead."
+        ],
+        "claims": [
+          {
+            "claim": "No, it has to go back to the card.",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method"
+          },
+          {
+            "claim": "If the card has expired, the refund is sent as a check instead.",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method and typically post within 5-10 business days. Ledgerly does not support refunding a payment to a different payment method than the one used originally."
+          }
+        ]
+      },
+      {
+        "id": "L11",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "No, refunds go back to the card that was used.",
+            "label": "stated",
+            "evidence": "Ledgerly does not support refunding a payment to a different payment method than the one used originally."
+          },
+          {
+            "claim": "They usually post within 5-10 business days.",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method and typically post within 5-10 business days."
+          }
+        ]
+      },
+      {
+        "id": "L12",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Refunds always go back to the original payment method",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method"
+          },
+          {
+            "claim": "a card payment is refunded to the card",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method, so a card payment is refunded to the card"
+          }
+        ]
+      },
+      {
+        "id": "L13",
+        "grounded": false,
+        "unsupported_claims": [
+          "A late fee is added every 7 days after the due date until the invoice is paid."
+        ],
+        "claims": [
+          {
+            "claim": "A late fee is added every 7 days after the due date until the invoice is paid.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L14",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "the first one is added 1 day after the due date",
+            "label": "stated",
+            "evidence": "When enabled, a late fee is applied automatically 1 day after an invoice's due date"
+          },
+          {
+            "claim": "then another every 30 days while it's unpaid",
+            "label": "stated",
+            "evidence": "and again every 30 days the invoice remains unpaid"
+          },
+          {
+            "claim": "up to the cap you set",
+            "label": "stated",
+            "evidence": "up to a cap the account owner sets"
+          }
+        ]
+      },
+      {
+        "id": "L15",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Every 30 days after the due date.",
+            "label": "stated",
+            "evidence": "again every 30 days the invoice remains unpaid"
+          }
+        ]
+      },
+      {
+        "id": "L16",
+        "grounded": false,
+        "unsupported_claims": [
+          "with no limit until the invoice is paid"
+        ],
+        "claims": [
+          {
+            "claim": "One day after the due date",
+            "label": "stated",
+            "evidence": "When enabled, a late fee is applied automatically 1 day after an invoice's due date"
+          },
+          {
+            "claim": "and every 30 days after that",
+            "label": "stated",
+            "evidence": "and again every 30 days the invoice remains unpaid"
+          },
+          {
+            "claim": "with no limit until the invoice is paid",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L17",
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly converts the payment back to USD at the daily exchange rate."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, you can send it in EUR.",
+            "label": "stated",
+            "evidence": "individual invoices can still be issued in any of the four supported currencies regardless of the account default."
+          },
+          {
+            "claim": "Ledgerly converts the payment back to USD at the daily exchange rate.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L18",
+        "grounded": false,
+        "unsupported_claims": [
+          "invoices always use your account's default currency"
+        ],
+        "claims": [
+          {
+            "claim": "invoices always use your account's default currency",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L19",
+        "grounded": false,
+        "unsupported_claims": [
+          "but"
+        ],
+        "claims": [
+          {
+            "claim": "Your account default stays USD",
+            "label": "stated",
+            "evidence": "An account's default currency is set once at account creation and cannot be changed afterward..."
+          },
+          {
+            "claim": "any single invoice can be issued in EUR, GBP or CAD",
+            "label": "stated",
+            "evidence": "individual invoices can still be issued in any of the four supported currencies regardless of the account default"
+          },
+          {
+            "claim": "but",
+            "label": "from_question",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L20",
+        "grounded": false,
+        "unsupported_claims": [
+          "you can also switch your account default to EUR in Settings if you prefer"
+        ],
+        "claims": [
+          {
+            "claim": "you can invoice in EUR",
+            "label": "stated",
+            "evidence": "individual invoices can still be issued in any of the four supported currencies regardless of the account default"
+          },
+          {
+            "claim": "you can also switch your account default to EUR in Settings if you prefer",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L21",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, but the invoice is marked as paid once the customer has paid at least half.",
+          "and the invoice stays open until the full balance is paid"
+        ],
+        "claims": [
+          {
+            "claim": "Yes, but the invoice is marked as paid once the customer has paid at least half.",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "a customer can pay any amount up to the invoice total",
+            "label": "stated",
+            "evidence": "Every invoice supports partial payments -- a customer can pay any amount up to the invoice total"
+          },
+          {
+            "claim": "and the invoice stays open until the full balance is paid",
+            "label": "stated",
+            "evidence": "Every invoice supports partial payments -- a customer can pay any amount up to the invoice total, and the invoice stays open until the full balance is paid"
+          }
+        ]
+      },
+      {
+        "id": "L22",
+        "grounded": false,
+        "unsupported_claims": [
+          "Only if you enable partial payments on the invoice first -- they're off by default."
+        ],
+        "claims": [
+          {
+            "claim": "Only if you enable partial payments on the invoice first -- they're off by default.",
+            "label": "stated",
+            "evidence": "Every invoice supports partial payments -- a customer can pay any amount up to the invoice total, and the invoice stays open until the full balance is paid."
+          }
+        ]
+      },
+      {
+        "id": "L23",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "partial payments are supported",
+            "label": "stated",
+            "evidence": "Every invoice supports partial payments"
+          }
+        ]
+      },
+      {
+        "id": "L24",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "A customer can pay any amount up to the total",
+            "label": "stated",
+            "evidence": "Every invoice supports partial payments -- a customer can pay any amount up to the invoice total"
+          },
+          {
+            "claim": "and the invoice stays open until the rest is paid",
+            "label": "stated",
+            "evidence": "and the invoice stays open until the full balance is paid"
+          }
+        ]
+      },
+      {
+        "id": "L25",
+        "grounded": false,
+        "unsupported_claims": [
+          "You can bulk-update them from the Invoices page if you want them to match."
+        ],
+        "claims": [
+          {
+            "claim": "No, existing invoices keep their terms.",
+            "label": "stated",
+            "evidence": "existing invoices keep their original terms."
+          },
+          {
+            "claim": "You can bulk-update them from the Invoices page if you want them to match.",
+            "label": "stated",
+            "evidence": "You can bulk-update them from the Invoices page if you want them to match."
+          }
+        ]
+      },
+      {
+        "id": "L26",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "it only affects new invoices",
+            "label": "stated",
+            "evidence": "Changing the default only affects invoices created after the change -- existing invoices keep their original terms."
+          }
+        ]
+      },
+      {
+        "id": "L27",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "the new default only applies to invoices you create after the change",
+            "label": "stated",
+            "evidence": "Changing the default only affects invoices created after the change -- existing invoices keep their original terms."
+          },
+          {
+            "claim": "existing invoices keep their original terms",
+            "label": "stated",
+            "evidence": "Changing the default only affects invoices created after the change -- existing invoices keep their original terms."
+          }
+        ]
+      },
+      {
+        "id": "L28",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, all open invoices are updated to the new term."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, all open invoices are updated to the new term.",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "existing invoices keep their original terms.",
+            "label": "stated",
+            "evidence": "Changing the default only affects invoices created after the change -- existing invoices keep their original terms."
+          }
+        ]
+      },
+      {
+        "id": "L29",
+        "grounded": false,
+        "unsupported_claims": [
+          "Refunds are available for 90 days after payment."
+        ],
+        "claims": [
+          {
+            "claim": "Refunds are available for 90 days after payment.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L30",
+        "grounded": false,
+        "unsupported_claims": [
+          "After that, you'd need to contact Ledgerly support to approve a refund."
+        ],
+        "claims": [
+          {
+            "claim": "Within 180 days of the payment.",
+            "label": "stated",
+            "evidence": "Refunds can be issued for any payment within 180 days of the payment date."
+          },
+          {
+            "claim": "After that, you'd need to contact Ledgerly support to approve a refund.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L31",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "You can refund a payment for up to 180 days after the payment date",
+            "label": "stated",
+            "evidence": "Refunds can be issued for any payment within 180 days of the payment date."
+          },
+          {
+            "claim": "either partially or in full",
+            "label": "stated",
+            "evidence": "A refund can be partial or full."
+          }
+        ]
+      },
+      {
+        "id": "L32",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Within 180 days of the invoice date.",
+            "label": "stated",
+            "evidence": "Refunds can be issued for any payment within 180 days of the payment date."
+          }
+        ]
+      },
+      {
+        "id": "L33",
+        "grounded": false,
+        "unsupported_claims": [
+          "and once enabled they only apply to invoices over $100"
+        ],
+        "claims": [
+          {
+            "claim": "No, they're off by default",
+            "label": "stated",
+            "evidence": "Late fees are off by default."
+          },
+          {
+            "claim": "and once enabled they only apply to invoices over $100",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L34",
+        "grounded": false,
+        "unsupported_claims": [
+          "a 1.5% late fee is applied automatically",
+          "unless you turn it off"
+        ],
+        "claims": [
+          {
+            "claim": "a 1.5% late fee is applied automatically",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "unless you turn it off",
+            "label": "from_question",
+            "evidence": ""
+          },
+          {
+            "claim": "late fees are off by default",
+            "label": "stated",
+            "evidence": "Late fees are off by default."
+          },
+          {
+            "claim": "a late fee (flat amount or percentage) is applied automatically 1 day after an invoice's due date",
+            "label": "stated",
+            "evidence": "When enabled in Settings > Billing, a late fee (flat amount or percentage) is applied automatically 1 day after an invoice's due date"
+          },
+          {
+            "claim": "and again every 30 days the invoice remains unpaid, up to a cap the account owner sets",
+            "label": "stated",
+            "evidence": "and again every 30 days the invoice remains unpaid, up to a cap the account owner sets."
+          }
+        ]
+      },
+      {
+        "id": "L35",
+        "grounded": false,
+        "unsupported_claims": [
+          "Once you turn them on, you can choose a flat amount or a percentage.",
+          "Late fees are turned on automatically."
+        ],
+        "claims": [
+          {
+            "claim": "Late fees are off by default.",
+            "label": "stated",
+            "evidence": "Late fees are off by default."
+          },
+          {
+            "claim": "Once you turn them on, you can choose a flat amount or a percentage.",
+            "label": "stated",
+            "evidence": "When enabled in Settings > Billing, a late fee (flat amount or percentage) is applied automatically 1 day after an invoice's due date, and again every 30 days the invoice remains unpaid, up to a cap the account owner sets."
+          },
+          {
+            "claim": "Late fees are turned on automatically.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L36",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "No, late fees are off by default.",
+            "label": "stated",
+            "evidence": "Late fees are off by default."
+          },
+          {
+            "claim": "You can turn them on in Settings > Billing.",
+            "label": "stated",
+            "evidence": "When enabled in Settings > Billing..."
+          }
+        ]
+      },
+      {
+        "id": "L37",
+        "grounded": false,
+        "unsupported_claims": [
+          "Nothing happens to them.",
+          "anything already sent stays as it is."
+        ],
+        "claims": [
+          {
+            "claim": "Nothing happens to them.",
+            "label": "from_question",
+            "evidence": ""
+          },
+          {
+            "claim": "Pausing only stops future invoices;",
+            "label": "stated",
+            "evidence": "Pausing a recurring schedule stops future invoices"
+          },
+          {
+            "claim": "anything already sent stays as it is.",
+            "label": "stated",
+            "evidence": "anything already sent stays as it is."
+          }
+        ]
+      },
+      {
+        "id": "L38",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Already-sent invoices aren't affected.",
+            "label": "stated",
+            "evidence": "Pausing a recurring schedule stops future invoices but does not affect invoices already sent."
+          },
+          {
+            "claim": "You can resume the schedule later and Ledgerly will send any invoices that were skipped while it was paused.",
+            "label": "stated",
+            "evidence": "A recurring schedule can be edited at any time; changes apply only to invoices created after the edit."
+          }
+        ]
+      },
+      {
+        "id": "L39",
+        "grounded": false,
+        "unsupported_claims": [
+          "Pausing cancels the invoices it already sent",
+          "so customers won't owe them"
+        ],
+        "claims": [
+          {
+            "claim": "Pausing cancels the invoices it already sent",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "so customers won't owe them",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L40",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "They aren't affected.",
+            "label": "stated",
+            "evidence": "A recurring schedule can be edited at any time; changes apply only to invoices created after the edit."
+          }
+        ]
+      },
+      {
+        "id": "L41",
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly sends a reminder every day after the due date until the invoice is paid."
+        ],
+        "claims": [
+          {
+            "claim": "Ledgerly sends a reminder every day after the due date until the invoice is paid.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L42",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "3 days before the due date",
+            "label": "stated",
+            "evidence": "When turned on, a reminder is sent 3 days before the due date"
+          },
+          {
+            "claim": "and on the due date",
+            "label": "stated",
+            "evidence": "and again on the due date"
+          }
+        ]
+      },
+      {
+        "id": "L43",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Reminders are off by default.",
+            "label": "stated",
+            "evidence": "Reminders are off by default."
+          },
+          {
+            "claim": "If you turn them on, one goes out 3 days before the due date and another on the due date",
+            "label": "stated",
+            "evidence": "When turned on, a reminder is sent 3 days before the due date and again on the due date."
+          },
+          {
+            "claim": "and they stop once the invoice is paid in full.",
+            "label": "stated",
+            "evidence": "Reminders stop automatically once an invoice is fully paid."
+          }
+        ]
+      },
+      {
+        "id": "L44",
+        "grounded": false,
+        "unsupported_claims": [
+          "and again 7 days after if it's still unpaid"
+        ],
+        "claims": [
+          {
+            "claim": "If turned on, 3 days before the due date, on the due date",
+            "label": "stated",
+            "evidence": "When turned on, a reminder is sent 3 days before the due date and again on the due date."
+          },
+          {
+            "claim": "and again 7 days after if it's still unpaid",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L45",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "reminders go out by email",
+            "label": "stated",
+            "evidence": "Ledgerly can send automatic payment reminders by email."
+          },
+          {
+            "claim": "only once you've turned them on",
+            "label": "stated",
+            "evidence": "Reminders are off by default. When turned on, a reminder is sent 3 days before the due date and again on the due date."
+          },
+          {
+            "claim": "Not by text",
+            "label": "stated",
+            "evidence": "Reminders cannot be sent by text message."
+          }
+        ]
+      },
+      {
+        "id": "L46",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, you can choose email or text for each customer."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, you can choose email or text for each customer.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L47",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Reminders are only sent by email.",
+            "label": "stated",
+            "evidence": "Reminders are only sent by email."
+          }
+        ]
+      },
+      {
+        "id": "L48",
+        "grounded": false,
+        "unsupported_claims": [
+          "But you can connect Twilio to send text reminders."
+        ],
+        "claims": [
+          {
+            "claim": "No, only email.",
+            "label": "stated",
+            "evidence": "Reminders cannot be sent by text message."
+          },
+          {
+            "claim": "But you can connect Twilio to send text reminders.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L49",
+        "grounded": false,
+        "unsupported_claims": [
+          "You can add tax rates yourself."
+        ],
+        "claims": [
+          {
+            "claim": "You can add tax rates yourself.",
+            "label": "stated",
+            "evidence": "You can add tax rates yourself."
+          },
+          {
+            "claim": "You can apply up to three rates per line item.",
+            "label": "stated",
+            "evidence": "Up to two tax rates can be applied to each invoice line item."
+          },
+          {
+            "claim": "Ledgerly does not look up tax rates by location.",
+            "label": "stated",
+            "evidence": "Ledgerly does not look up tax rates by location."
+          },
+          {
+            "claim": "No, you add tax rates yourself.",
+            "label": "from_question",
+            "evidence": "Does Ledgerly calculate sales tax automatically based on my customer's location?"
+          }
+        ]
+      },
+      {
+        "id": "L50",
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly files your sales tax returns at the end of each quarter"
+        ],
+        "claims": [
+          {
+            "claim": "you enter rates yourself",
+            "label": "stated",
+            "evidence": "Up to two tax rates can be applied to each invoice line item. Tax rates are set up in Settings > Taxes"
+          },
+          {
+            "claim": "Ledgerly files your sales tax returns at the end of each quarter",
+            "label": "stated",
+            "evidence": "Ledgerly files your sales tax returns at the end of each quarter"
+          },
+          {
+            "claim": "Ledgerly does not look up tax rates by location",
+            "label": "stated",
+            "evidence": "Tax rates are set up in Settings > Taxes and are not calculated automatically -- Ledgerly does not look up tax rates by location."
+          }
+        ]
+      },
+      {
+        "id": "L51",
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly calculates tax automatically",
+          "from your customer's billing address"
+        ],
+        "claims": [
+          {
+            "claim": "Ledgerly calculates tax automatically",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "from your customer's billing address",
+            "label": "from_question",
+            "evidence": ""
+          },
+          {
+            "claim": "Up to two tax rates can be applied to each invoice line item",
+            "label": "stated",
+            "evidence": "Up to two tax rates can be applied to each invoice line item."
+          },
+          {
+            "claim": "Tax rates are set up in Settings > Taxes",
+            "label": "stated",
+            "evidence": "Tax rates are set up in Settings > Taxes and are not calculated automatically -- Ledgerly does not look up tax rates by location."
+          },
+          {
+            "claim": "Ledgerly does not look up tax rates by location",
+            "label": "stated",
+            "evidence": "Ledgerly does not look up tax rates by location."
+          }
+        ]
+      },
+      {
+        "id": "L52",
+        "grounded": false,
+        "unsupported_claims": [
+          "No"
+        ],
+        "claims": [
+          {
+            "claim": "You set up your own tax rates in Settings > Taxes and apply them to line items",
+            "label": "stated",
+            "evidence": "Up to two tax rates can be applied to each invoice line item. Tax rates are set up in Settings > Taxes"
+          },
+          {
+            "claim": "Ledgerly doesn't look up rates by location",
+            "label": "stated",
+            "evidence": "Ledgerly does not look up tax rates by location."
+          },
+          {
+            "claim": "No",
+            "label": "from_question",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L53",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "No, only the Owner can.",
+            "label": "stated",
+            "evidence": "The Owner can change billing settings (payment terms and late fees) or delete the account."
+          }
+        ]
+      },
+      {
+        "id": "L54",
+        "grounded": false,
+        "unsupported_claims": [
+          "Admins have full access to all settings"
+        ],
+        "claims": [
+          {
+            "claim": "Admins have full access to all settings",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "Admins can create, edit, and send invoices and issue refunds",
+            "label": "stated",
+            "evidence": "Admins can create, edit, and send invoices and issue refunds"
+          },
+          {
+            "claim": "Only the Owner can change billing settings (payment terms and late fees)",
+            "label": "stated",
+            "evidence": "only the Owner can change billing settings (payment terms and late fees)"
+          },
+          {
+            "claim": "Viewers can see invoices and reports but cannot change anything",
+            "label": "stated",
+            "evidence": "Viewers can see invoices and reports but cannot change anything"
+          }
+        ]
+      },
+      {
+        "id": "L55",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Only the account Owner can change billing settings like late fees and payment terms.",
+            "label": "stated",
+            "evidence": "The Owner can change billing settings (payment terms and late fees) or delete the account."
+          },
+          {
+            "claim": "Admins can still create, send and refund invoices.",
+            "label": "stated",
+            "evidence": "Admins can create, edit, and send invoices and issue refunds,"
+          }
+        ]
+      },
+      {
+        "id": "L56",
+        "grounded": false,
+        "unsupported_claims": [
+          "The Owner can grant an Admin billing permission from the Team page"
+        ],
+        "claims": [
+          {
+            "claim": "that's Owner-only",
+            "label": "stated",
+            "evidence": "only the Owner can change billing settings (payment terms and late fees) or delete the account."
+          },
+          {
+            "claim": "The Owner can grant an Admin billing permission from the Team page",
+            "label": "stated",
+            "evidence": "The Owner can grant an Admin billing permission from the Team page, though."
+          }
+        ]
+      },
+      {
+        "id": "L57",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, go to Settings > Integrations and connect QuickBooks."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, go to Settings > Integrations and connect QuickBooks.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L58",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "No direct export",
+            "label": "stated",
+            "evidence": "Ledgerly does not offer a direct export to accounting software."
+          },
+          {
+            "claim": "you can download a CSV of invoices and payments from Reports",
+            "label": "stated",
+            "evidence": "Invoices and payments can be exported to CSV at any time from Reports."
+          },
+          {
+            "claim": "or a PDF of any invoice from its page",
+            "label": "stated",
+            "evidence": "PDF copies of individual invoices can be downloaded from the invoice page."
+          }
+        ]
+      },
+      {
+        "id": "L59",
+        "grounded": false,
+        "unsupported_claims": [
+          "No, and Ledgerly doesn't let you export your data at all."
+        ],
+        "claims": [
+          {
+            "claim": "No, and Ledgerly doesn't let you export your data at all.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L60",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Ledgerly has no direct export to accounting software",
+            "label": "stated",
+            "evidence": "Ledgerly does not offer a direct export to accounting software."
+          },
+          {
+            "claim": "you can export invoices and payments as a CSV from Reports",
+            "label": "stated",
+            "evidence": "Invoices and payments can be exported to CSV at any time from Reports."
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "id": "L01",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "You can change the due date after a partial payment.",
+            "label": "stated",
+            "evidence": "after a partial payment, only the due date and notes fields remain editable."
+          }
+        ]
+      },
+      {
+        "id": "L02",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, you can edit any part of the invoice until it's fully paid."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, you can edit any part of the invoice until it's fully paid.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L03",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Only partly -- once a payment comes in, you can still change the due date and the notes, but nothing else on the invoice.",
+            "label": "stated",
+            "evidence": "after a partial payment, only the due date and notes fields remain editable."
+          },
+          {
+            "claim": "once a payment comes in",
+            "label": "follows",
+            "evidence": "after a partial payment"
+          },
+          {
+            "claim": "you can still change the due date and the notes",
+            "label": "follows",
+            "evidence": "after a partial payment, only the due date and notes fields remain editable."
+          },
+          {
+            "claim": "nothing else on the invoice",
+            "label": "follows",
+            "evidence": "after a partial payment, only the due date and notes fields remain editable."
+          }
+        ]
+      },
+      {
+        "id": "L04",
+        "grounded": false,
+        "unsupported_claims": [
+          "After a partial payment you can still edit the due date and notes.",
+          "If you need to change the amount, you can void the invoice and issue a new one."
+        ],
+        "claims": [
+          {
+            "claim": "After a partial payment you can still edit the due date and notes.",
+            "label": "stated",
+            "evidence": "Invoices can be edited any time before the first payment is received; after a partial payment, only the due date and notes fields remain editable."
+          },
+          {
+            "claim": "If you need to change the amount, you can void the invoice and issue a new one.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L05",
+        "grounded": false,
+        "unsupported_claims": [
+          "The account owner can switch the default to Net 15, Net 45, Net 60, or Net 90 in Settings > Billing."
+        ],
+        "claims": [
+          {
+            "claim": "Net 30 by default.",
+            "label": "stated",
+            "evidence": "Default payment terms are Net 30."
+          },
+          {
+            "claim": "The account owner can switch the default to Net 15, Net 45, Net 60, or Net 90 in Settings > Billing.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L06",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Net 30",
+            "label": "stated",
+            "evidence": "Default payment terms are Net 30."
+          },
+          {
+            "claim": "you can set a different term on any individual invoice if a customer needs more time",
+            "label": "follows",
+            "evidence": "Account owners can change the default to Net 15, Net 45, or Net 60 in Settings > Billing."
+          }
+        ]
+      },
+      {
+        "id": "L07",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "New invoices use Net 30 by default.",
+            "label": "stated",
+            "evidence": "Default payment terms are Net 30."
+          }
+        ]
+      },
+      {
+        "id": "L08",
+        "grounded": false,
+        "unsupported_claims": [
+          "The default is Net 15"
+        ],
+        "claims": [
+          {
+            "claim": "The default is Net 15",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "you can change it in Settings",
+            "label": "stated",
+            "evidence": "Settings > Billing"
+          }
+        ]
+      },
+      {
+        "id": "L09",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes -- choose 'bank account' as the refund destination when you issue the refund."
+        ],
+        "claims": [
+          {
+            "claim": "Yes -- choose 'bank account' as the refund destination when you issue the refund.",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "Refunded amounts are returned to the original payment method",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method and typically post within 5-10 business days."
+          },
+          {
+            "claim": "Ledgerly does not support refunding a payment to a different payment method than the one used originally.",
+            "label": "stated",
+            "evidence": "Ledgerly does not support refunding a payment to a different payment method than the one used originally."
+          }
+        ]
+      },
+      {
+        "id": "L10",
+        "grounded": false,
+        "unsupported_claims": [
+          "If the card has expired, the refund is sent as a check instead."
+        ],
+        "claims": [
+          {
+            "claim": "No, it has to go back to the card.",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method"
+          },
+          {
+            "claim": "If the card has expired, the refund is sent as a check instead.",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method and typically post within 5-10 business days. Ledgerly does not support refunding a payment to a different payment method than the one used originally."
+          }
+        ]
+      },
+      {
+        "id": "L11",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "No, refunds go back to the card that was used.",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method"
+          },
+          {
+            "claim": "They usually post within 5-10 business days.",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method and typically post within 5-10 business days."
+          }
+        ]
+      },
+      {
+        "id": "L12",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Refunds always go back to the original payment method",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method"
+          },
+          {
+            "claim": "a card payment is refunded to the card",
+            "label": "stated",
+            "evidence": "Refunded amounts are returned to the original payment method, so a card payment is refunded to the card"
+          }
+        ]
+      },
+      {
+        "id": "L13",
+        "grounded": false,
+        "unsupported_claims": [
+          "A late fee is added every 7 days after the due date until the invoice is paid."
+        ],
+        "claims": [
+          {
+            "claim": "A late fee is added every 7 days after the due date until the invoice is paid.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L14",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "the first one is added 1 day after the due date",
+            "label": "stated",
+            "evidence": "When enabled, a late fee is applied automatically 1 day after an invoice's due date"
+          },
+          {
+            "claim": "then another every 30 days while it's unpaid",
+            "label": "stated",
+            "evidence": "and again every 30 days the invoice remains unpaid"
+          },
+          {
+            "claim": "up to the cap you set",
+            "label": "stated",
+            "evidence": "up to a cap the account owner sets"
+          }
+        ]
+      },
+      {
+        "id": "L15",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Every 30 days after the due date.",
+            "label": "stated",
+            "evidence": "again every 30 days the invoice remains unpaid"
+          }
+        ]
+      },
+      {
+        "id": "L16",
+        "grounded": false,
+        "unsupported_claims": [
+          "with no limit until the invoice is paid"
+        ],
+        "claims": [
+          {
+            "claim": "One day after the due date",
+            "label": "stated",
+            "evidence": "When enabled, a late fee is applied automatically 1 day after an invoice's due date"
+          },
+          {
+            "claim": "and every 30 days after that",
+            "label": "stated",
+            "evidence": "and again every 30 days the invoice remains unpaid"
+          },
+          {
+            "claim": "with no limit until the invoice is paid",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L17",
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly converts the payment back to USD at the daily exchange rate."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, you can send it in EUR.",
+            "label": "stated",
+            "evidence": "individual invoices can still be issued in any of the four supported currencies regardless of the account default."
+          },
+          {
+            "claim": "Ledgerly converts the payment back to USD at the daily exchange rate.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L18",
+        "grounded": false,
+        "unsupported_claims": [
+          "invoices always use your account's default currency"
+        ],
+        "claims": [
+          {
+            "claim": "invoices always use your account's default currency",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L19",
+        "grounded": false,
+        "unsupported_claims": [
+          "but"
+        ],
+        "claims": [
+          {
+            "claim": "Your account default stays USD",
+            "label": "stated",
+            "evidence": "An account's default currency is set once at account creation and cannot be changed afterward..."
+          },
+          {
+            "claim": "any single invoice can be issued in EUR, GBP or CAD",
+            "label": "stated",
+            "evidence": "individual invoices can still be issued in any of the four supported currencies regardless of the account default"
+          },
+          {
+            "claim": "but",
+            "label": "from_question",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L20",
+        "grounded": false,
+        "unsupported_claims": [
+          "and you can also switch your account default to EUR in Settings if you prefer"
+        ],
+        "claims": [
+          {
+            "claim": "Yes, you can invoice in EUR",
+            "label": "stated",
+            "evidence": "individual invoices can still be issued in any of the four supported currencies regardless of the account default"
+          },
+          {
+            "claim": "and you can also switch your account default to EUR in Settings if you prefer",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L21",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, but the invoice is marked as paid once the customer has paid at least half."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, but the invoice is marked as paid once the customer has paid at least half.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L22",
+        "grounded": false,
+        "unsupported_claims": [
+          "Only if you enable partial payments on the invoice first -- they're off by default."
+        ],
+        "claims": [
+          {
+            "claim": "Only if you enable partial payments on the invoice first -- they're off by default.",
+            "label": "stated",
+            "evidence": "Every invoice supports partial payments -- a customer can pay any amount up to the invoice total, and the invoice stays open until the full balance is paid."
+          }
+        ]
+      },
+      {
+        "id": "L23",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, partial payments are supported."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, partial payments are supported.",
+            "label": "stated",
+            "evidence": "Every invoice supports partial payments -- a customer can pay any amount up to the invoice total, and the invoice stays open until the full balance is paid."
+          }
+        ]
+      },
+      {
+        "id": "L24",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "A customer can pay any amount up to the total",
+            "label": "stated",
+            "evidence": "Every invoice supports partial payments -- a customer can pay any amount up to the invoice total"
+          },
+          {
+            "claim": "and the invoice stays open until the rest is paid",
+            "label": "stated",
+            "evidence": "and the invoice stays open until the full balance is paid"
+          }
+        ]
+      },
+      {
+        "id": "L25",
+        "grounded": false,
+        "unsupported_claims": [
+          "You can bulk-update them from the Invoices page if you want them to match."
+        ],
+        "claims": [
+          {
+            "claim": "No, existing invoices keep their terms.",
+            "label": "stated",
+            "evidence": "existing invoices keep their original terms."
+          },
+          {
+            "claim": "You can bulk-update them from the Invoices page if you want them to match.",
+            "label": "stated",
+            "evidence": "You can bulk-update them from the Invoices page if you want them to match."
+          }
+        ]
+      },
+      {
+        "id": "L26",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "No, it only affects new invoices.",
+            "label": "stated",
+            "evidence": "Changing the default only affects invoices created after the change -- existing invoices keep their original terms."
+          }
+        ]
+      },
+      {
+        "id": "L27",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "the new default only applies to invoices you create after the change",
+            "label": "stated",
+            "evidence": "Changing the default only affects invoices created after the change -- existing invoices keep their original terms."
+          },
+          {
+            "claim": "existing invoices keep their original terms",
+            "label": "stated",
+            "evidence": "Changing the default only affects invoices created after the change -- existing invoices keep their original terms."
+          }
+        ]
+      },
+      {
+        "id": "L28",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, all open invoices are updated to the new term."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, all open invoices are updated to the new term.",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "existing invoices keep their original terms.",
+            "label": "stated",
+            "evidence": "Changing the default only affects invoices created after the change -- existing invoices keep their original terms."
+          }
+        ]
+      },
+      {
+        "id": "L29",
+        "grounded": false,
+        "unsupported_claims": [
+          "Refunds are available for 90 days after payment."
+        ],
+        "claims": [
+          {
+            "claim": "Refunds are available for 90 days after payment.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L30",
+        "grounded": false,
+        "unsupported_claims": [
+          "After that, you'd need to contact Ledgerly support to approve a refund."
+        ],
+        "claims": [
+          {
+            "claim": "Within 180 days of the payment.",
+            "label": "stated",
+            "evidence": "Refunds can be issued for any payment within 180 days of the payment date."
+          },
+          {
+            "claim": "After that, you'd need to contact Ledgerly support to approve a refund.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L31",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "You can refund a payment for up to 180 days after the payment date",
+            "label": "stated",
+            "evidence": "Refunds can be issued for any payment within 180 days of the payment date."
+          },
+          {
+            "claim": "either partially or in full",
+            "label": "stated",
+            "evidence": "A refund can be partial or full."
+          }
+        ]
+      },
+      {
+        "id": "L32",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Within 180 days of the invoice date.",
+            "label": "stated",
+            "evidence": "Refunds can be issued for any payment within 180 days of the payment date."
+          }
+        ]
+      },
+      {
+        "id": "L33",
+        "grounded": false,
+        "unsupported_claims": [
+          "and once enabled they only apply to invoices over $100"
+        ],
+        "claims": [
+          {
+            "claim": "No, they're off by default",
+            "label": "stated",
+            "evidence": "Late fees are off by default."
+          },
+          {
+            "claim": "and once enabled they only apply to invoices over $100",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L34",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, a 1.5% late fee is applied automatically unless you turn it off.",
+          "1.5% is the late fee percentage"
+        ],
+        "claims": [
+          {
+            "claim": "Yes, a 1.5% late fee is applied automatically unless you turn it off.",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "late fees are off by default",
+            "label": "stated",
+            "evidence": "Late fees are off by default."
+          },
+          {
+            "claim": "a late fee is applied automatically",
+            "label": "stated",
+            "evidence": "When enabled in Settings > Billing, a late fee (flat amount or percentage) is applied automatically"
+          },
+          {
+            "claim": "1.5% is the late fee percentage",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "you can turn it off",
+            "label": "stated",
+            "evidence": "When enabled in Settings > Billing, a late fee (flat amount or percentage) is applied automatically"
+          }
+        ]
+      },
+      {
+        "id": "L35",
+        "grounded": false,
+        "unsupported_claims": [
+          "Once you turn them on, you can choose a flat amount or a percentage.",
+          "Late fees are turned on automatically."
+        ],
+        "claims": [
+          {
+            "claim": "Late fees are off by default.",
+            "label": "stated",
+            "evidence": "Late fees are off by default."
+          },
+          {
+            "claim": "Once you turn them on, you can choose a flat amount or a percentage.",
+            "label": "stated",
+            "evidence": "When enabled in Settings > Billing, a late fee (flat amount or percentage) is applied automatically 1 day after an invoice's due date, and again every 30 days the invoice remains unpaid, up to a cap the account owner sets."
+          },
+          {
+            "claim": "Late fees are turned on automatically.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L36",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "No, late fees are off by default.",
+            "label": "stated",
+            "evidence": "Late fees are off by default."
+          },
+          {
+            "claim": "You can turn them on in Settings > Billing.",
+            "label": "stated",
+            "evidence": "When enabled in Settings > Billing..."
+          }
+        ]
+      },
+      {
+        "id": "L37",
+        "grounded": false,
+        "unsupported_claims": [
+          "Nothing happens to them.",
+          "anything already sent stays as it is."
+        ],
+        "claims": [
+          {
+            "claim": "Nothing happens to them.",
+            "label": "from_question",
+            "evidence": ""
+          },
+          {
+            "claim": "Pausing only stops future invoices;",
+            "label": "stated",
+            "evidence": "Pausing a recurring schedule stops future invoices"
+          },
+          {
+            "claim": "anything already sent stays as it is.",
+            "label": "stated",
+            "evidence": "anything already sent stays as it is."
+          }
+        ]
+      },
+      {
+        "id": "L38",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Already-sent invoices aren't affected.",
+            "label": "stated",
+            "evidence": "Pausing a recurring schedule stops future invoices but does not affect invoices already sent."
+          },
+          {
+            "claim": "You can resume the schedule later and Ledgerly will send any invoices that were skipped while it was paused.",
+            "label": "stated",
+            "evidence": "A recurring schedule can be edited at any time; changes apply only to invoices created after the edit."
+          }
+        ]
+      },
+      {
+        "id": "L39",
+        "grounded": false,
+        "unsupported_claims": [
+          "Pausing cancels the invoices it already sent",
+          "so customers won't owe them"
+        ],
+        "claims": [
+          {
+            "claim": "Pausing cancels the invoices it already sent",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "so customers won't owe them",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L40",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "They aren't affected.",
+            "label": "stated",
+            "evidence": "A recurring schedule can be edited at any time; changes apply only to invoices created after the edit."
+          }
+        ]
+      },
+      {
+        "id": "L41",
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly sends a reminder every day after the due date until the invoice is paid."
+        ],
+        "claims": [
+          {
+            "claim": "Ledgerly sends a reminder every day after the due date until the invoice is paid.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L42",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "3 days before the due date",
+            "label": "stated",
+            "evidence": "When turned on, a reminder is sent 3 days before the due date"
+          },
+          {
+            "claim": "and on the due date",
+            "label": "stated",
+            "evidence": "and again on the due date"
+          }
+        ]
+      },
+      {
+        "id": "L43",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Reminders are off by default.",
+            "label": "stated",
+            "evidence": "Reminders are off by default."
+          },
+          {
+            "claim": "If you turn them on, one goes out 3 days before the due date and another on the due date",
+            "label": "stated",
+            "evidence": "When turned on, a reminder is sent 3 days before the due date and again on the due date."
+          },
+          {
+            "claim": "and they stop once the invoice is paid in full.",
+            "label": "stated",
+            "evidence": "Reminders stop automatically once an invoice is fully paid."
+          }
+        ]
+      },
+      {
+        "id": "L44",
+        "grounded": false,
+        "unsupported_claims": [
+          "and again 7 days after if it's still unpaid"
+        ],
+        "claims": [
+          {
+            "claim": "If turned on, 3 days before the due date, on the due date",
+            "label": "stated",
+            "evidence": "When turned on, a reminder is sent 3 days before the due date and again on the due date."
+          },
+          {
+            "claim": "and again 7 days after if it's still unpaid",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L45",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "reminders go out by email",
+            "label": "stated",
+            "evidence": "Ledgerly can send automatic payment reminders by email."
+          },
+          {
+            "claim": "only once you've turned them on",
+            "label": "stated",
+            "evidence": "Reminders are off by default. When turned on, a reminder is sent 3 days before the due date and again on the due date."
+          },
+          {
+            "claim": "Not by text",
+            "label": "stated",
+            "evidence": "Reminders cannot be sent by text message."
+          }
+        ]
+      },
+      {
+        "id": "L46",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, you can choose email or text for each customer."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, you can choose email or text for each customer.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L47",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Reminders are only sent by email.",
+            "label": "stated",
+            "evidence": "Reminders are only sent by email."
+          }
+        ]
+      },
+      {
+        "id": "L48",
+        "grounded": false,
+        "unsupported_claims": [
+          "But you can connect Twilio to send text reminders."
+        ],
+        "claims": [
+          {
+            "claim": "No, only email.",
+            "label": "stated",
+            "evidence": "Reminders cannot be sent by text message."
+          },
+          {
+            "claim": "But you can connect Twilio to send text reminders.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L49",
+        "grounded": false,
+        "unsupported_claims": [
+          "You can add tax rates yourself."
+        ],
+        "claims": [
+          {
+            "claim": "You can add tax rates yourself.",
+            "label": "stated",
+            "evidence": "You can add tax rates yourself."
+          },
+          {
+            "claim": "You can apply up to three rates per line item.",
+            "label": "stated",
+            "evidence": "Up to two tax rates can be applied to each invoice line item."
+          }
+        ]
+      },
+      {
+        "id": "L50",
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly files your sales tax returns at the end of each quarter"
+        ],
+        "claims": [
+          {
+            "claim": "you enter rates yourself",
+            "label": "stated",
+            "evidence": "Up to two tax rates can be applied to each invoice line item. Tax rates are set up in Settings > Taxes"
+          },
+          {
+            "claim": "Ledgerly files your sales tax returns at the end of each quarter",
+            "label": "stated",
+            "evidence": "Ledgerly files your sales tax returns at the end of each quarter."
+          },
+          {
+            "claim": "Ledgerly does not look up tax rates by location",
+            "label": "stated",
+            "evidence": "Tax rates are set up in Settings > Taxes and are not calculated automatically -- Ledgerly does not look up tax rates by location."
+          }
+        ]
+      },
+      {
+        "id": "L51",
+        "grounded": false,
+        "unsupported_claims": [
+          "Ledgerly calculates tax automatically",
+          "from your customer's billing address"
+        ],
+        "claims": [
+          {
+            "claim": "Ledgerly calculates tax automatically",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "from your customer's billing address",
+            "label": "from_question",
+            "evidence": ""
+          },
+          {
+            "claim": "Up to two tax rates can be applied to each invoice line item",
+            "label": "stated",
+            "evidence": "Up to two tax rates can be applied to each invoice line item."
+          },
+          {
+            "claim": "Tax rates are set up in Settings > Taxes",
+            "label": "stated",
+            "evidence": "Tax rates are set up in Settings > Taxes"
+          },
+          {
+            "claim": "and are not calculated automatically",
+            "label": "stated",
+            "evidence": "and are not calculated automatically -- Ledgerly does not look up tax rates by location."
+          },
+          {
+            "claim": "Ledgerly does not look up tax rates by location",
+            "label": "stated",
+            "evidence": "Ledgerly does not look up tax rates by location."
+          }
+        ]
+      },
+      {
+        "id": "L52",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "You set up your own tax rates in Settings > Taxes",
+            "label": "stated",
+            "evidence": "Tax rates are set up in Settings > Taxes"
+          },
+          {
+            "claim": "and apply them to line items",
+            "label": "stated",
+            "evidence": "Up to two tax rates can be applied to each invoice line item"
+          },
+          {
+            "claim": "Ledgerly doesn't look up rates by location",
+            "label": "stated",
+            "evidence": "Ledgerly does not look up tax rates by location"
+          },
+          {
+            "claim": "No",
+            "label": "from_question",
+            "evidence": "Does Ledgerly calculate sales tax automatically based on my customer's location?"
+          }
+        ]
+      },
+      {
+        "id": "L53",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "No, only the Owner can.",
+            "label": "stated",
+            "evidence": "The Owner can change billing settings (payment terms and late fees) or delete the account."
+          }
+        ]
+      },
+      {
+        "id": "L54",
+        "grounded": false,
+        "unsupported_claims": [
+          "Admins have full access to all settings",
+          "Admins can change billing settings",
+          "Admins can change late fee settings"
+        ],
+        "claims": [
+          {
+            "claim": "Admins have full access to all settings",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "Admins can change billing settings",
+            "label": "unsupported",
+            "evidence": ""
+          },
+          {
+            "claim": "Admins can change late fee settings",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L55",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Only the account Owner can change billing settings like late fees and payment terms.",
+            "label": "stated",
+            "evidence": "The Owner can change billing settings (payment terms and late fees) or delete the account."
+          },
+          {
+            "claim": "Admins can still create, send and refund invoices.",
+            "label": "stated",
+            "evidence": "Admins can create, edit, and send invoices and issue refunds,"
+          }
+        ]
+      },
+      {
+        "id": "L56",
+        "grounded": false,
+        "unsupported_claims": [
+          "The Owner can grant an Admin billing permission from the Team page, though"
+        ],
+        "claims": [
+          {
+            "claim": "that's Owner-only",
+            "label": "stated",
+            "evidence": "only the Owner can change billing settings (payment terms and late fees) or delete the account."
+          },
+          {
+            "claim": "The Owner can grant an Admin billing permission from the Team page, though",
+            "label": "stated",
+            "evidence": "The Owner can grant an Admin billing permission from the Team page, though"
+          }
+        ]
+      },
+      {
+        "id": "L57",
+        "grounded": false,
+        "unsupported_claims": [
+          "Yes, go to Settings > Integrations and connect QuickBooks."
+        ],
+        "claims": [
+          {
+            "claim": "Yes, go to Settings > Integrations and connect QuickBooks.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L58",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "No direct export",
+            "label": "stated",
+            "evidence": "Ledgerly does not offer a direct export to accounting software."
+          },
+          {
+            "claim": "you can download a CSV of invoices and payments from Reports",
+            "label": "stated",
+            "evidence": "Invoices and payments can be exported to CSV at any time from Reports."
+          },
+          {
+            "claim": "or a PDF of any invoice from its page",
+            "label": "stated",
+            "evidence": "PDF copies of individual invoices can be downloaded from the invoice page."
+          }
+        ]
+      },
+      {
+        "id": "L59",
+        "grounded": false,
+        "unsupported_claims": [
+          "No, and Ledgerly doesn't let you export your data at all."
+        ],
+        "claims": [
+          {
+            "claim": "No, and Ledgerly doesn't let you export your data at all.",
+            "label": "unsupported",
+            "evidence": ""
+          }
+        ]
+      },
+      {
+        "id": "L60",
+        "grounded": true,
+        "unsupported_claims": [],
+        "claims": [
+          {
+            "claim": "Ledgerly has no direct export to accounting software",
+            "label": "stated",
+            "evidence": "Ledgerly does not offer a direct export to accounting software."
+          },
+          {
+            "claim": "you can export invoices and payments as a CSV from Reports",
+            "label": "stated",
+            "evidence": "Invoices and payments can be exported to CSV at any time from Reports."
+          }
+        ]
+      }
+    ]
+  ]
+}

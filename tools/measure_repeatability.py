@@ -34,6 +34,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from data_utils import load_golden_dataset, load_json  # noqa: E402
 from decision_policy import CONSERVATIVE, judge_gate_value  # noqa: E402
+from llm_provider import QuotaExhausted  # noqa: E402
 from tools.measure_agreement import (  # noqa: E402
     CHECKS, MEASUREMENT_DIR, _safe, check_row, confusion, flags, metrics,
 )
@@ -300,7 +301,11 @@ def main(argv: list[str] | None = None) -> int:
         model = getattr(provider, "model", None)
         path = results_path(provider.name, model, args.temperature)
         print(f"Running every check {args.runs}x per answer: {provider.name}/{model} at temperature {args.temperature:g}")
-        record = run(provider, args.runs, args.limit, args.temperature)
+        try:
+            record = run(provider, args.runs, args.limit, args.temperature)
+        except QuotaExhausted as e:
+            print(f"\nStopped, nothing saved: {e}")
+            return 3
         MEASUREMENT_DIR.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         print(f"Saved: {path.relative_to(Path(__file__).parent.parent)}")

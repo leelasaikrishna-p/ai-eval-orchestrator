@@ -529,6 +529,52 @@ needed, since a later run is made only on answers still passing):
   stay an option for a noisier model or a check where steady recall matters
   more than review load.
 
+## Cutting groundedness false alarms: a held-out test
+
+Groundedness does most of the catching, and most of the false alarms: it
+flags good answers that paraphrase the context, apply a general rule to the
+user's case ("refunds go to the original payment method" -> "a card payment
+goes back to the card"), or repeat the user's own question. At a realistic
+5% bad-answer rate those false alarms are most of the human review queue.
+
+The attempt: a claim-by-claim mode (`groundedness_check(..., mode="claims")`)
+that also sees the question, labels each claim (stated, follows,
+from_question, unsupported), and decides "grounded" in code. Two code rules
+were added while studying llama on the design questions: evidence quoted for
+a claim must come from the context or question, and quoting (nearly) the
+whole context doesn't count as evidence.
+
+**Held out.** To avoid tuning on the answers it is scored on, the 60 labeled
+answers were split by question. q1-q7 (28 answers) were used to study the
+false alarms and design the prompt and rules, in two iterations; q8-q15
+(32 answers) weren't looked at until the design was locked.
+
+```bash
+python3 tools/measure_groundedness.py run --runs 3
+python3 tools/measure_groundedness.py report
+```
+
+llama3.1:8b, each answer's flag averaged over its runs (whole-answer mode:
+the agreement run plus five repeatability runs; claim mode: three runs):
+
+| | whole-answer catches | false alarms | claim-by-claim catches | false alarms |
+|---|---|---|---|---|
+| design (q1-q7) | 91% | 26% | 88% | **12%** |
+| **held out (q8-q15)** | **96%** | **6%** | 89% | 24% |
+
+- **It didn't generalize.** On the questions it was designed on, false
+  alarms halved. On the held-out questions they quadrupled and catches fell.
+- **The code rules did most of the damage.** 12 of 16 held-out false alarms
+  came from the evidence rules, which penalize short conversational claims
+  ("No", "Nothing happens to them") that have nothing to quote.
+- **No variant beats the shipped check.** Recomputed offline from the same
+  recorded claims (exploratory, since the held-out answers had been seen by
+  then): llama's own labels alone catch only 72% of held-out bad answers;
+  each rule added back catches and false alarms together.
+- **Not shipped.** Whole-answer groundedness stays the default; claim mode
+  stays available, off by default. Gemini is measured next: a stronger
+  model may label claims well enough for the labels alone to work.
+
 ## The four tools
 
 | Tool | Question it answers | LLM call? |
@@ -567,7 +613,7 @@ differ across the three.
 
 ```bash
 python3 tests/test_tools_smoke.py
-# all 84 tests run offline -- each tests/*.py file also runs standalone
+# all 91 tests run offline -- each tests/*.py file also runs standalone
 # or, with pytest installed:
 pip install -r requirements.txt && pytest
 ```

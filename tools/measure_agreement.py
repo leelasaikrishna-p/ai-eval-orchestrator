@@ -32,6 +32,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from data_utils import DATA_DIR, load_golden_dataset, load_json  # noqa: E402
 from decision_policy import CONSERVATIVE, judge_gate_value, sign_off  # noqa: E402
+from llm_provider import QuotaExhausted  # noqa: E402
 
 MEASUREMENT_DIR = DATA_DIR / "measurements"
 CHECKS = ("golden_eval", "groundedness_check", "llm_judge", "policy_or", "policy_and")
@@ -68,6 +69,8 @@ def check_row(it: dict, q: dict, provider) -> dict:
                 row[name] = {"grounded": r["grounded"], "unsupported_claims": r.get("unsupported_claims", [])}
             else:
                 row[name] = {"score": r["score"], "breakdown": r["breakdown"]}
+        except QuotaExhausted:
+            raise  # every later call would fail too: stop, don't record it
         except Exception as e:
             row[name] = {"error": f"{type(e).__name__}: {e}"[:200]}
     return row
@@ -273,7 +276,11 @@ def main(argv: list[str] | None = None) -> int:
         model = getattr(provider, "model", None)
         path = results_path(provider.name, model)
         print(f"Running all checks on every labeled answer: {provider.name}/{model}")
-        record = run(provider)
+        try:
+            record = run(provider)
+        except QuotaExhausted as e:
+            print(f"\nStopped, nothing saved: {e}")
+            return 3
         MEASUREMENT_DIR.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         print(f"Saved: {path.relative_to(Path(__file__).parent.parent)}")

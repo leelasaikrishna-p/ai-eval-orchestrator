@@ -50,3 +50,6 @@ jobs:
 
       - name: Repeatability measurement tests (mock provider, no LLM)
         run: python3 tests/test_repeatability.py
+
+      - name: Claim-by-claim groundedness tests (no LLM)
+        run: python3 tests/test_groundedness_claims.py

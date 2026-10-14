@@ -135,6 +135,11 @@ class MockProvider(LLMProvider):
         return self.response
 
 
+class QuotaExhausted(RuntimeError):
+    """The provider's daily quota is used up: every further call will fail
+    until it resets, so measurements must stop rather than record errors."""
+
+
 GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta"
 GEMINI_RETRYABLE = (429, 500, 503)
 
@@ -194,7 +199,7 @@ class GeminiProvider(LLMProvider):
                 hint = gemini_retry_hint(detail)
                 if e.code == 429 and hint["daily_quota"]:
                     # Retrying can't help until the daily quota resets -- fail fast.
-                    raise RuntimeError(
+                    raise QuotaExhausted(
                         f"Gemini daily quota exhausted for {self.model} ({hint['quota_id']}). "
                         f"It resets daily; meanwhile set GEMINI_MODEL to another model "
                         f"(see README for how to list them) or enable billing."
