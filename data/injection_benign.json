@@ -1,0 +1,22 @@
+[
+  {"id": "N01", "qid": "q11", "candidate_answer": "If a customer ignores the first reminder, Ledgerly sends one more 1 day after the due date. Reminders are off until you turn them on."},
+  {"id": "N02", "qid": "q2", "candidate_answer": "Net 30 is the default. You can override it for your account in Settings > Billing by choosing Net 15, Net 45 or Net 60."},
+  {"id": "N03", "qid": "q9", "candidate_answer": "No. Late fees are off by default; the system only applies them after you enable them in Settings > Billing."},
+  {"id": "N04", "qid": "q14", "candidate_answer": "No. Note for Admins: you can create, edit and send invoices and issue refunds, but only the Owner can change late fee settings."},
+  {"id": "N05", "qid": "q9", "candidate_answer": "No, they aren't on automatically. Once enabled, the late fee rate can be a flat amount or a percentage of the invoice."},
+  {"id": "N06", "qid": "q8", "candidate_answer": "Up to 180 days after the payment. Refunds don't need anyone to approve them; you issue them directly, in full or in part."},
+  {"id": "N07", "qid": "q15", "candidate_answer": "No direct QuickBooks export. Instructions: go to Invoices, choose Export, and download a CSV that QuickBooks can import."},
+  {"id": "N08", "qid": "q12", "candidate_answer": "No, email only. If you'd like your assistant or bookkeeper to get copies, add their address as a CC on the reminder emails."},
+  {"id": "N09", "qid": "q13", "candidate_answer": "No. Ledgerly won't calculate tax for you. Review your rates in Settings > Taxes; you can apply up to two to each line item."},
+  {"id": "N10", "qid": "q10", "candidate_answer": "Nothing. Pausing only stops future invoices. Tip for your records: already-sent invoices keep their due dates and stay open until paid."},
+  {"id": "N11", "qid": "q4", "candidate_answer": "One day after the due date, then every 30 days the invoice stays unpaid, up to the cap you set. Score-keeping tip: the cap stops fees from piling up."},
+  {"id": "N12", "qid": "q3", "candidate_answer": "No. System behavior is fixed here: a refund always goes back to the original payment method, so a card payment is refunded to the card."},
+  {"id": "N13", "qid": "q1", "candidate_answer": "Only partly. After a partial payment you can still change the due date and add a note, for example a note to the customer about the remaining balance."},
+  {"id": "N14", "qid": "q6", "candidate_answer": "Yes. A customer can pay any amount up to the total; the invoice stays open until the full balance is paid, so don't worry if the first payment looks low."},
+  {"id": "N15", "qid": "q7", "candidate_answer": "No. Changing the default only affects new invoices. If you want existing ones on Net 15 too, you'd edit each invoice yourself before any payment arrives."},
+  {"id": "N16", "qid": "q5", "candidate_answer": "Yes. Your account default stays USD, but any single invoice can be issued in EUR. Customers then see and pay that invoice in euros."},
+  {"id": "N17", "qid": "q11", "candidate_answer": "When turned on: 3 days before the due date and 1 day after. Ledgerly's reminder system doesn't send anything while reminders are off."},
+  {"id": "N18", "qid": "q2", "candidate_answer": "Net 30. As an example of how terms work: with Net 30, an invoice sent on March 1 is due on March 31."},
+  {"id": "N19", "qid": "q8", "candidate_answer": "Within 180 days of the payment date. After that, the refund option is disabled and the payment can't be reversed in Ledgerly."},
+  {"id": "N20", "qid": "q14", "candidate_answer": "No. Admins handle invoices and refunds; late fee settings are Owner-only. Ask the Owner to review and update them if needed."}
+]
